@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>Spider</title>
+		<link rel="icon" sizes="16x16" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAC+0lEQVQ4jX2SXUjTYRSH35sSRS2NzLZZ9IEWZQvnrNmwGKu12keK/6FWoygpP1Z4YUEju+lCKmJMb8ZsKZthzZraXKZz1FpOaU3FWRFMwdys3EhEQc3168IcW0QHnovzvIfn6iXkzyBgP/dr9sUwoMF/WXg5huk36SRyhEJhzOJMjzOgL4467qviw3Rwe5QL6Isx9vnZbPFp+Zn8s2dTCCGEcDhU7FJIC9t1PpZCWiyFtJjoVKBr2zp00OMx0akIe9t1PhYWmyEuKGk+Ji1KI4QQQmOJ4/zzenzquoapbxr45/UYKGJhisqAvzADA0Us+Of1mPqmWbmZNSInT+TM5Z3asRKgseKGg0YMDtXjfd9dDAeNsLC24gNvC4a4dFhYWzEcNOJ9310MDtXDE+hAdt7Jd0zuifRwoNdnRs+4CTqlHL0+M5rFXLSsj4Ehfg2axVz0+szQKeXoGTfB7uvG/kMnXcyciECL14oWrxUm1VU8KRdB16pGnfAw1MI86FrVeFIugkl1FS1eK9rGXmFf7l+Beo8Dq6jdNtRUK2BgJEOzIRE11Qqo3bbwu260H3tzRa5dkYFbLhdq7TY0qWpgkB1BnVSAcdFOOLM2oU4qgEF2BE2qGtTabbjnHsTuvwMVDg+qqpVQPLagwuFBpc0NbXwsGlKSUGlzo8LhgeKxBVXVStxwjiLjoCQ6ILN6cbv8CkobuyCzeiGzenFeeR+X846G99LGLtwuv4JLr73YkSNxbWdGBHhmH9rlBShpegue2Qee2Qd+5yQEli/hvaTpLdrlBaC6J7GNLXHRIwOZxiCosjvINAbD7G8NIOvpdJSjyu6A1zGNNLbkHT0nPz38E/nPf8wwVSPYrJ8PQzfMgW6Yi3JM1QhOPPoUomVL+xkcyU5CCCEMDhWbrHHcZDz4/nONNoRVYhqWEdOwjEiX+jDwayOH+rr5UFEbjUttIYQQsoei1qYckGxK4l+oTcoSv0pgsD0JdNbHBNo/YLBHEjOP21OPXSxMFFDJvwHM+TWdEk/CkAAAAABJRU5ErkJggg==">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, user-scalable=no, minimal-ui">
+		<style>
+			html,body{background-color:black;height:100%;padding:0;margin:0;overflow:hidden}
+			#content{position:fixed;height:100%;width:100%;margin:0;padding:0}
+			.pleasewait{position:fixed;width:64px;height:64px;left:0;right:0;top:0;bottom:0;margin:auto auto;border:0;z-index:99}
+			.lds-spinner{color:white;display:inline-block;position:relative;width:64px;height:64px}
+			.lds-spinner div{transform-origin:32px 32px;animation:lds-spinner 1.2s linear infinite}
+			.lds-spinner div:after{content:" ";display:block;position:absolute;top:3px;left:29px;width:5px;height:14px;border-radius:20%;background:white}
+			.lds-spinner div:nth-child(1){transform:rotate(0deg);animation-delay:-1.1s}
+			.lds-spinner div:nth-child(2){transform:rotate(30deg);animation-delay:-1s}
+			.lds-spinner div:nth-child(3){transform:rotate(60deg);animation-delay:-0.9s}
+			.lds-spinner div:nth-child(4){transform:rotate(90deg);animation-delay:-0.8s}
+			.lds-spinner div:nth-child(5){transform:rotate(120deg);animation-delay:-0.7s}
+			.lds-spinner div:nth-child(6){transform:rotate(150deg);animation-delay:-0.6s}
+			.lds-spinner div:nth-child(7){transform:rotate(180deg);animation-delay:-0.5s}
+			.lds-spinner div:nth-child(8){transform:rotate(210deg);animation-delay:-0.4s}
+			.lds-spinner div:nth-child(9){transform:rotate(240deg);animation-delay:-0.3s}
+			.lds-spinner div:nth-child(10){transform:rotate(270deg);animation-delay:-0.2s}
+			.lds-spinner div:nth-child(11){transform:rotate(300deg);animation-delay:-0.1s}
+			.lds-spinner div:nth-child(12){transform:rotate(330deg);animation-delay:0s}
+			@keyframes lds-spinner{0%{opacity:1}100%{opacity:0}}
+		</style>
+	</head>
+	<body>
+		<div class="pleasewait" id="loading"><div class="lds-spinner"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div></div>
+		<div id="content"></div>
+		<script src="Spider.js"></script>
+	</body>
+</html>
