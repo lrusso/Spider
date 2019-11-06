@@ -1,6 +1,6 @@
-# Spider
+# Spider Solitarie
 
-Spider Solitarie
+Spider Solitarie in JavaScript
 
 ## Web:
 
