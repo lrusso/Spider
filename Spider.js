@@ -69,10 +69,6 @@ var SimpleGame = (function()
 		var config = {width: 880, height: 600, renderer: Phaser.CANVAS, parent: "content", disableVisibilityChange: true};
 		this.game = new Phaser.Game(config);
 		SimpleGame.myGame = this.game;
-		document.body.addEventListener("click", function()
-			{
-			var context = new AudioContext();
-			});
 
 		this.boot = new Phaser.State();
 		this.game.state.add("Boot", this.boot, true);
