@@ -35,7 +35,6 @@ if (userLanguage.substring(0,2)=="es")
 	STRING_WIN = "You Won!";
 	}
 
-// Game.js
 var __extends=this&&this.__extends||function(){var t=Object.setPrototypeOf||{__proto__:[]}instanceof Array&&function(t,o){t.__proto__=o}||function(t,o){for(var n in o)o.hasOwnProperty(n)&&(t[n]=o[n])};return function(o,n){function r(){this.constructor=o}t(o,n),o.prototype=null===n?Object.create(n):(r.prototype=n.prototype,new r)}}();
 
 var mouseIsWithinGame;
@@ -533,32 +532,40 @@ var GameWonAnim = (function()
 	return GameWonAnim;
 	}());
 
-var Trace = (function() {
-	function Trace() {
-	}
-	Trace.TraceCardByIdxAndPos = function(tableIdx, tablePos) {
-		var i = Card.cardArray.length;
-		while (i-- > 0) {
-			var c = Card.cardArray[i];
-			if (c.tableuIdx == tableIdx && c.tableuPosition == tablePos) {
-				var name = CardUtil.cardNameArray[c.suitIdx * CardUtil.NUM_CARDS_PER_SUIT + c.cardIdx];
-				
-			}
+var Trace = (function()
+	{
+	function Trace()
+		{
 		}
-	};
-	return Trace;
-}());
-var OpenMenuBut = (function() {
-	function OpenMenuBut() {
+		Trace.TraceCardByIdxAndPos = function(tableIdx, tablePos)
+			{
+			var i = Card.cardArray.length;
+			while (i-- > 0)
+				{
+				var c = Card.cardArray[i];
+				if (c.tableuIdx == tableIdx && c.tableuPosition == tablePos)
+					{
+					var name = CardUtil.cardNameArray[c.suitIdx * CardUtil.NUM_CARDS_PER_SUIT + c.cardIdx];
+					}
+				}
+			};
+		return Trace;
+	}());
+
+var OpenMenuBut = (function()
+	{
+	function OpenMenuBut()
+		{
 		SimpleGame.myGame.add.button();
-	}
+		}
 	return OpenMenuBut;
-}());
-var BoardData = (function() {
-	function BoardData() {
+	}());
+
+var BoardData = (function()
+	{
+	function BoardData()
+		{
 		this.currentScore = 0;
-		//stockPile = new Array();
-		//wastePile = new Array();
 		this.stockPile = new Array();
 		this.foundationPile = new Array();
 		this.foundationPile[0] = new Array();
@@ -580,334 +587,398 @@ var BoardData = (function() {
 		this.tableuPile[7] = new Array();
 		this.tableuPile[8] = new Array();
 		this.tableuPile[9] = new Array();
-	}
-	BoardData.prototype.addToBdata = function(card) {
+		}
+
+	BoardData.prototype.addToBdata = function(card)
+		{
 		var cardData = new CardData(card.suitIdx, card.cardIdx, card.turned, card.deckIdx);
 		var stockCards = 0;
 		var tabCards = 0;
-		if (card.myState == Card.STATE_STOCK) {
+		if (card.myState == Card.STATE_STOCK)
+			{
 			this.stockPile[card.myStockIdx] = cardData;
-		}
-		else if (card.myState == Card.STATE_TABLEU) {
+			}
+		else if (card.myState == Card.STATE_TABLEU)
+			{
 			this.tableuPile[card.tableuIdx][card.tableuPosition] = cardData;
-			// console.log(card.tableuIdx, card.tableuPosition)
-		}
-		else if (card.myState == Card.STATE_FOUNDATION) {
+			}
+		else if (card.myState == Card.STATE_FOUNDATION)
+			{
 			this.foundationPile[card.foundationIdx][card.foundationPosition] = cardData;
-		}
-	};
-	BoardData.prototype.fromSnapshotToBoard = function(skiplayerfixes) {
-		// console.log("from snapshot to board called")
+			}
+		};
+
+	BoardData.prototype.fromSnapshotToBoard = function(skiplayerfixes)
+		{
 		this.justUndoedArray = new Array();
-		// console.log("tab len: " + this.tableuPile[9].length)
 		this.manageStockpile();
-		//manageStockPile();
 		this.manageTableu();
-		//manageWaste();
 		this.manageFoundation();
-		if (!skiplayerfixes) {
+		if (!skiplayerfixes)
+			{
 			this.fixPostUndoLayering();
-		}
-		// MainUI.currentScore = currentScore;
-	};
-	BoardData.prototype.manageFoundation = function() {
+			}
+		};
+
+	BoardData.prototype.manageFoundation = function()
+		{
 		var i = this.foundationPile.length;
-		while (i-- > 0) {
+		while (i-- > 0)
+			{
 			var arr = this.foundationPile[i];
 			var j = arr.length;
-			while (j-- > 0) {
+			while (j-- > 0)
+				{
 				var cData = this.foundationPile[i][j];
 				if (cData == undefined)
+					{
 					continue;
+					}
+
 				var card = CardUtil.getByCardAndSuitIdx(cData.suitIdx, cData.cardIdx, cData.deckIdx);
-				if (card.myState == Card.STATE_FOUNDATION && card.foundationIdx == i && card.foundationPosition == j && card.turned == cData.turned) {
-				}
-				else {
+				if (card.myState == Card.STATE_FOUNDATION && card.foundationIdx == i && card.foundationPosition == j && card.turned == cData.turned)
+					{
+					}
+					else
+					{
 					this.justUndoedArray.push(card);
-				}
-				
+					}
+
 				card.myState = Card.STATE_FOUNDATION;
 				card.foundationIdx = i;
 				card.foundationPosition = j;
 				card.turned = cData.turned;
 				card.isMoving = false;
 				card.selectedFlag = false;
-				// GameContext.layerTiles.addChild(card.owner, false);
-				// Maybe add on top?
+				}
 			}
-		}
-	};
-	BoardData.prototype.manageStockpile = function() {
+		};
+
+	BoardData.prototype.manageStockpile = function()
+		{
 		var i = this.stockPile.length;
-		while (i-- > 0) {
+		while (i-- > 0)
+			{
 			var cdata = this.stockPile[i];
 			if (cdata == null)
+				{
 				continue;
+				}
+
 			var card = CardUtil.getByCardAndSuitIdx(cdata.suitIdx, cdata.cardIdx, cdata.deckIdx);
-			if (card.myState == Card.STATE_STOCK && card.myStockIdx == i && card.turned == cdata.turned) {
-			}
-			else {
+			if (card.myState == Card.STATE_STOCK && card.myStockIdx == i && card.turned == cdata.turned)
+				{
+				}
+				else
+				{
 				this.justUndoedArray.push(card);
-			}
+				}
 			card.myState = Card.STATE_STOCK;
 			card.myStockIdx = i;
 			card.turned = cdata.turned;
 			card.isMoving = false;
 			card.selectedFlag = false;
-			// GameContext.layerTiles.addChild(card.owner, false);
-		}
-	};
-	BoardData.prototype.manageTableu = function() {
-		// console.log("manage tab called")
+			}
+		};
+
+	BoardData.prototype.manageTableu = function()
+		{
 		var i = this.tableuPile.length;
-		while (i-- > 0) {
+		while (i-- > 0)
+			{
 			var arr = this.tableuPile[i];
 			var j = arr.length;
-			while (j-- > 0) {
+			while (j-- > 0)
+				{
 				var cData = this.tableuPile[i][j];
 				var card = CardUtil.getByCardAndSuitIdx(cData.suitIdx, cData.cardIdx, cData.deckIdx);
-				if (card.myState == Card.STATE_TABLEU && card.tableuIdx == i && card.tableuPosition == j && card.turned == cData.turned) {
-				}
-				else {
+				if (card.myState == Card.STATE_TABLEU && card.tableuIdx == i && card.tableuPosition == j && card.turned == cData.turned)
+					{
+					}
+					else
+					{
 					this.justUndoedArray.push(card);
-				}
-				if (card.tableuIdx != i || card.tableuPosition != j) {
-					// console.log("changed card found")
-				}
-				else {
-					// console.log(i,j)
-				}
+					}
+				if (card.tableuIdx != i || card.tableuPosition != j)
+					{
+					}
+					else
+					{
+					}
 				card.myState = Card.STATE_TABLEU;
 				card.tableuIdx = i;
 				card.tableuPosition = j;
 				card.turned = cData.turned;
 				card.isMoving = false;
 				card.selectedFlag = false;
-				// GameContext.layerTiles.addChild(card.owner, false);
+				}
 			}
-		}
-	};
-	BoardData.prototype.fixPostUndoLayering = function() {
-		this.justUndoedArray.sort(function(x, y) {
-			if (x.foundationPosition > y.foundationPosition) {
+		};
+
+	BoardData.prototype.fixPostUndoLayering = function()
+		{
+		this.justUndoedArray.sort(function(x, y)
+			{
+			if (x.foundationPosition > y.foundationPosition)
+				{
 				return 1;
-			}
-			else if (x.foundationPosition == y.foundationPosition) {
+				}
+			else if (x.foundationPosition == y.foundationPosition)
+				{
 				return 0;
-			}
-			else {
+				}
+			else
+				{
 				return -1;
-			}
-		});
-		//justUndoedArray.reverse();
+				}
+			});
+
 		var i = this.justUndoedArray.length;
-		while (i-- > 0) {
-			// GameContext.layerTiles.addChild(justUndoedArray[i].owner);
-		}
-	};
-	BoardData.isBdataChanged = function(data1, data2) {
-		if (this.isArrayIdentical(data1.foundationPile[0], data2.foundationPile[0]) == false)
-			return true;
-		if (this.isArrayIdentical(data1.foundationPile[1], data2.foundationPile[1]) == false)
-			return true;
-		if (this.isArrayIdentical(data1.foundationPile[2], data2.foundationPile[2]) == false)
-			return true;
-		if (this.isArrayIdentical(data1.foundationPile[3], data2.foundationPile[3]) == false)
-			return true;
-		if (this.isArrayIdentical(data1.foundationPile[4], data2.foundationPile[4]) == false)
-			return true;
-		if (this.isArrayIdentical(data1.foundationPile[5], data2.foundationPile[5]) == false)
-			return true;
-		if (this.isArrayIdentical(data1.foundationPile[6], data2.foundationPile[6]) == false)
-			return true;
-		if (this.isArrayIdentical(data1.foundationPile[7], data2.foundationPile[7]) == false)
-			return true;
-		if (this.isArrayIdentical(data1.tableuPile[0], data2.tableuPile[0]) == false)
-			return true;
-		if (this.isArrayIdentical(data1.tableuPile[1], data2.tableuPile[1]) == false)
-			return true;
-		if (this.isArrayIdentical(data1.tableuPile[2], data2.tableuPile[2]) == false)
-			return true;
-		if (this.isArrayIdentical(data1.tableuPile[3], data2.tableuPile[3]) == false)
-			return true;
-		if (this.isArrayIdentical(data1.tableuPile[4], data2.tableuPile[4]) == false)
-			return true;
-		if (this.isArrayIdentical(data1.tableuPile[5], data2.tableuPile[5]) == false)
-			return true;
-		if (this.isArrayIdentical(data1.tableuPile[6], data2.tableuPile[6]) == false)
-			return true;
-		if (this.isArrayIdentical(data1.tableuPile[7], data2.tableuPile[7]) == false)
-			return true;
-		if (this.isArrayIdentical(data1.tableuPile[8], data2.tableuPile[8]) == false)
-			return true;
-		if (this.isArrayIdentical(data1.tableuPile[9], data2.tableuPile[9]) == false)
-			return true;
-		if (this.isArrayIdentical(data1.stockPile, data2.stockPile) == false) {
-			// 
-			return true;
-		}
+		while (i-- > 0)
+			{
+			}
+		};
+
+	BoardData.isBdataChanged = function(data1, data2)
+		{
+		if (this.isArrayIdentical(data1.foundationPile[0], data2.foundationPile[0]) == false){return true}
+		if (this.isArrayIdentical(data1.foundationPile[1], data2.foundationPile[1]) == false){return true}
+		if (this.isArrayIdentical(data1.foundationPile[2], data2.foundationPile[2]) == false){return true}
+		if (this.isArrayIdentical(data1.foundationPile[3], data2.foundationPile[3]) == false){return true}
+		if (this.isArrayIdentical(data1.foundationPile[4], data2.foundationPile[4]) == false){return true}
+		if (this.isArrayIdentical(data1.foundationPile[5], data2.foundationPile[5]) == false){return true}
+		if (this.isArrayIdentical(data1.foundationPile[6], data2.foundationPile[6]) == false){return true}
+		if (this.isArrayIdentical(data1.foundationPile[7], data2.foundationPile[7]) == false){return true}
+		if (this.isArrayIdentical(data1.tableuPile[0], data2.tableuPile[0]) == false){return true}
+		if (this.isArrayIdentical(data1.tableuPile[1], data2.tableuPile[1]) == false){return true}
+		if (this.isArrayIdentical(data1.tableuPile[2], data2.tableuPile[2]) == false){return true}
+		if (this.isArrayIdentical(data1.tableuPile[3], data2.tableuPile[3]) == false){return true}
+		if (this.isArrayIdentical(data1.tableuPile[4], data2.tableuPile[4]) == false){return true}
+		if (this.isArrayIdentical(data1.tableuPile[5], data2.tableuPile[5]) == false){return true}
+		if (this.isArrayIdentical(data1.tableuPile[6], data2.tableuPile[6]) == false){return true}
+		if (this.isArrayIdentical(data1.tableuPile[7], data2.tableuPile[7]) == false){return true}
+		if (this.isArrayIdentical(data1.tableuPile[8], data2.tableuPile[8]) == false){return true}
+		if (this.isArrayIdentical(data1.tableuPile[9], data2.tableuPile[9]) == false){return true}
+		if (this.isArrayIdentical(data1.stockPile, data2.stockPile) == false){return true}
 		return false;
-	};
-	BoardData.isFreeCellArrayIdentical = function(arr1, arr2) {
-		// trace(arr1.length, arr2.length);
+		};
+
+	BoardData.isFreeCellArrayIdentical = function(arr1, arr2)
+		{
 		if (arr1.length != arr2.length)
+			{
 			return false;
+			}
+
 		var retVal = true;
 		var i = arr1.length;
-		while (i-- > 0) {
+
+		while (i-- > 0)
+			{
 			if (arr1[i] == null || arr2[i] == null)
+				{
 				return false;
-			if (arr1[i].cardIdx != arr2[i].cardIdx || arr1[i].suitIdx != arr2[i].suitIdx || arr1[i].turned != arr2[i].turned) {
+				}
+			if (arr1[i].cardIdx != arr2[i].cardIdx || arr1[i].suitIdx != arr2[i].suitIdx || arr1[i].turned != arr2[i].turned)
+				{
 				return false;
+				}
 			}
-		}
 		return true;
-	};
-	BoardData.isArrayIdentical = function(arr1, arr2) {
+		};
+
+	BoardData.isArrayIdentical = function(arr1, arr2)
+		{
 		if (arr1.length != arr2.length)
+			{
 			return false;
+			}
+
 		var retVal = true;
 		var i = arr1.length;
-		while (i-- > 0) {
+		while (i-- > 0)
+			{
 			if (arr1[i] == null || arr2[i] == null)
+				{
 				return false;
-			if (arr1[i].deckIdx != arr2[i].deckIdx || arr1[i].cardIdx != arr2[i].cardIdx || arr1[i].suitIdx != arr2[i].suitIdx || arr1[i].turned != arr2[i].turned) {
+				}
+			if (arr1[i].deckIdx != arr2[i].deckIdx || arr1[i].cardIdx != arr2[i].cardIdx || arr1[i].suitIdx != arr2[i].suitIdx || arr1[i].turned != arr2[i].turned)
+				{
 				return false;
+				}
 			}
-		}
 		return true;
-	};
+		};
+
 	BoardData.boardDataIdx = -1;
 	return BoardData;
-}());
-var CardData = (function() {
-	function CardData(suitIdx, cardIdx, turned, deckIdx) {
+	}());
+
+var CardData = (function()
+	{
+	function CardData(suitIdx, cardIdx, turned, deckIdx)
+		{
 		this.turned = turned;
 		this.cardIdx = cardIdx;
 		this.suitIdx = suitIdx;
 		this.deckIdx = deckIdx;
-	}
+		}
 	return CardData;
-}());
-var BoardManager = (function() {
-	function BoardManager() {
-	}
-	BoardManager.HintReset = function() {
+	}());
+
+var BoardManager = (function()
+	{
+	function BoardManager()
+		{
+		}
+
+	BoardManager.HintReset = function()
+		{
 		BoardManager.hintState = 0;
 		BoardManager.currentObservedColumn = -1;
-	};
-	BoardManager.Hint = function() {
-		if (BoardManager.currentObservedColumn == -1) {
+		};
+
+	BoardManager.Hint = function()
+		{
+		if (BoardManager.currentObservedColumn == -1)
+			{
 			BoardManager.currentObservedColumn = BoardManager.NUM_TABLEU_COLUMNS;
-		}
+			}
+
 		var isInitialHint = false;
-		if (BoardManager.hintState == 0 && BoardManager.currentObservedColumn == BoardManager.NUM_TABLEU_COLUMNS) {
+		if (BoardManager.hintState == 0 && BoardManager.currentObservedColumn == BoardManager.NUM_TABLEU_COLUMNS)
+			{
 			isInitialHint = true;
-		}
+			}
+
 		BoardManager.hintSuccess = false;
 		BoardManager.currentObservedColumn = BoardManager.NUM_TABLEU_COLUMNS;
 		isInitialHint = true;
 		var respectSuitIdx = true;
-		
-		
-		if (BoardManager.hintState == BoardManager.HINT_STATE_TRY_FIRST_CARD_ONLY_HINT) {
-			
+
+		if (BoardManager.hintState == BoardManager.HINT_STATE_TRY_FIRST_CARD_ONLY_HINT)
+			{
 			var i = BoardManager.currentObservedColumn;
 			BoardManager.hintSuccess = false;
-			while (i-- > 0) {
+			while (i-- > 0)
+				{
 				BoardManager.TryToHintColumn(i, true, true);
 				BoardManager.currentObservedColumn = i;
-				if (BoardManager.hintSuccess) {
+				if(BoardManager.hintSuccess)
+					{
 					return;
+					}
 				}
-			}
 			BoardManager.hintState++;
 			BoardManager.currentObservedColumn = BoardManager.NUM_TABLEU_COLUMNS;
-		}
-		if (BoardManager.hintState == BoardManager.HINT_STATE_TRY_ANY_CARD_HINT) {
-			
+			}
+
+		if (BoardManager.hintState == BoardManager.HINT_STATE_TRY_ANY_CARD_HINT)
+			{
 			var i = BoardManager.currentObservedColumn;
 			BoardManager.hintSuccess = false;
-			while (i-- > 0) {
+			while (i-- > 0)
+				{
 				BoardManager.TryToHintColumn(i, false, true);
 				BoardManager.currentObservedColumn = i;
-				if (BoardManager.hintSuccess) {
+				if (BoardManager.hintSuccess)
+					{
 					return;
+					}
 				}
-			}
 			BoardManager.hintState++;
 			BoardManager.currentObservedColumn = BoardManager.NUM_TABLEU_COLUMNS;
-		}
-		if (BoardManager.hintState == BoardManager.HINT_STATE_FIRST_CARD_ONLY_NORESPECT) {
-			
+			}
+
+		if (BoardManager.hintState == BoardManager.HINT_STATE_FIRST_CARD_ONLY_NORESPECT)
+			{
 			var i = BoardManager.currentObservedColumn;
 			BoardManager.hintSuccess = false;
-			while (i-- > 0) {
+			while (i-- > 0)
+				{
 				BoardManager.TryToHintColumn(i, true);
 				BoardManager.currentObservedColumn = i;
-				if (BoardManager.hintSuccess) {
+				if (BoardManager.hintSuccess)
+					{
 					return;
+					}
 				}
-			}
 			BoardManager.hintState++;
 			BoardManager.currentObservedColumn = BoardManager.NUM_TABLEU_COLUMNS;
-		}
-		if (BoardManager.hintState == BoardManager.HINT_STATE_ANY_CARD_ONLY_NORESPECT) {
-			
+			}
+
+		if (BoardManager.hintState == BoardManager.HINT_STATE_ANY_CARD_ONLY_NORESPECT)
+			{
 			var i = BoardManager.currentObservedColumn;
 			BoardManager.hintSuccess = false;
-			while (i-- > 0) {
+			while (i-- > 0)
+				{
 				BoardManager.TryToHintColumn(i, false);
 				BoardManager.currentObservedColumn = i;
-				if (BoardManager.hintSuccess) {
+				if (BoardManager.hintSuccess)
+					{
 					return;
+					}
 				}
-			}
 			BoardManager.hintState++;
 			BoardManager.currentObservedColumn = BoardManager.NUM_TABLEU_COLUMNS;
-		}
-		if (BoardManager.hintState == BoardManager.HINT_STATE_TRY_EMPTY_COLUMN) {
-			
+			}
+
+		if (BoardManager.hintState == BoardManager.HINT_STATE_TRY_EMPTY_COLUMN)
+			{
 			var i = BoardManager.currentObservedColumn;
 			BoardManager.hintSuccess = false;
-			while (i-- > 0) {
+			while (i-- > 0)
+				{
 				BoardManager.TryToHintToEmptyColumn(i);
 				BoardManager.currentObservedColumn = i;
-				if (BoardManager.hintSuccess) {
+				if (BoardManager.hintSuccess)
+					{
 					return;
+					}
 				}
-			}
 			BoardManager.hintState = 0;
 			BoardManager.currentObservedColumn = BoardManager.NUM_TABLEU_COLUMNS;
-		}
-		if (BoardManager.hintSuccess) {
-		}
-		else {
-			if (!isInitialHint){
-				
+			}
+
+		if (BoardManager.hintSuccess)
+			{
+			}
+			else
+			{
+			if (!isInitialHint)
+				{
 				BoardManager.hintState = 0;
 				BoardManager.currentObservedColumn = BoardManager.NUM_TABLEU_COLUMNS;
 				BoardManager.Hint();
+				}
 			}
-		}
-	};
-	BoardManager.TryToHintToEmptyColumnBackup = function(tabIdx) {
+		};
+
+	BoardManager.TryToHintToEmptyColumnBackup = function(tabIdx)
+		{
 		var i = BoardManager.NUM_TABLEU_COLUMNS;
 		var emptyExists = false;
 		var emptyIdx = -1;
-		while (i-- > 0) {
+		while (i-- > 0)
+			{
 			var idx = 9 - i;
-			if (CardUtil.checkIfTabEmpty(idx)) {
+			if (CardUtil.checkIfTabEmpty(idx))
+				{
 				emptyIdx = idx;
 				emptyExists = true;
 				break;
+				}
 			}
-		}
 		if (!emptyExists)
+			{
 			return;
+			}
 		var cardOnTopOfInitialColumn = CardUtil.getCardOnTop(tabIdx);
 		if (cardOnTopOfInitialColumn == null)
+			{
 			return;
+			}
 		cardOnTopOfInitialColumn.invertFrontColors();
 		BoardManager.hintSuccess = true;
 		var hintMarker = SimpleGame.myGame.make.graphics(0, 0);
@@ -915,46 +986,62 @@ var BoardManager = (function() {
 		hintMarker.drawRoundedRect(Card.CARD_TAB_POS_X_INIT + emptyIdx * Card.CARD_TAB_POS_X_DELTA - 81 / 2, Card.CARD_TAB_POS_Y_INIT - 113 / 2, 81, 113, 4);
 		hintMarker.alpha = 0.75;
 		hintMarker.endFill();
-		SimpleGame.myGame.time.events.add(Consts.timeToHint, function() {
+		SimpleGame.myGame.time.events.add(Consts.timeToHint, function()
+			{
 			Card.items.add(hintMarker);
-		}, this);
-		SimpleGame.myGame.time.events.add(1000, function() {
+			}, this);
+		SimpleGame.myGame.time.events.add(1000, function()
+			{
 			Card.items.remove(hintMarker, true);
-		}, this);
-	};
-	BoardManager.TryToHintToEmptyColumn = function(tabIdx) {
-		
+			}, this);
+		};
+
+	BoardManager.TryToHintToEmptyColumn = function(tabIdx)
+		{
 		var i = BoardManager.NUM_TABLEU_COLUMNS;
 		var emptyExists = false;
 		var emptyIdx = -1;
-		while (i-- > 0) {
+		while (i-- > 0)
+			{
 			var idx = 9 - i;
-			
-			if (CardUtil.checkIfTabEmpty(idx)) {
+			if (CardUtil.checkIfTabEmpty(idx))
+				{
 				emptyIdx = idx;
 				emptyExists = true;
 				break;
+				}
 			}
-		}
 		if (!emptyExists)
+			{
 			return;
+			}
+
 		var cardOnBotOfInitialColumn = CardUtil.getByTabIdxAndPos(tabIdx, 0);
 		if (cardOnBotOfInitialColumn == null)
+			{
 			return;
-		if (CardUtil.isValidMoveStack(cardOnBotOfInitialColumn)) {
+			}
+		if (CardUtil.isValidMoveStack(cardOnBotOfInitialColumn))
+			{
 			return;
-		}
+			}
+
 		var c2 = null;
 		var deltaPos = 0;
-		do {
+		do
+			{
 			deltaPos++;
 			c2 = CardUtil.getByTabIdxAndPos(tabIdx, deltaPos);
-			if (CardUtil.isValidMoveStack(c2)) {
+			if (CardUtil.isValidMoveStack(c2))
+				{
 				break;
+				}
 			}
-		} while (c2 != null);
+		while (c2 != null);
 		if (c2 == null)
+			{
 			return;
+			}
 		c2.invertFrontColors();
 		BoardManager.hintSuccess = true;
 		var hintMarker = SimpleGame.myGame.make.graphics(0, 0);
@@ -962,38 +1049,59 @@ var BoardManager = (function() {
 		hintMarker.drawRoundedRect(1 + Card.CARD_TAB_POS_X_INIT + emptyIdx * Card.CARD_TAB_POS_X_DELTA - 71 / 2, Card.CARD_TAB_POS_Y_INIT - 96 / 2, 71, 96, 4);
 		hintMarker.alpha = 0.75;
 		hintMarker.endFill();
-		SimpleGame.myGame.time.events.add(Consts.timeToHint, function() {
+		SimpleGame.myGame.time.events.add(Consts.timeToHint, function()
+			{
 			Card.items.add(hintMarker);
-		}, this);
-		SimpleGame.myGame.time.events.add(2 * Consts.timeToHint, function() {
+			}, this);
+		SimpleGame.myGame.time.events.add(2 * Consts.timeToHint, function()
+			{
 			Card.items.remove(hintMarker, true);
-		}, this);
-	};
-	BoardManager.TryToHintToEmptyColumnOld = function(tabIdx) {
+			}, this);
+		};
+
+	BoardManager.TryToHintToEmptyColumnOld = function(tabIdx)
+		{
 		var i = BoardManager.NUM_TABLEU_COLUMNS;
 		var emptyExists = false;
 		var emptyIdx = -1;
-		while (i-- > 0) {
+
+		while (i-- > 0)
+			{
 			var idx = 9 - i;
-			
-			if (CardUtil.checkIfTabEmpty(idx)) {
+
+			if (CardUtil.checkIfTabEmpty(idx))
+				{
 				emptyIdx = idx;
 				emptyExists = true;
 				break;
+				}
 			}
-		}
+
 		if (!emptyExists)
+			{
 			return;
+			}
+
 		var cardOnTopOfInitialColumn = CardUtil.getCardOnTop(tabIdx);
 		if (cardOnTopOfInitialColumn == null)
+			{
 			return;
+			}
+
 		var cardOnTopOfInitialMinusOne = CardUtil.getByTabIdxAndPos(tabIdx, cardOnTopOfInitialColumn.tableuPosition - 1);
 		if (cardOnTopOfInitialMinusOne == null)
+			{
 			return;
-		if (cardOnTopOfInitialMinusOne.turned == true) {
+			}
+
+		if (cardOnTopOfInitialMinusOne.turned == true)
+			{
 			if (CardUtil.isCardIdxFollowing(cardOnTopOfInitialMinusOne, cardOnTopOfInitialColumn))
+				{
 				return;
-		}
+				}
+			}
+
 		cardOnTopOfInitialColumn.invertFrontColors();
 		BoardManager.hintSuccess = true;
 		var hintMarker = SimpleGame.myGame.make.graphics(0, 0);
@@ -1001,176 +1109,200 @@ var BoardManager = (function() {
 		hintMarker.drawRoundedRect(Card.CARD_TAB_POS_X_INIT + emptyIdx * Card.CARD_TAB_POS_X_DELTA - 81 / 2, Card.CARD_TAB_POS_Y_INIT - 113 / 2, 81, 113, 4);
 		hintMarker.alpha = 0.75;
 		hintMarker.endFill();
-		SimpleGame.myGame.time.events.add(Consts.timeToHint, function() {
+		SimpleGame.myGame.time.events.add(Consts.timeToHint, function()
+			{
 			Card.items.add(hintMarker);
-		}, this);
-		SimpleGame.myGame.time.events.add(2 * Consts.timeToHint, function() {
+			}, this);
+		SimpleGame.myGame.time.events.add(2 * Consts.timeToHint, function()
+			{
 			Card.items.remove(hintMarker, true);
-		}, this);
-	};
-	BoardManager.TryToHintColumn = function(tabIdx, firstCardOnly, respectSuit) {
-		if (respectSuit === void 0) { respectSuit = false; }
-		// console.log("try to hint column: "+ tabIdx)
-		var initPos = CardUtil.getFirstTurnedCardIdx(tabIdx);
-		do {
-			var cardPlaced = CardUtil.getByTabIdxAndPos(tabIdx, initPos);
-			if (cardPlaced == null) {
-				// console.log("went over top, exit")
-				return;
+			}, this);
+		};
+
+	BoardManager.TryToHintColumn = function(tabIdx, firstCardOnly, respectSuit)
+		{
+		if (respectSuit === void 0)
+			{
+			respectSuit = false;
 			}
-			if (CardUtil.isValidMoveStack(cardPlaced)) {
+
+		var initPos = CardUtil.getFirstTurnedCardIdx(tabIdx);
+		do
+			{
+			var cardPlaced = CardUtil.getByTabIdxAndPos(tabIdx, initPos);
+			if (cardPlaced == null)
+				{
+				return;
+				}
+
+			if (CardUtil.isValidMoveStack(cardPlaced))
+				{
 				var cardPlacedMinusOne = CardUtil.getByTabIdxAndPos(tabIdx, initPos - 1);
-				// console.log("valid move stack found...")
-				// Trace.TraceCardByIdxAndPos(cardPlaced.tableuIdx, cardPlaced.tableuPosition)
 				var j = BoardManager.NUM_TABLEU_COLUMNS;
 				var tabIdxCurrent = cardPlaced.tableuIdx;
-				while (j-- > 0) {
+				while (j-- > 0)
+					{
 					tabIdxCurrent++;
 					if (tabIdxCurrent % BoardManager.NUM_TABLEU_COLUMNS == tabIdx)
+						{
 						continue;
-					//   console.log("get card on top of: " + tabIdxCurrent % BoardManager.NUM_TABLEU_COLUMNS)
-					var cardTableu = CardUtil.getCardOnTop(tabIdxCurrent % BoardManager.NUM_TABLEU_COLUMNS);
-					if (cardTableu == null) {
-						//	console.log("card is null")
-						// tabIdxCurrent++;
-						continue;
-					}
-					if (respectSuit) {
-						if (cardTableu.suitIdx != cardPlaced.suitIdx) {
-							continue;
 						}
-					}
-					//	console.log("check against...")
-					//	Trace.TraceCardByIdxAndPos(cardTableu.tableuIdx, cardTableu.tableuPosition)
-					if (cardTableu.cardIdx != CardUtil.CARD_IDX_A && (cardPlaced.cardIdx == CardUtil.CARD_IDX_A && cardTableu.cardIdx == CardUtil.CARD_IDX_02 || cardPlaced.cardIdx + 1 == cardTableu.cardIdx)) {
-						if (cardPlacedMinusOne != null) {
-							if (cardPlacedMinusOne.turned && cardPlacedMinusOne.cardIdx == cardTableu.cardIdx) {
-								// tabIdxCurrent++;
-								if (cardTableu.suitIdx == cardPlaced.suitIdx && BoardManager.resultsInFullstack(cardTableu) && BoardManager.resultsInFullstackDownwards(cardPlaced)) {
-									// console.log("FULL STACK FOUND!")
+
+					var cardTableu = CardUtil.getCardOnTop(tabIdxCurrent % BoardManager.NUM_TABLEU_COLUMNS);
+					if (cardTableu == null)
+						{
+						continue;
+						}
+					if (respectSuit)
+						{
+						if (cardTableu.suitIdx != cardPlaced.suitIdx)
+							{
+							continue;
+							}
+						}
+
+					if (cardTableu.cardIdx != CardUtil.CARD_IDX_A && (cardPlaced.cardIdx == CardUtil.CARD_IDX_A && cardTableu.cardIdx == CardUtil.CARD_IDX_02 || cardPlaced.cardIdx + 1 == cardTableu.cardIdx))
+						{
+						if (cardPlacedMinusOne != null)
+							{
+							if (cardPlacedMinusOne.turned && cardPlacedMinusOne.cardIdx == cardTableu.cardIdx)
+								{
+								if (cardTableu.suitIdx == cardPlaced.suitIdx && BoardManager.resultsInFullstack(cardTableu) && BoardManager.resultsInFullstackDownwards(cardPlaced))
+									{
 									BoardManager.hintSuccess = true;
 									break;
-								}
-								else {
-									// console.log("FULL STACK NOT FOUND")
+									}
+									else
+									{
 									continue;
+									}
 								}
-							}
-							else {
+								else
+								{
 								BoardManager.hintSuccess = true;
 								break;
+								}
 							}
-						}
-						else {
+							else
+							{
 							BoardManager.hintSuccess = true;
 							break;
+							}
 						}
 					}
-					//	tabIdxCurrent++;
+				}
+
+			if (BoardManager.hintSuccess)
+				{
+				cardPlaced.invertFrontColors();
+				SimpleGame.myGame.time.events.add(Consts.timeToHint, function()
+					{
+					cardTableu.invertFrontColors();
+					}, this);
+				return;
+				}
+
+			if (firstCardOnly)
+				{
+				return;
+				}
+				else
+				{
+				initPos++;
 				}
 			}
-			if (BoardManager.hintSuccess) {
-				// console.log("hint found")
-				cardPlaced.invertFrontColors();
-				SimpleGame.myGame.time.events.add(Consts.timeToHint, function() {
-					cardTableu.invertFrontColors();
-				}, this);
-				return;
-			}
-			if (firstCardOnly) {
-				return;
-			}
-			else {
-				initPos++;
-			}
-		} while (cardPlaced != null);
-	};
-	BoardManager.resultsInFullstackDownwards = function(cardObserved) {
-		// 
+		while (cardPlaced != null);
+		};
+
+	BoardManager.resultsInFullstackDownwards = function(cardObserved)
+		{
 		Trace.TraceCardByIdxAndPos(cardObserved.tableuIdx, cardObserved.tableuPosition);
-		if (cardObserved.cardIdx == CardUtil.CARD_IDX_A) {
+		if (cardObserved.cardIdx == CardUtil.CARD_IDX_A)
+			{
 			return true;
-		}
+			}
+
 		var cminusone = CardUtil.getByTabIdxAndPos(cardObserved.tableuIdx, cardObserved.tableuPosition + 1);
-		if (cminusone == null) {
+		if (cminusone == null)
+			{
 			return false;
-		}
-		if (CardUtil.isCardIdxFollowing(cardObserved, cminusone, true) == false) {
+			}
+
+		if (CardUtil.isCardIdxFollowing(cardObserved, cminusone, true) == false)
+			{
 			return false;
-		}
+			}
+
 		return BoardManager.resultsInFullstackDownwards(cminusone);
-	};
-	BoardManager.resultsInFullstack = function(cardObserved) {
-		// console.log("results in full stack called, card observed")
-		// Trace.TraceCardByIdxAndPos(cardObserved.tableuIdx, cardObserved.tableuPosition)
-		if (cardObserved.cardIdx == CardUtil.CARD_IDX_K) {
+		};
+
+	BoardManager.resultsInFullstack = function(cardObserved)
+		{
+		if (cardObserved.cardIdx == CardUtil.CARD_IDX_K)
+			{
 			return true;
-		}
+			}
+
 		var cminusone = CardUtil.getByTabIdxAndPos(cardObserved.tableuIdx, cardObserved.tableuPosition - 1);
-		if (cminusone == null) {
-			// console.log("cminus one not found")
+		if (cminusone == null)
+			{
 			return false;
-		}
-		// console.log("cminus one is")
-		// Trace.TraceCardByIdxAndPos(cminusone.tableuIdx, cminusone.tableuPosition)
-		if (CardUtil.isCardIdxFollowing(cminusone, cardObserved, true) == false) {
-			// console.log("not following")
+			}
+
+		if (CardUtil.isCardIdxFollowing(cminusone, cardObserved, true) == false)
+			{
 			return false;
-		}
+			}
 		return BoardManager.resultsInFullstack(cminusone);
-	};
-	BoardManager.InitializeBoard = function() {
-		
+		};
+
+	BoardManager.InitializeBoard = function()
+		{
 		BoardManager.removeAllCards();
 		BoardData.boardDataArray = new Array();
-		
 		BoardManager.GenerateCards();
-		
 		BoardManager.GenerateStock();
-		
 		BoardManager.GenerateTableu();
-		
 		BoardManager.actuallyGenerateSnapshot();
-		
 		BoardManager.sortImmediately();
-		
 		BoardManager.initialTween();
 		GameUI.reinitData();
 		var gamesPlayed = Util.getStorage("gamesPlayed");
 		gamesPlayed++;
 		Util.setStorage("gamesPlayed", gamesPlayed);
-		
-	};
-	BoardManager.initialTween = function() {
-		
-		// SimpleGame.myGame.time.events.add(200, function()
-		// {
-		//	 console.log("init tweens")
-		// }, this);
+		};
+
+	BoardManager.initialTween = function()
+		{
 		var arr = Card.cardArray;
 		var i = arr.length;
 		var initTweenIdx = 0;
-		while (i-- > 0) {
+		while (i-- > 0)
+			{
 			var c = arr[i];
-			if (c.myState == Card.STATE_TABLEU && c.turned) {
+			if (c.myState == Card.STATE_TABLEU && c.turned)
+				{
 				c.initTween(initTweenIdx++);
+				}
 			}
-		}
-	};
-	BoardManager.removeAllCards = function() {
+		};
+
+	BoardManager.removeAllCards = function()
+		{
 		var cArr = Card.cardArray;
 		var i = cArr.length;
-		while (i-- > 0) {
+		while (i-- > 0)
+			{
 			var c = Card.cardArray[i];
 			c.markForKill = true;
 			c.remove();
-		}
-		while (Card.cardArray.pop())
-			;
+			}
+		while (Card.cardArray.pop());
 		Card.cardArray = new Array();
-		
-	};
-	BoardManager.resetBoard = function() {
+		};
+
+	BoardManager.resetBoard = function()
+		{
 		var gamesPlayed = Util.getStorage("gamesPlayed");
 		gamesPlayed++;
 		Util.setStorage("gamesPlayed", gamesPlayed);
@@ -1178,213 +1310,255 @@ var BoardManager = (function() {
 		BoardManager.fromSnapshotToBoard(BoardData.boardDataArray[0]);
 		BoardData.boardDataArray = new Array();
 		BoardManager.actuallyGenerateSnapshot();
-	};
-	BoardManager.update = function() {
-		// if (BoardManager.sortCounter++ % 60 == 1)
-		// {
-		//	  BoardManager.sort();
-		// }
+		};
+
+	BoardManager.update = function()
+		{
 		BoardManager.sort();
-		if (BoardManager.checkForGameOver() && GameUI.gameStarted) {
+		if (BoardManager.checkForGameOver() && GameUI.gameStarted)
+			{
 			var gamewon = new GameWonPrompt2();
-		}
-		if (BoardData.boardDataArray) {
-		}
-	};
-	BoardManager.checkForGameOver = function() {
+			}
+		if (BoardData.boardDataArray)
+			{
+			}
+		};
+
+	BoardManager.checkForGameOver = function()
+		{
 		var arr = Card.cardArray;
 		var i = arr.length;
 		if (arr.length <= 0)
+			{
 			return false;
-		while (i-- > 0) {
+			}
+		while (i-- > 0)
+			{
 			var c = arr[i];
-			if (c.myState != Card.STATE_FOUNDATION) {
+			if (c.myState != Card.STATE_FOUNDATION)
+				{
 				return false;
-			}
-		}
-		return true;
-	};
-	BoardManager.sort = function() {
-		SimpleGame.myGame.time.events.add(50, function() {
-			BoardManager.sortImmediately();
-		});
-	};
-	BoardManager.sortImmediately = function() {
-		// var arr = Card.cardArray
-		//   console.log("sort called")
-		var arr = Card.cardArray;
-		var i = arr.length;
-		while (i-- > 0) {
-			var c = arr[i];
-			if (c.selectedFlag || c.myState == Card.STATE_DRAGGED) {
-				c.cardImgFront.z = 3000 + c.tableuPosition;
-				//  Trace.TraceCardByIdxAndPos(c.tableuIdx, c.tableuPosition)
-			}
-			else if (c.isMoving) {
-				//  console.log("moving card that initiates lookup...")
-				//   Trace.TraceCardByIdxAndPos(c.tableuIdx, c.tableuPosition)
-				// GameUI.topLayer.add(c.cardImgFront)
-				c.cardImgFront.z = 2000 + c.tableuPosition;
-				// console.log(c.cardImgFront.z)
-				var j = 50;
-				while (j-- > 1) {
-					var c1 = CardUtil.getByTabIdxAndPos(c.tableuIdx, c.tableuPosition + j);
-					if (c1 != null) {
-						c1.cardImgFront.z = 2000 + c1.tableuPosition;
-						//   Trace.TraceCardByIdxAndPos(c1.tableuIdx, c1.tableuPosition)
-						//	console.log(c1.cardImgFront.z)
-					}
 				}
 			}
-			else if (c.myState == Card.STATE_TABLEU) {
-				// Trace.TraceCardByIdxAndPos(c.tableuIdx, c.tableuPosition)
-				//	c.cardImgBack.z = c.cardImgFront.z = 1000 + c.tableuPosition;
-				//	console.log("tab: " +c.cardImgBack.z)
-			}
-			else if (c.myState == Card.STATE_STOCK) {
+		return true;
+		};
+
+	BoardManager.sort = function()
+		{
+		SimpleGame.myGame.time.events.add(50, function()
+			{
+			BoardManager.sortImmediately();
+			});
+		};
+
+	BoardManager.sortImmediately = function()
+		{
+		var arr = Card.cardArray;
+		var i = arr.length;
+
+		while (i-- > 0)
+			{
+			var c = arr[i];
+			if (c.selectedFlag || c.myState == Card.STATE_DRAGGED)
+				{
+				c.cardImgFront.z = 3000 + c.tableuPosition;
+				}
+			else if (c.isMoving)
+				{
+				c.cardImgFront.z = 2000 + c.tableuPosition;
+				var j = 50;
+				while (j-- > 1)
+					{
+					var c1 = CardUtil.getByTabIdxAndPos(c.tableuIdx, c.tableuPosition + j);
+					if (c1 != null)
+						{
+						c1.cardImgFront.z = 2000 + c1.tableuPosition;
+						}
+					}
+				}
+			else if (c.myState == Card.STATE_TABLEU)
+				{
+				}
+			else if (c.myState == Card.STATE_STOCK)
+				{
 				c.cardImgBack.z = c.myStockIdx;
-				//  console.log("stock: " +c.cardImgBack.z)
+				}
 			}
-		}
-		if (BoardManager.areAllCardsStatic()) {
+
+		if (BoardManager.areAllCardsStatic())
+			{
 			var arr = Card.cardArray;
 			var i = arr.length;
 			var totalStockCards = 0;
-			while (i-- > 0) {
+
+			while (i-- > 0)
+				{
 				var c = arr[i];
-				// Card.items.add(c.cardImgFront)
-				if (c.myState == Card.STATE_TABLEU) {
+
+				if (c.myState == Card.STATE_TABLEU)
+					{
 					c.cardImgBack.z = c.cardImgFront.z = c.tableuPosition;
-				}
-				if (c.myState == Card.STATE_STOCK) {
+					}
+				if (c.myState == Card.STATE_STOCK)
+					{
 					c.cardImgBack.z = c.myStockIdx;
 					totalStockCards++;
-				}
-				if (c.myState == Card.STATE_FOUNDATION) {
-					c.foundationPosition = 11 - c.cardIdx;
-					if (c.foundationPosition < 0) {
-						c.foundationPosition = 12;
 					}
+				if (c.myState == Card.STATE_FOUNDATION)
+					{
+					c.foundationPosition = 11 - c.cardIdx;
+					if (c.foundationPosition < 0)
+						{
+						c.foundationPosition = 12;
+						}
 					c.cardImgFront.z = 10000 + c.foundationPosition + 13 * c.foundationIdx;
+					}
 				}
 			}
-		}
 		Card.items.sort();
 		Card.stock.sort();
 		GameUI.topLayer.sort();
-	};
-	BoardManager.areAllCardsStatic = function() {
+		};
+
+	BoardManager.areAllCardsStatic = function()
+		{
 		var arr = Card.cardArray;
 		var i = arr.length;
-		while (i-- > 0) {
+		while (i-- > 0)
+			{
 			var c = arr[i];
-			if (c.isMoving == true || c.myState == Card.STATE_DRAGGED || c.selectedFlag) {
-				//   console.log(c.isMoving, c.myState, c.selectedFlag, c.tableuIdx, c.tableuPosition)
+			if (c.isMoving == true || c.myState == Card.STATE_DRAGGED || c.selectedFlag)
+				{
 				return false;
+				}
 			}
-		}
 		return true;
-	};
-	BoardManager.generateBoardSnapshot = function(skipundoenable) {
-		// EntityHelper.delayedCall(0.1, actuallyGenerateSnapshot);
-		if (skipundoenable === void 0) { skipundoenable = false; }
-		SimpleGame.myGame.time.events.add(100, function() {
+		};
+
+	BoardManager.generateBoardSnapshot = function(skipundoenable)
+		{
+		if (skipundoenable === void 0)
+			{
+			skipundoenable = false;
+			}
+		SimpleGame.myGame.time.events.add(100, function()
+			{
 			BoardManager.actuallyGenerateSnapshot();
-		});
-	};
-	BoardManager.actuallyGenerateSnapshot = function() {
+			});
+		};
+
+	BoardManager.actuallyGenerateSnapshot = function()
+		{
 		if (CardUtil.getCompletedStack() != null)
+			{
 			return;
-		
-		if (BoardData.boardDataArray == null) {
+			}
+
+		if (BoardData.boardDataArray == null)
+			{
 			BoardData.boardDataArray = new Array();
 			BoardData.boardDataIdx = 0;
-		}
+			}
+
 		var bData = new BoardData();
 		var i = Card.cardArray.length;
-		while (i-- > 0) {
+		while (i-- > 0)
+			{
 			bData.addToBdata(Card.cardArray[i]);
-		}
-		
-		// bData.currentScore = MainUI.currentScore;
-		//  console.log("tab pile 9 len: " + bData.tableuPile[9].length)
-		if (BoardData.boardDataArray.length >= 2) {
-			if (BoardManager.isBdataChanged(bData, BoardData.boardDataArray[BoardData.boardDataArray.length - 1])) {
+			}
+
+		if (BoardData.boardDataArray.length >= 2)
+			{
+			if (BoardManager.isBdataChanged(bData, BoardData.boardDataArray[BoardData.boardDataArray.length - 1]))
+				{
 				BoardData.boardDataArray.push(bData);
 				BoardData.boardDataIdx = BoardData.boardDataArray.length - 1;
-				// MainUI.totalMoves++;
-				// console.log("actually generate snapshot, success")
+				}
 			}
-		}
-		else {
+			else
+			{
 			BoardData.boardDataArray.push(bData);
-			//BoardData.boardDataArray.push(bData);
 			BoardData.boardDataIdx = BoardData.boardDataArray.length - 1;
-			// MainUI.totalMoves++;
-			// console.log("actually generate snapshot, success")
-		}
-		
-		// if ( ValidMoveUtil.isBoardPlayable() == false)
-		// {
-		// 	trace("SHOW UNDO MOVE DIALOGUE");
-		// 	var nomoremoves:NoMoreMovesPrompt = new NoMoreMovesPrompt();
-		// }
-		// 
+			}
+
 		var i = BoardData.boardDataArray.length;
-		while (i-- > 0) {
-			
-		}
-	};
-	BoardManager.isBdataChanged = function(bData, boardData) {
+		while (i-- > 0)
+			{
+			}
+		};
+
+	BoardManager.isBdataChanged = function(bData, boardData)
+		{
 		return BoardData.isBdataChanged(bData, boardData);
-	};
-	BoardManager.Undo = function() {
-		// if (MainUI.gameInProgress==false) return;
+		};
+
+	BoardManager.Undo = function()
+		{
 		if (BoardData.boardDataIdx == -1)
+			{
 			return;
-		//BoardData.boardDataIdx--;
+			}
+
 		if (this.undoDisabled)
+			{
 			return;
-		
-		if (BoardData.boardDataArray.length > 1) {
+			}
+
+		if (BoardData.boardDataArray.length > 1)
+			{
 			var bData = BoardData.boardDataArray.pop();
-			// console.log("tab len: " + bData.tableuPile[9].length)
 			BoardManager.fromSnapshotToBoard(BoardData.boardDataArray[BoardData.boardDataArray.length - 1]);
-			// BoardManager.fromSnapshotToBoard(BoardData.boardDataArray[BoardData.boardDataArray.length-1]);
 			GameUI.score--;
 			GameUI.moves++;
-		}
-		else {
+			}
+			else
+			{
 			BoardManager.fromSnapshotToBoard(BoardData.boardDataArray[0]);
-		}
+			}
+
 		BoardManager.sort();
+
 		var i = Card.cardArray.length;
-		while (i-- > 0) {
+		while (i-- > 0)
+			{
 			Card.cardArray[i].update();
-		}
+			}
+
 		BoardManager.sortImmediately();
 		this.undoDisabled = true;
-		
-	};
-	BoardManager.fromSnapshotToBoard = function(bData, skiplayerfixes) {
-		if (skiplayerfixes === void 0) { skiplayerfixes = false; }
+		};
+
+	BoardManager.fromSnapshotToBoard = function(bData, skiplayerfixes)
+		{
+		if (skiplayerfixes === void 0)
+			{
+			skiplayerfixes = false;
+			}
 		bData.fromSnapshotToBoard(skiplayerfixes);
-	};
-	BoardManager.GenerateCards = function() {
+		};
+
+	BoardManager.GenerateCards = function()
+		{
 		Card.cardArray = new Array();
 		var i = CardUtil.NUM_SUITS;
-		while (i-- > 0) {
+		while (i-- > 0)
+			{
 			var j = CardUtil.NUM_CARDS_PER_SUIT;
-			while (j-- > 0) {
+			while (j-- > 0)
+				{
 				var card = new Card((i % CardUtil.NUM_SUIT_COLORS), j, i);
+				}
 			}
-		}
 		Phaser.ArrayUtils.shuffle(Card.cardArray);
-	};
-	BoardManager.GenerateTableu = function() {
+		};
+
+	BoardManager.GenerateTableu = function()
+		{
 		var totalCards = CardUtil.NUM_SUITS * CardUtil.NUM_CARDS_PER_SUIT;
 		var i = totalCards - 50;
-		while (i-- > 0) {
+
+		while (i-- > 0)
+			{
 			var tableuIdx = i % 10;
 			var tableuPosition = Math.floor(i / 10);
 			var card = Card.cardArray[i];
@@ -1392,37 +1566,44 @@ var BoardManager = (function() {
 			card.tableuPosition = tableuPosition;
 			card.setToTableu(true);
 			card.setTableuZCoords();
-			if (CardUtil.isOnTableuTop(card)) {
+			if (CardUtil.isOnTableuTop(card))
+				{
 				card.cardImgBack.visible = false;
 				card.cardImgFront.visible = true;
 				card.turned = true;
-			}
-			else {
+				}
+				else
+				{
 				card.cardImgBack.visible = true;
 				card.cardImgFront.visible = false;
 				card.turned = false;
+				}
 			}
-		}
+
 		var arr = Card.cardArray;
 		var i = arr.length;
-		while (i-- > 0) {
+		while (i-- > 0)
+			{
 			var c = arr[i];
-			if (c.myState == Card.STATE_TABLEU) {
+			if (c.myState == Card.STATE_TABLEU)
+				{
 				c.setToTableu(true);
+				}
 			}
-		}
-		// Card.items.sort();
-	};
-	BoardManager.GenerateStock = function() {
+		};
+
+	BoardManager.GenerateStock = function()
+		{
 		var totalCards = CardUtil.NUM_SUITS * CardUtil.NUM_CARDS_PER_SUIT;
 		var i = totalCards;
 		var stockIdx = 0;
-		while (i-- > totalCards - 50) {
+		while (i-- > totalCards - 50)
+			{
 			var card = Card.cardArray[i];
 			card.setToStock(stockIdx++);
-		}
-		// Card.items.sort();
-	};
+			}
+		};
+
 	BoardManager.NUM_TABLEU_COLUMNS = 10;
 	BoardManager.undoDisabled = true;
 	BoardManager.sortCounter = 0;
@@ -1436,9 +1617,12 @@ var BoardManager = (function() {
 	BoardManager.HINT_STATE_TRY_EMPTY_BACKUP = 5;
 	BoardManager.currentObservedColumn = -1;
 	return BoardManager;
-}());
-var Card = (function() {
-	function Card(suitIdx, cardIdx, deckIdx) {
+	}());
+
+var Card = (function()
+	{
+	function Card(suitIdx, cardIdx, deckIdx)
+		{
 		this.initTweenFlag = false;
 		this.completedStackCheckedFlag = false;
 		this.selectedFlag = false;
@@ -1450,318 +1634,367 @@ var Card = (function() {
 		this.colorInvertedFlag = false;
 		this.initFoundationTweenFlag = false;
 		this.markForKill = false;
-		
 		this.suitIdx = suitIdx;
 		this.cardIdx = cardIdx;
 		this.deckIdx = deckIdx;
-		// 
 		this.cardImgFront = SimpleGame.myGame.make.sprite(-500, -500, CardUtil.getCardImgName(suitIdx, cardIdx));
 		this.cardImgFront.inputEnabled = true;
 		this.cardImgFront.events.onInputDown.add(this.onCardImgFrontDown, this, 200);
-		this.cardImgFront.events.onInputUp.add(function() {
+		this.cardImgFront.events.onInputUp.add(function()
+			{
 			this.banInputDown = true;
-			this.cardImgFront.game.time.events.add(Consts.DELAY_BETWEEN_EVENTS_TOUCH, function() {
+			this.cardImgFront.game.time.events.add(Consts.DELAY_BETWEEN_EVENTS_TOUCH, function()
+				{
 				this.banInputDown = false;
-			}, this);
-		}, this, 100);
+				}, this);
+			}, this, 100);
 		this.cardimgfrontupsignal = this.cardImgFront.events.onInputUp.add(this.onCardImgFrontUp, this);
-		this.cardImgFront.events.onInputOver.add(function() {
-			
-		}, this);
-		// this.cardImgFront.events.onOutOfBounds.add(this.onCardImgFrontUp, this)
-		// this.cardImgFront.bringToTop();
+		this.cardImgFront.events.onInputOver.add(function()
+			{
+			}, this);
 		this.cardImgBack = SimpleGame.myGame.make.sprite(-100, -100, "backside");
 		this.cardImgBack.inputEnabled = true;
-		// this.cardImgBack.input.enableDrag();
 		this.cardImgBack.events.onInputDown.add(this.onCardImgBackDown, this);
 		Card.items.add(this.cardImgFront);
 		Card.items.add(this.cardImgBack);
 		this.cardImgFront.anchor.set(0.5, 0.5);
 		this.cardImgBack.anchor.set(0.5, 0.5);
 		SimpleGame.myGame.renderer.renderSession.roundPixels = true;
-		// this.invertFrontColors();
 		Card.cardArray.push(this);
-		SimpleGame.myGame.time.events.add(3000, function() {
-			// this.myState = Card.STATE_FOUNDATION
-		}, this);
-	}
-	Card.prototype.createInvertedSprite = function() {
+		SimpleGame.myGame.time.events.add(3000, function()
+			{
+			}, this);
+		}
+
+	Card.prototype.createInvertedSprite = function()
+		{
 		var bmd = SimpleGame.myGame.make.bitmapData();
 		bmd.load(CardUtil.getCardImgName(this.suitIdx, this.cardIdx));
-		bmd.processPixelRGB(function(pixel) {
+		bmd.processPixelRGB(function(pixel)
+			{
 			pixel.r = 255 - pixel.r;
 			pixel.g = 255 - pixel.g;
 			pixel.b = 255 - pixel.b;
 			return pixel;
-		}, this);
-		// bmd.addToWorld(this.cardImgFront.x, this.cardImgFront.y, 0.5, 0.5)
+			}, this);
+
 		this.invertedSprite = SimpleGame.myGame.make.sprite(this.cardImgFront.x, this.cardImgFront.y + 50, bmd);
 		this.invertedSprite.z = this.cardImgFront.z;
 		this.invertedSprite.visible = false;
 		Card.items.add(this.invertedSprite);
-	};
-	Card.prototype.invertFrontColors = function() {
-		if (this.invertedSprite == null) {
+		};
+
+	Card.prototype.invertFrontColors = function()
+		{
+		if (this.invertedSprite == null)
+			{
 			this.createInvertedSprite();
-		}
+			}
 		this.colorInvertedFlag = true;
 		this.cardImgFront.visible = false;
 		this.invertedSprite.z = this.cardImgFront.z;
 		this.invertedSprite.y = 400;
-		SimpleGame.myGame.time.events.add(Consts.timeToHint, function() {
+		SimpleGame.myGame.time.events.add(Consts.timeToHint, function()
+			{
 			this.colorInvertedFlag = false;
-		}, this);
+			}, this);
 		var nextCard = CardUtil.getByTabIdxAndPos(this.tableuIdx, this.tableuPosition + 1);
-		if (nextCard != null) {
+		if (nextCard != null)
+			{
 			nextCard.invertFrontColors();
-		}
-	};
-	Card.prototype.onCardImgBackDown = function() {
+			}
+		};
+
+	Card.prototype.onCardImgBackDown = function()
+		{
 		if (Card.disableSelect == true)
+			{
 			return;
+			}
 		if (this.myState != Card.STATE_STOCK)
+			{
 			return;
-		if (CardUtil.canUncoverStock()) {
+			}
+		if (CardUtil.canUncoverStock())
+			{
 			CardUtil.uncoverStock(this.stockPosition);
 			GameUI.gameStarted = true;
-		}
-		else {
+			}
+			else
+			{
 			var cannotuncoverstock = new CannotUncoverStock();
-		}
-	};
-	Card.prototype.update = function() {
-		// console.log(this.cardImgFront.x)
-		// console.log("update")
-		// this.cardImgBack.position.set(this.cardImgFront.position.x, this.cardImgFront.position.y);
-		if (this.markForKill) {
-			
+			}
+		};
+
+	Card.prototype.update = function()
+		{
+		if (this.markForKill)
+			{
 			this.remove();
 			return;
-		}
-		if (this.selectedFlag) {
-			if (Math.abs(this.lastSelectedPosX - this.cardImgFront.x) > 10) {
-				this.autoclickEnabled = false;
 			}
+
+		if (this.selectedFlag)
+			{
+			if (Math.abs(this.lastSelectedPosX - this.cardImgFront.x) > 10)
+				{
+				this.autoclickEnabled = false;
+				}
 			this.cardImgFront.x = SimpleGame.myGame.input.activePointer.x - this.dragDeltaX;
 			this.cardImgFront.y = SimpleGame.myGame.input.activePointer.y - this.dragDeltaY;
-			// console.log(SimpleGame.myGame.device.tridentVersion, SimpleGame.myGame.device.ieVersion)
-			if (SimpleGame.myGame.device.tridentVersion > 0 || window.navigator.userAgent.indexOf("Edge") > -1) {
-				if (this.cardImgFront.x + this.cardImgFront.width / 2 > SimpleGame.myGame.width) {
+
+			if (SimpleGame.myGame.device.tridentVersion > 0 || window.navigator.userAgent.indexOf("Edge") > -1)
+				{
+				if (this.cardImgFront.x + this.cardImgFront.width / 2 > SimpleGame.myGame.width)
+					{
 					this.cardImgFront.x = SimpleGame.myGame.width - this.cardImgFront.width / 2;
-				}
-				if (this.cardImgFront.x < this.cardImgFront.width / 2) {
+					}
+				if (this.cardImgFront.x < this.cardImgFront.width / 2)
+					{
 					this.cardImgFront.x = this.cardImgFront.width / 2;
+					}
 				}
-			}
-			// if (this.cardImgFront.y + this.cardImgFront.height / 2 > SimpleGame.myGame.height)
-			// {
-			//	 this.cardImgFront.y = SimpleGame.myGame.height - this.cardImgFront.height / 2;
-			// }
-			// if (this.cardImgFront.y < this.cardImgFront.height / 2)
-			// {
-			//	 this.cardImgFront.y = this.cardImgFront.height / 2;
-			// }
+
 			var i = Card.cardArray.length;
-			while (i-- > 0) {
+			while (i-- > 0)
+				{
 				var c = Card.cardArray[i];
-				if (c.myState == Card.STATE_DRAGGED) {
+				if (c.myState == Card.STATE_DRAGGED)
+					{
 					c.update();
+					}
 				}
-			}
+
 			this.lastSelectedPosX = this.cardImgFront.x;
 			this.lastSelectedPosY = this.cardImgFront.y;
-		}
+			}
+
 		this.cardImgFront.alpha = 1;
-		if (SimpleGame.myGame.input.activePointer.withinGame == false && (this.selectedFlag)) {
+
+		if (SimpleGame.myGame.input.activePointer.withinGame == false && (this.selectedFlag))
+			{
 			this.lastFrameWasOutsideOfScreen = true;
-			// this.cardImgFront.alpha = 0.0001;
-		}
-		if (this.selectedFlag) {
-			// console.log(SimpleGame.myGame.input.activePointer.target, SimpleGame.myGame.input.activePointer.targetObject, SimpleGame.myGame.input.activePointer.isDown, SimpleGame.myGame.input.activePointer.withinGame, SimpleGame.myGame.input.activePointer.leftButton.isDown)
-			// 
-			// console.log(SimpleGame.myGame.input.mousePointer.withinGame, SimpleGame.pointerDown, SimpleGame.myGame.input.activePointer.withinGame, SimpleGame.myGame.input.activePointer.isUp)
-		}
-		// if (Math.random() < 0.01 && this.selectedFlag)
-		// {
-		//	 console.log("test: "+ SimpleGame.myGame.input.mousePointer.isUp, SimpleGame.myGame.device.desktop, this.selectedFlag, SimpleGame.pointerDown, ((SimpleGame.myGame.device.tridentVersion != 0 || window.navigator.userAgent.indexOf("Edge") > -1) && SimpleGame.myGame.input.activePointer.targetObject!=null) || SimpleGame.myGame.input.activePointer.withinGame ||  SimpleGame.myGame.input.mousePointer.withinGame)
-		//	 console.log( SimpleGame.myGame.device.desktop && this.selectedFlag &&  SimpleGame.pointerDown == false && ( ((SimpleGame.myGame.device.tridentVersion != 0 || window.navigator.userAgent.indexOf("Edge") > -1) && SimpleGame.myGame.input.activePointer.targetObject!=null) || SimpleGame.myGame.input.activePointer.withinGame ||  SimpleGame.myGame.input.mousePointer.withinGame) && SimpleGame.myGame.input.mousePointer.isUp)
-		// }
-		if (this.selectedFlag && SimpleGame.pointerDown == false && (((SimpleGame.myGame.device.tridentVersion != 0 || window.navigator.userAgent.indexOf("Edge") > -1) && SimpleGame.myGame.input.activePointer.targetObject != null) || SimpleGame.myGame.input.activePointer.withinGame || SimpleGame.myGame.input.mousePointer.withinGame) && SimpleGame.myGame.input.activePointer.isUp) 
-		// if ( SimpleGame.myGame.device.desktop && this.selectedFlag  && ( ((SimpleGame.myGame.device.tridentVersion != 0 || window.navigator.userAgent.indexOf("Edge") > -1) && SimpleGame.myGame.input.activePointer.targetObject!=null) || SimpleGame.myGame.input.activePointer.withinGame ||  SimpleGame.myGame.input.mousePointer.withinGame) && (SimpleGame.myGame.input.mousePointer.isUp || SimpleGame.myGame.input.activePointer.isUp))
-		{
-			// console.log("active pointer is up: "+ SimpleGame.myGame.input.activePointer.isUp)
-			if (this.cardImgFront.parent) {
-				
+			}
+
+		if (this.selectedFlag)
+			{
+			}
+
+		if (this.selectedFlag && SimpleGame.pointerDown == false && (((SimpleGame.myGame.device.tridentVersion != 0 || window.navigator.userAgent.indexOf("Edge") > -1) && SimpleGame.myGame.input.activePointer.targetObject != null) || SimpleGame.myGame.input.activePointer.withinGame || SimpleGame.myGame.input.mousePointer.withinGame) && SimpleGame.myGame.input.activePointer.isUp)
+			{
+			if (this.cardImgFront.parent)
+				{
 				this.cardImgFront.parent.removeChild(this.cardImgFront);
 				this.cardImgFront = SimpleGame.myGame.make.sprite(-500, -500, CardUtil.getCardImgName(this.suitIdx, this.cardIdx));
 				this.cardImgFront.inputEnabled = true;
 				this.cardImgFront.events.onInputDown.add(this.onCardImgFrontDown, this, 101);
-				this.cardImgFront.events.onInputDown.add(function() {
+				this.cardImgFront.events.onInputDown.add(function()
+					{
 					this.banInputDown = true;
-					this.cardImgFront.game.time.events.add(Consts.DELAY_BETWEEN_EVENTS_TOUCH, function() {
+					this.cardImgFront.game.time.events.add(Consts.DELAY_BETWEEN_EVENTS_TOUCH, function()
+						{
 						this.banInputDown = false;
-					}, this);
-				}, this, 100);
+						}, this);
+					}, this, 100);
 				this.cardimgfrontupsignal = this.cardImgFront.events.onInputUp.add(this.onCardImgFrontUp, this);
 				this.setToTableu(true);
 				Card.items.add(this.cardImgFront);
 				var arr = Card.cardArray;
 				var i = arr.length;
-				while (i-- > 0) {
+				while (i-- > 0)
+					{
 					var c = arr[i];
-					if (c.myState == Card.STATE_DRAGGED) {
+					if (c.myState == Card.STATE_DRAGGED)
+						{
 						Card.items.add(c.cardImgFront);
 						c.setToTableu(true);
+						}
 					}
-				}
 				this.cardImgFront.anchor.set(0.5, 0.5);
-			}
+				}
 			this.onCardImgFrontUp();
-		}
-		if (this.myState != Card.STATE_STOCK && this.myState != Card.STATE_FOUNDATION && this.cardImgFront.scale.x < 1) {
+			}
+
+		if (this.myState != Card.STATE_STOCK && this.myState != Card.STATE_FOUNDATION && this.cardImgFront.scale.x < 1)
+			{
 			this.cardImgFront.scale.x += 0.02;
 			this.cardImgFront.scale.y += 0.02;
-		}
-		else {
-			if (this.myState != Card.STATE_FOUNDATION) {
+			}
+			else
+			{
+			if (this.myState != Card.STATE_FOUNDATION)
+				{
 				this.cardImgFront.scale.x = 1;
 				this.cardImgFront.scale.y = 1;
+				}
 			}
-		}
-		if (this.initTweenFlag) {
-			// GameUI.topLayer.add(this.cardImgFront);
-			// GameUI.topLayer.add(this.cardImgBack);
-			// console.log("on top layer")
+
+		if (this.initTweenFlag)
+			{
 			return;
-		}
-		if (this.myState == Card.STATE_STOCK) {
+			}
+
+		if (this.myState == Card.STATE_STOCK)
+			{
 			this.updateStock();
-		}
-		if (this.myState == Card.STATE_TABLEU) {
+			}
+
+		if (this.myState == Card.STATE_TABLEU)
+			{
 			this.updateTableu();
 			this.initFoundationTweenFlag = false;
-			// this.cardImgFront.x = Math.round(this.cardImgFront.x)
-			// this.cardImgFront.y = Math.round(this.cardImgFront.y)
-			// this.cardImgBack.x = Math.floor(this.cardImgBack.x)
-			// this.cardImgBack.y = Math.floor(this.cardImgBack.y)		   
-		}
-		if (this.myState == Card.STATE_DRAGGED) {
+			}
+
+		if (this.myState == Card.STATE_DRAGGED)
+			{
 			this.updateDragged();
-		}
-		if (this.myState == Card.STATE_STOCK_TO_TAB) {
+			}
+
+		if (this.myState == Card.STATE_STOCK_TO_TAB)
+			{
 			return;
-		}
-		if (this.turned == false) {
+			}
+
+		if (this.turned == false)
+			{
 			this.cardImgBack.visible = true;
 			this.cardImgFront.visible = false;
-		}
-		else {
+			}
+			else
+			{
 			this.cardImgBack.visible = false;
 			this.cardImgFront.visible = true;
-			if (this.invertedSprite != null) {
-				if (this.colorInvertedFlag) {
+			if (this.invertedSprite != null)
+				{
+				if (this.colorInvertedFlag)
+					{
 					this.cardImgFront.visible = false;
 					this.invertedSprite.position.set(this.cardImgFront.x, this.cardImgFront.y);
 					this.invertedSprite.anchor.set(0.5, 0.5);
 					this.invertedSprite.z = this.cardImgFront.z;
 					this.invertedSprite.visible = true;
-				}
-				else {
+					}
+					else
+					{
 					this.invertedSprite.visible = false;
+					}
 				}
 			}
-		}
-		if (this.selectedFlag) {
+
+		if (this.selectedFlag)
+			{
 			this.cardImgFront.x = Math.floor(this.cardImgFront.x);
 			this.cardImgFront.y = Math.floor(this.cardImgFront.y);
-		}
-		if (this.myState == Card.STATE_FOUNDATION) {
-			this.updateFoundation();
-		}
-		this.setIsMovingFlag();
-	};
-	Card.prototype.updateFoundation = function() {
-		
-		if (this.initFoundationTweenFlag == false) {
-			this.initFoundationTweenFlag = true;
-			// this.isMoving = true;
-			this.cardImgFront.z += 10000;
-			if (this.cardIdx == CardUtil.CARD_IDX_K) {
-				this.cardImgFront.z += 100000;
 			}
-		}
-		else {
+
+		if (this.myState == Card.STATE_FOUNDATION)
+			{
+			this.updateFoundation();
+			}
+		this.setIsMovingFlag();
+		};
+
+	Card.prototype.updateFoundation = function()
+		{
+		if (this.initFoundationTweenFlag == false)
+			{
+			this.initFoundationTweenFlag = true;
+			this.cardImgFront.z += 10000;
+			if (this.cardIdx == CardUtil.CARD_IDX_K)
+				{
+				this.cardImgFront.z += 100000;
+				}
+			}
+			else
+			{
 			this.cardImgBack.position.set(this.cardImgFront.x, this.cardImgFront.y);
 			return;
-		}
-		var tween3 = SimpleGame.myGame.add.tween(this.cardImgFront.scale).to({
-			x: Card.FOUNDATION_SCALE, y: Card.FOUNDATION_SCALE
-		}, 200, Phaser.Easing.Default, true);
+			}
+
+		var tween3 = SimpleGame.myGame.add.tween(this.cardImgFront.scale).to({x: Card.FOUNDATION_SCALE, y: Card.FOUNDATION_SCALE}, 200, Phaser.Easing.Default, true);
 		var tween1 = SimpleGame.myGame.add.tween(this.cardImgFront).to({ y: Card.CARD_FOUND_POS_Y_INIT }, 200, Phaser.Easing.Default, true);
 		var tween2 = SimpleGame.myGame.add.tween(this.cardImgFront).to({ x: Card.CARD_FOUND_POS_X_INIT + Card.CARD_FOUND_POS_X_DELTA * this.foundationIdx }, 200, Phaser.Easing.Default, true);
-		tween2.onComplete.add(function() {
-			if (this.cardIdx != CardUtil.CARD_IDX_K) {
+		tween2.onComplete.add(function()
+			{
+			if (this.cardIdx != CardUtil.CARD_IDX_K)
+				{
 				this.cardImgFront.y = 1000;
-			}
-		}, this);
-	};
-	Card.prototype.updateDragged = function() {
+				}
+			}, this);
+		};
+
+	Card.prototype.updateDragged = function()
+		{
 		var c = CardUtil.getSelectedCard();
-		if (c != null) {
+		if (c != null)
+			{
 			this.cardImgFront.x = Math.round(c.cardImgFront.x - this.draggedDeltaX);
 			this.cardImgFront.y = Math.round(c.cardImgFront.y - this.draggedDeltaY);
-		}
-	};
-	Card.prototype.updateTableu = function() {
-		//   console.log("update tableu")
-		// this.cardImgFront.position.set(200,300);
+			}
+		};
+
+	Card.prototype.updateTableu = function()
+		{
 		this.cardImgBack.position.set(this.cardImgFront.x, this.cardImgFront.y);
-		if (this.selectedFlag == false) {
+		if (this.selectedFlag == false)
+			{
 			this.setToTableu();
-		}
-	};
-	Card.prototype.updateStock = function() {
-		if (Card.initTweenFlag == false) {
+			}
+		};
+
+	Card.prototype.updateStock = function()
+		{
+		if (Card.initTweenFlag == false)
+			{
 			var deltaX = 0.5 * (Card.CARD_STOCK_POSITION_X_INIT + this.stockPosition * Card.CARD_STOCK_POSITION_X_DELTA - this.cardImgBack.x);
 			this.cardImgBack.position.set(this.cardImgBack.x + deltaX, Card.CARD_STOCK_POSITION_Y_INIT);
-			// this.cardImgBack.position.set(Card.CARD_STOCK_POSITION_X_INIT + this.stockPosition*Card.CARD_STOCK_POSITION_X_DELTA, Card.CARD_STOCK_POSITION_Y_INIT);
-		}
-		else {
-			// this.cardImgBack.position.set(Card.CARD_STOCK_POSITION_X_INIT + 0*Card.CARD_STOCK_POSITION_X_DELTA, Card.CARD_STOCK_POSITION_Y_INIT);
+			}
+			else
+			{
 			this.cardImgBack.position.set(Card.CARD_STOCK_POSITION_X_INIT + 0 * Card.CARD_STOCK_POSITION_X_DELTA, Card.CARD_STOCK_POSITION_Y_INIT);
-		}
+			}
 		this.cardImgFront.position.set(this.cardImgBack.x, this.cardImgBack.y);
-	};
-	Card.prototype.manageInvalidMovingStackSelection = function() {
+		};
+
+	Card.prototype.manageInvalidMovingStackSelection = function()
+		{
 		this.peekedFlag = true;
-	};
-	Card.prototype.onCardImgFrontDown = function() {
-		//  console.log(CardUtil.isValidMoveStack(this), Card.disableSelect, this.myState)
+		};
+
+	Card.prototype.onCardImgFrontDown = function()
+		{
 		BoardManager.HintReset();
-		
+
 		if (CardUtil.checkIfSelectedCardExists())
+			{
 			return;
+			}
 		if (Card.disableSelect == true)
+			{
 			return;
+			}
 		if (this.myState == Card.STATE_FOUNDATION)
+			{
 			return;
-		// if (this.selectedFlag) return;
-		if (this.banInputDown) {
-			
+			}
+		if (this.banInputDown)
+			{
 			return;
-		}
-		if (CardUtil.isValidMoveStack(this) == false) {
+			}
+		if (CardUtil.isValidMoveStack(this) == false)
+			{
 			this.manageInvalidMovingStackSelection();
 			return;
-		}
-		
+			}
+
 		Trace.TraceCardByIdxAndPos(this.tableuIdx, this.tableuPosition);
 		this.banInputDown = true;
-		this.cardImgFront.game.time.events.add(Consts.DELAY_BETWEEN_EVENTS_TOUCH, function() {
+		this.cardImgFront.game.time.events.add(Consts.DELAY_BETWEEN_EVENTS_TOUCH, function()
+			{
 			this.banInputDown = false;
-		}, this);
+			}, this);
+
 		GameUI.gameStarted = true;
-		// this.cardImgFront.input.enableDrag()
 		this.cardImgFront.z = 1000;
 		var deltaY = 1;
 		this.cardImgFront.y -= deltaY;
@@ -1770,173 +2003,220 @@ var Card = (function() {
 		this.dragDeltaX = SimpleGame.myGame.input.activePointer.x - this.cardImgFront.x;
 		this.dragDeltaY = SimpleGame.myGame.input.activePointer.y - this.cardImgFront.y;
 		this.autoclickEnabled = true;
-		//  console.log("autoclickenabled is true")
-		// console.log("autoclickenabled is true")
 		this.selectedFlag = true;
 		this.lastSelectedPosX = this.cardImgFront.x;
 		this.lastSelectedPosY = this.cardImgFront.y;
-		SimpleGame.myGame.time.events.add(250, function() {
+		SimpleGame.myGame.time.events.add(250, function()
+			{
 			this.autoclickEnabled = false;
-			// console.log("autoclick enabled is false", this.autoclickEnabled)
-		}, this);
+			}, this);
 		GameUI.topLayer.add(this.cardImgFront);
 		var arr = Card.cardArray;
 		var i = arr.length;
-		while (i-- > 0) {
+		while (i-- > 0)
+			{
 			var c = arr[i];
-			if (c.myState == Card.STATE_TABLEU) {
-				if (c.tableuIdx == this.tableuIdx) {
-					if (c.tableuPosition > this.tableuPosition) {
+			if (c.myState == Card.STATE_TABLEU)
+				{
+				if (c.tableuIdx == this.tableuIdx)
+					{
+					if (c.tableuPosition > this.tableuPosition)
+						{
 						c.myState = Card.STATE_DRAGGED;
 						c.draggedDeltaX = this.cardImgFront.x - c.cardImgFront.x + 1;
 						c.draggedDeltaY = -Card.CARD_TAB_POS_Y_DELTA * (c.tableuPosition - this.tableuPosition);
 						c.cardImgFront.z = c.tableuPosition - this.tableuPosition + this.cardImgFront.z;
 						GameUI.topLayer.add(c.cardImgFront);
+						}
 					}
 				}
 			}
-		}
 		BoardManager.sort();
 		BoardManager.sortImmediately();
-	};
-	Card.prototype.onCardImgFrontUp = function() {
-		
-		if (this.peekedFlag == true) {
+		};
+
+	Card.prototype.onCardImgFrontUp = function()
+		{
+		if (this.peekedFlag == true)
+			{
 			this.peekedFlag = false;
-		}
+			}
+
 		this.lastFrameWasOutsideOfScreen = false;
+
 		if (this.selectedFlag == false)
+			{
 			return;
-		//  console.log("autoclick enabled: " + this.autoclickEnabled)
-		// 
+			}
+
 		this.cardImgFront.input.disableDrag();
-		// this.setToTableu(true)
+
 		CardUtil.cardDeselected(this);
-		if (this.autoclickEnabled == true && CardUtil.droppedOnTableuSuccess == false) {
-			
-			// CardUtil.tryToAutoclick(this)
+
+		if (this.autoclickEnabled == true && CardUtil.droppedOnTableuSuccess == false)
+			{
 			this.selectedFlag = false;
-		}
-		else {
-			// CardUtil.cardDeselected(this)
-		}
+			}
+			else
+			{
+			}
+
 		CardUtil.returnUnplacedTabCards();
 		CardUtil.tryToPlaceCardsOnFoundation();
 		BoardManager.generateBoardSnapshot();
 		BoardManager.sort();
 		BoardManager.sortImmediately();
-	};
-	Card.prototype.setIsMovingFlag = function() {
-		if (this.myState == Card.STATE_TABLEU) {
+		};
+
+	Card.prototype.setIsMovingFlag = function()
+		{
+		if (this.myState == Card.STATE_TABLEU)
+			{
 			var newX = Card.CARD_TAB_POS_X_INIT + this.tableuIdx * Card.CARD_TAB_POS_X_DELTA;
-			if (Math.abs(newX - this.cardImgFront.x) > 3 || Math.abs(this.newY - this.cardImgFront.y) > 3) {
+			if (Math.abs(newX - this.cardImgFront.x) > 3 || Math.abs(this.newY - this.cardImgFront.y) > 3)
+				{
 				this.isMoving = true;
-			}
-			else {
+				}
+				else
+				{
 				this.isMoving = false;
+				}
 			}
-		}
-		else if (this.myState == Card.STATE_STOCK || this.myState == Card.STATE_FOUNDATION) {
+		else if (this.myState == Card.STATE_STOCK || this.myState == Card.STATE_FOUNDATION)
+			{
 			this.isMoving = false;
-		}
-	};
-	Card.prototype.setToTableu = function(immediately) {
-		if (immediately === void 0) { immediately = false; }
+			}
+		};
+
+	Card.prototype.setToTableu = function(immediately)
+		{
+		if (immediately === void 0)
+			{
+			immediately = false;
+			}
+
 		var closedCardsDelta = 21;
 		var firstTurnedCardIdx = CardUtil.getFirstTurnedCardIdx(this.tableuIdx);
 		var newX = Card.CARD_TAB_POS_X_INIT + this.tableuIdx * Card.CARD_TAB_POS_X_DELTA;
 		this.newX = newX;
-		if (firstTurnedCardIdx <= this.tableuPosition) {
+
+		if (firstTurnedCardIdx <= this.tableuPosition)
+			{
 			var newY = Card.CARD_TAB_POS_Y_INIT + firstTurnedCardIdx * (Card.CARD_TAB_POS_Y_DELTA - closedCardsDelta) + (this.tableuPosition - firstTurnedCardIdx) * Card.CARD_TAB_POS_Y_DELTA;
-		}
-		else {
+			}
+			else
+			{
 			var newY = Card.CARD_TAB_POS_Y_INIT + this.tableuPosition * (Card.CARD_TAB_POS_Y_DELTA - closedCardsDelta);
-		}
-		//   var newY = Card.CARD_TAB_POS_Y_INIT + this.tableuPosition * (Card.CARD_TAB_POS_Y_DELTA-3);
-		if (this.tableuIdx == 0) {
-			// console.log(firstTurnedCardIdx, this.tableuPosition, newY)
-		}
-		if (Math.abs(newX - this.cardImgFront.x) > 5) {
-			// console.log("card is moving")
+			}
+
+		if (this.tableuIdx == 0)
+			{
+			}
+
+		if (Math.abs(newX - this.cardImgFront.x) > 5)
+			{
 			this.isMoving = true;
 			var cMinusOne = CardUtil.getByTabIdxAndPos(this.tableuIdx, this.tableuPosition - 1);
-			if (cMinusOne != null) {
-				if (cMinusOne.isMoving) {
+			if (cMinusOne != null)
+				{
+				if (cMinusOne.isMoving)
+					{
 					this.isMoving = false;
+					}
 				}
 			}
-			// BoardManager.sort()
-		}
-		else {
-			if (this.isMoving == true) {
-			}
+			else
+			{
+			if (this.isMoving == true)
+				{
+				}
 			this.isMoving = false;
-		}
+			}
+
 		var peekedPosition = CardUtil.getPeekedPosition(this.tableuIdx);
 		var peekDelta = this.tableuPosition - peekedPosition;
-		if (peekedPosition < 0) {
+		if (peekedPosition < 0)
+			{
 			peekDelta = -1;
-		}
+			}
 		var deltaMultiplier = 1.8;
 		var deltaReducer = 0.961;
-		//   deltaReducer = 0.8;
-		// deltaMultiplier = 3;
-		// deltaReducer = 1;
+
 		var maxIdx = CardUtil.getMaxTableuPosition(this.tableuIdx);
-		if (maxIdx > 14) {
+		if (maxIdx > 14)
+			{
 			var delta = maxIdx - 14;
-			if (firstTurnedCardIdx <= this.tableuPosition) {
-				if (peekDelta > 0) {
+			if (firstTurnedCardIdx <= this.tableuPosition)
+				{
+				if (peekDelta > 0)
+					{
 					var newY = Card.CARD_TAB_POS_Y_INIT + firstTurnedCardIdx * (Card.CARD_TAB_POS_Y_DELTA - closedCardsDelta) + (deltaMultiplier * delta * (Math.pow(deltaReducer, delta))) + (this.tableuPosition - firstTurnedCardIdx) * (Card.CARD_TAB_POS_Y_DELTA - deltaMultiplier * delta * (Math.pow(deltaReducer, delta)));
-				}
-				else {
+					}
+					else
+					{
 					var newY = Card.CARD_TAB_POS_Y_INIT + firstTurnedCardIdx * (Card.CARD_TAB_POS_Y_DELTA - closedCardsDelta) + (this.tableuPosition - firstTurnedCardIdx) * (Card.CARD_TAB_POS_Y_DELTA - deltaMultiplier * delta * (Math.pow(deltaReducer, delta)));
+					}
+				}
+				else
+				{
+				var newY = Card.CARD_TAB_POS_Y_INIT + this.tableuPosition * (Card.CARD_TAB_POS_Y_DELTA - closedCardsDelta);
 				}
 			}
-			else {
-				var newY = Card.CARD_TAB_POS_Y_INIT + this.tableuPosition * (Card.CARD_TAB_POS_Y_DELTA - closedCardsDelta);
-			}
-		}
-		if (this.selectedFlag || this.myState == Card.STATE_DRAGGED) {
+
+		if (this.selectedFlag || this.myState == Card.STATE_DRAGGED)
+			{
 			var newY = Card.CARD_TAB_POS_Y_INIT + this.tableuPosition * (Card.CARD_TAB_POS_Y_DELTA - closedCardsDelta);
-		}
+			}
+
 		newY = Math.round(newY);
-		if (immediately) {
+		if (immediately)
+			{
 			this.cardImgFront.x = newX;
 			this.cardImgFront.y = newY;
-		}
-		else {
+			}
+			else
+			{
 			var deltaX = (newX - this.cardImgFront.x) * 0.4;
 			var deltaY = (newY - this.cardImgFront.y) * 0.4;
-			if (Math.abs(deltaX) < 20) {
+			if (Math.abs(deltaX) < 20)
+				{
 				this.cardImgFront.x = newX;
-			}
-			else {
+				}
+				else
+				{
 				this.cardImgFront.x += deltaX;
-			}
-			if (Math.abs(deltaY) < 20) {
+				}
+			if (Math.abs(deltaY) < 20)
+				{
 				this.cardImgFront.y = newY;
-			}
-			else {
+				}
+				else
+				{
 				this.cardImgFront.y += deltaY;
+				}
 			}
-			// this.cardImgFront.x += deltaX
-			// this.cardImgFront.y += deltaY
-		}
-		if (Math.abs(newX - this.cardImgFront.x) < 0.3 && Math.abs(newX - this.cardImgFront.x) >= 0) {
+
+		if (Math.abs(newX - this.cardImgFront.x) < 0.3 && Math.abs(newX - this.cardImgFront.x) >= 0)
+			{
 			this.cardImgFront.x = Math.round(this.cardImgFront.x);
-		}
-		if (Math.abs(newY - this.cardImgFront.y) < 0.3 && Math.abs(newY - this.cardImgFront.y) >= 0) {
+			}
+
+		if (Math.abs(newY - this.cardImgFront.y) < 0.3 && Math.abs(newY - this.cardImgFront.y) >= 0)
+			{
 			this.cardImgFront.y = Math.round(this.cardImgFront.y);
-		}
-		if (this.turned) {
+			}
+
+		if (this.turned)
+			{
 			this.cardImgBack.visible = false;
 			this.cardImgFront.visible = true;
-		}
+			}
+
 		this.myState = Card.STATE_TABLEU;
-	};
-	Card.prototype.setFromStockToTabStart = function(myTabIdx) {
-		// console.log("setfromstocktotabstart" + this)
+		};
+
+	Card.prototype.setFromStockToTabStart = function(myTabIdx)
+		{
 		this.myTabIdx = myTabIdx;
 		this.cardImgBack.visible = false;
 		this.cardImgFront.visible = true;
@@ -1945,81 +2225,93 @@ var Card = (function() {
 		this.flipcard();
 		this.updateStock();
 		this.cardImgFront.z = 10000 - myTabIdx;
-	};
-	Card.prototype.setFromStockToTab = function() {
-		
+		};
+
+	Card.prototype.setFromStockToTab = function()
+		{
 		this.tableuPosition = 1 + CardUtil.getMaxTableuPosition(this.myTabIdx);
 		this.myState = Card.STATE_TABLEU;
 		this.tableuIdx = this.myTabIdx;
-		SimpleGame.myGame.time.events.add(100, function() {
+		SimpleGame.myGame.time.events.add(100, function()
+			{
 			this.setToTableu();
-		}, this);
+			}, this);
 		this.flipcard(true);
 		this.cardImgFront.z = 1000;
 		this.cardImgFront.x = Card.CARD_STOCK_POSITION_X_INIT + this.stockPosition * Card.CARD_STOCK_POSITION_X_DELTA;
 		this.cardImgFront.y = Card.CARD_STOCK_POSITION_Y_INIT;
 		Card.items.add(this.cardImgFront);
-		// Card.items.sort()   
-	};
-	Card.prototype.flipcard = function(withAnim) {
-		// withAnim = false;
-		if (withAnim === void 0) { withAnim = false; }
+		};
+
+	Card.prototype.flipcard = function(withAnim)
+		{
+		if (withAnim === void 0)
+			{
+			withAnim = false;
+			}
+
 		if (this.turned)
+			{
 			return;
+			}
+
 		withAnim = false;
-		if (withAnim) {
-			SimpleGame.myGame.time.events.add(200, function() {
+		if (withAnim)
+			{
+			SimpleGame.myGame.time.events.add(200, function()
+				{
 				this.cardImgFront.scale.x = 1;
-			}, this);
-		}
+				}, this);
+			}
+
 		this.turned = true;
-		if (withAnim) {
-			SimpleGame.myGame.time.events.add(0, function() {
+		if (withAnim)
+			{
+			SimpleGame.myGame.time.events.add(0, function()
+				{
 				this.cardImgFront.scale.x = 0.05;
-				var scaleTween = SimpleGame.myGame.add.tween(this.cardImgFront.scale).to({
-					x: 1, y: 1
-				}, 100, Phaser.Easing.Linear.None);
-				// this.cardImgBack.scale.x = 1;
-				var scaleTween1 = SimpleGame.myGame.add.tween(this.cardImgBack.scale).to({
-					x: 1, y: 1
-				}, 200, Phaser.Easing.Linear.None);
+				var scaleTween = SimpleGame.myGame.add.tween(this.cardImgFront.scale).to({x: 1, y: 1}, 100, Phaser.Easing.Linear.None);
+				var scaleTween1 = SimpleGame.myGame.add.tween(this.cardImgBack.scale).to({x: 1, y: 1}, 200, Phaser.Easing.Linear.None);
 				scaleTween.start();
 				scaleTween1.start();
-				
-			}, this);
-			if (withAnim) {
-				var scaleTween2 = SimpleGame.myGame.add.tween(this.cardImgBack.scale).to({
-					x: 0.05, y: 1
-				}, 60);
-			}
-			else {
+				}, this);
+			if (withAnim)
+				{
+				var scaleTween2 = SimpleGame.myGame.add.tween(this.cardImgBack.scale).to({x: 0.05, y: 1}, 60);
+				}
+				else
+				{
 				this.turned = true;
 				this.cardImgBack.visible = false;
 				this.cardImgFront.visible = true;
+				}
 			}
-		}
-	};
-	Card.prototype.setTableuZCoords = function() {
+		};
+
+	Card.prototype.setTableuZCoords = function()
+		{
 		this.cardImgBack.z = this.tableuPosition;
 		this.cardImgFront.z = this.tableuPosition;
-	};
-	Card.prototype.setToStock = function(stockIdx) {
+		};
+
+	Card.prototype.setToStock = function(stockIdx)
+		{
 		this.myState = Card.STATE_STOCK;
 		this.cardImgFront.visible = false;
 		this.cardImgBack.visible = true;
 		this.myStockIdx = stockIdx;
 		this.stockPosition = Math.floor(stockIdx / 10);
-		// Card.items.sort("myStockIdx", Phaser.Group.SORT_ASCENDING)
-		// Card.items.sort()
+
 		Card.items.add(this.cardImgBack);
 		Card.items.add(this.cardImgFront);
 		this.cardImgFront.z = stockIdx;
 		this.cardImgBack.z = stockIdx;
-		// 
+
 		this.updateStock();
-	};
-	Card.prototype.initTween = function(idx) {
-		
+		};
+
+	Card.prototype.initTween = function(idx)
+		{
 		this.initTweenFlag = true;
 		this.tweenIdx = idx;
 		Card.initTweenFlag = true;
@@ -2032,68 +2324,69 @@ var Card = (function() {
 		this.cardImgFront.y += +650;
 		this.cardImgBack.y += +650;
 		this.cardImgBack.x = this.cardImgFront.x = 880;
-		//   SimpleGame.myGame.time.advancedTiming = true;
-		//   SimpleGame.myGame.time.slowMotion = 10;
-		SimpleGame.myGame.time.events.add(160 + 80 * idx, function() {
+
+		SimpleGame.myGame.time.events.add(160 + 80 * idx, function()
+			{
 			this.isMoving = true;
-			//	var tween = SimpleGame.myGame.add.tween(this.cardImgFront).to({y:this.cardImgFront.y-650, onComplete:this.tweenComplete.bind(this)},200,Phaser.Easing.Cubic.Out, true, 0)
-			//	tween.onComplete.add(this.tweenComplete, this)
 			this.tweenComplete();
-			//	var tween1 = SimpleGame.myGame.add.tween(this.cardImgBack).to({y:this.cardImgBack.y-700},200,Phaser.Easing.Cubic.Out, true, idx*20)
-			//	var tween2 = SimpleGame.myGame.add.tween(this.cardImgFront).to({x:this.cardImgBackXOld},200,Phaser.Easing.Cubic.Out, true,0)
-			//	var tween3 = SimpleGame.myGame.add.tween(this.cardImgBack).to({x:this.cardImgBackXOld},200,Phaser.Easing.Cubic.Out, true, idx*20)
-		}, this);
-		//	this.updateTableu()
-		if (CardUtil.isOnTableuTop(this) == false) {
+			}, this);
+
+		if (CardUtil.isOnTableuTop(this) == false)
+			{
 			this.cardImgBack.visible = true;
-		}
-	};
-	Card.prototype.tweenComplete = function() {
-		// this.myState = Card.STATE_TABLEU;
-		// console.log("TWEEN COMPLETE!")
-		if (this.tweenIdx == 9) {
-			SimpleGame.myGame.time.events.add(500, function() {
+			}
+		};
+
+	Card.prototype.tweenComplete = function()
+		{
+		if (this.tweenIdx == 9)
+			{
+			SimpleGame.myGame.time.events.add(500, function()
+				{
 				Card.initTweenFlag = false;
-			});
-		}
+				});
+			}
 		this.initTweenFlag = false;
 		this.isMoving = false;
 		Card.items.add(this.cardImgFront);
 		Card.items.add(this.cardImgBack);
-	};
-	Card.prototype.remove = function() {
-		
-		if (this.cardImgFront.parent) {
+		};
+
+	Card.prototype.remove = function()
+		{
+		if (this.cardImgFront.parent)
+			{
 			this.cardImgFront.parent.removeChild(this.cardImgFront);
-		}
-		if (this.cardImgBack.parent) {
+			}
+		if (this.cardImgBack.parent)
+			{
 			this.cardImgBack.parent.removeChild(this.cardImgBack);
-		}
+			}
+
 		Card.items.remove(this.cardImgFront);
 		Card.items.remove(this.cardImgBack);
 		Card.cardArray.slice(Card.cardArray.indexOf(this, 0), 1);
 		this.cardImgFront.destroy();
 		this.cardImgBack.destroy();
-		
-	};
-	Card.Init = function() {
-		
+		};
+
+	Card.Init = function()
+		{
 		Card.cardArray = new Array();
 		Card.stock = SimpleGame.myGame.add.group();
 		Card.items = SimpleGame.myGame.add.group();
-		// Card.items.visible = false;
-		// var c1:Card = new Card(1,1);
-	};
-	Card.preload = function() {
-		
+		};
+
+	Card.preload = function()
+		{
 		SimpleGame.myGame.load.image("backside", "data:image/png;base64,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");
 		var i = CardUtil.NUM_CARDS_PER_SUIT * 4;
-		while (i-- > 0) {
+		while (i-- > 0)
+			{
 			SimpleGame.myGame.load.image(CardUtil.cardNameArray[i], CardUtil.getCardNameURLs()[i]);
-			// console.log(CardUtil.cardNameArray[i], CardUtil.getCardNameURLs()[i])
-		}
-		
-	};
+			}
+		};
+
 	Card.FOUNDATION_SCALE = 1;
 	Card.CARD_STOCK_POSITION_X_INIT = 775 + 60 - 2;
 	Card.CARD_STOCK_POSITION_Y_INIT = 541;
@@ -2114,631 +2407,821 @@ var Card = (function() {
 	Card.initTweenFlag = false;
 	Card.disableSelect = false;
 	return Card;
-}());
-var CardUtil = (function() {
-	function CardUtil() {
-	}
-	CardUtil.getByCardAndSuitIdx = function(suitidx, cardidx, deckidx) {
+	}());
+
+var CardUtil = (function()
+	{
+	function CardUtil()
+		{
+		}
+
+	CardUtil.getByCardAndSuitIdx = function(suitidx, cardidx, deckidx)
+		{
 		var arr = Card.cardArray;
 		var i = arr.length;
-		while (i-- > 0) {
+		while (i-- > 0)
+			{
 			var c = arr[i];
-			if (c.suitIdx == suitidx && c.cardIdx == cardidx && c.deckIdx == deckidx) {
+			if (c.suitIdx == suitidx && c.cardIdx == cardidx && c.deckIdx == deckidx)
+				{
 				return c;
+				}
 			}
-		}
 		return null;
-	};
-	CardUtil.getFirstTurnedCardIdx = function(tabIdx) {
+		};
+
+	CardUtil.getFirstTurnedCardIdx = function(tabIdx)
+		{
 		var i = -1;
-		do {
+		do
+			{
 			i++;
 			var c = CardUtil.getByTabIdxAndPos(tabIdx, i);
-			if (c == null) {
+			if (c == null)
+				{
 				break;
+				}
 			}
-		} while (c.turned == false);
+		while (c.turned == false);
 		return i;
-	};
-	CardUtil.cardDeselected = function(card) {
+		};
+
+	CardUtil.cardDeselected = function(card)
+		{
 		CardUtil.returnToTableuLayer();
-		//  console.log("card deselected,not autoclick")
 		CardUtil.droppedOnTableuSuccess = false;
 		CardUtil.checkIfDroppedOnTableu(card);
-		// console.log("card deselected call")
-		if (CardUtil.droppedOnTableuSuccess == false) {
+
+		if (CardUtil.droppedOnTableuSuccess == false)
+			{
 			CardUtil.checkIfDroppedOnEmptyTableu(card);
-		}
-		if (CardUtil.droppedOnTableuSuccess) {
+			}
+		if (CardUtil.droppedOnTableuSuccess)
+			{
 			GameUI.moves++;
 			BoardManager.undoDisabled = false;
-			SimpleGame.myGame.time.events.add(150, function() {
+			SimpleGame.myGame.time.events.add(150, function()
+				{
 				GameUI.score--;
-			});
-		}
-		// CardUtil.returnUnplacedTabCards();
-		// CardUtil.tryToPlaceCardsOnFoundation();
-		// BoardManager.generateBoardSnapshot()
-		// BoardManager.sort()
-	};
-	CardUtil.returnToTableuLayer = function() {
-		// Card.items.add(card.cardImgFront) 
+				});
+			}
+		};
+
+	CardUtil.returnToTableuLayer = function()
+		{
 		var arr = Card.cardArray;
 		var i = arr.length;
-		while (i-- > 0) {
-			if (arr[i].myState == Card.STATE_DRAGGED || arr[i].selectedFlag) {
-				// console.log("return to card.items")
+		while (i-- > 0)
+			{
+			if (arr[i].myState == Card.STATE_DRAGGED || arr[i].selectedFlag)
+				{
 				Card.items.add(arr[i].cardImgFront);
+				}
 			}
-		}
-	};
-	CardUtil.getCardOnTop = function(tabIdx) {
-		// console.log("get card on top called")
+		};
+
+	CardUtil.getCardOnTop = function(tabIdx)
+		{
 		var i = -1;
-		do {
+
+		do
+			{
 			i++;
 			var c = CardUtil.getByTabIdxAndPos(tabIdx, i);
-			if (c == null) {
-				// console.log("card is null")
+			if (c == null)
+				{
 				return null;
-			}
-			else {
-				// console.log("card found")
-			}
-			// Trace.TraceCardByIdxAndPos(c.tableuIdx, c.tableuPosition)
-			if (c.myState != Card.STATE_TABLEU) {
-				// console.log("state is not tableu")
+				}
+				else
+				{
+				}
+
+			if (c.myState != Card.STATE_TABLEU)
+				{
 				continue;
-			}
-			if (CardUtil.isOnTableuTop(c)) {
+				}
+
+			if (CardUtil.isOnTableuTop(c))
+				{
 				return c;
+				}
 			}
-		} while (c != null);
+		while (c != null);
+
 		return null;
-	};
-	CardUtil.tryToAutoclick = function(card) {
-		//  console.log("try to autoclick: " + CardUtil.tabIdxCurrent)
+		};
+
+	CardUtil.tryToAutoclick = function(card)
+		{
 		CardUtil.returnToTableuLayer();
 		CardUtil.autoclickMode = true;
+
 		var j = 10;
+
 		CardUtil.tabIdxCurrent = card.tableuIdx;
-		while (j-- > 0) {
+
+		while (j-- > 0)
+			{
 			CardUtil.tabIdxCurrent++;
-			if (CardUtil.tabIdxCurrent >= 10) {
+			if (CardUtil.tabIdxCurrent >= 10)
+				{
 				CardUtil.tabIdxCurrent = 0;
-			}
+				}
 			CardUtil.droppedOnTableuSuccess = false;
+
 			var arr = Card.cardArray;
 			var i = arr.length;
-			while (i-- > 0) {
+
+			while (i-- > 0)
+				{
 				var c = arr[i];
-				if (CardUtil.isOnTableuTop(c) && c.tableuIdx == CardUtil.tabIdxCurrent && c.suitIdx == card.suitIdx) {
-					if (c.tableuIdx != card.tableuIdx) {
+				if (CardUtil.isOnTableuTop(c) && c.tableuIdx == CardUtil.tabIdxCurrent && c.suitIdx == card.suitIdx)
+					{
+					if (c.tableuIdx != card.tableuIdx)
+						{
 						CardUtil.droppedOnTableu(card, c);
-					}
-					if (CardUtil.droppedOnTableuSuccess) {
+						}
+					if (CardUtil.droppedOnTableuSuccess)
+						{
 						break;
+						}
 					}
 				}
-			}
-			if (CardUtil.droppedOnTableuSuccess) {
+
+			if (CardUtil.droppedOnTableuSuccess)
+				{
 				break;
+				}
 			}
-		}
-		if (CardUtil.droppedOnTableuSuccess == false) {
+
+		if (CardUtil.droppedOnTableuSuccess == false)
+			{
 			var j = 10;
 			CardUtil.tabIdxCurrent = card.tableuIdx;
-			while (j-- > 0) {
+			while (j-- > 0)
+				{
 				CardUtil.tabIdxCurrent++;
-				if (CardUtil.tabIdxCurrent >= 10) {
+				if (CardUtil.tabIdxCurrent >= 10)
+					{
 					CardUtil.tabIdxCurrent = 0;
-				}
+					}
 				CardUtil.droppedOnTableuSuccess = false;
+
 				var arr = Card.cardArray;
 				var i = arr.length;
-				while (i-- > 0) {
+
+				while (i-- > 0)
+					{
 					var c = arr[i];
-					if (CardUtil.isOnTableuTop(c) && c.tableuIdx == CardUtil.tabIdxCurrent) {
-						if (c.tableuIdx != card.tableuIdx) {
+					if (CardUtil.isOnTableuTop(c) && c.tableuIdx == CardUtil.tabIdxCurrent)
+						{
+						if (c.tableuIdx != card.tableuIdx)
+							{
 							CardUtil.droppedOnTableu(card, c);
-						}
-						if (CardUtil.droppedOnTableuSuccess) {
+							}
+						if (CardUtil.droppedOnTableuSuccess)
+							{
 							break;
+							}
 						}
 					}
-				}
-				if (CardUtil.droppedOnTableuSuccess) {
+
+				if (CardUtil.droppedOnTableuSuccess)
+					{
 					break;
+					}
 				}
 			}
-		}
-		if (CardUtil.droppedOnTableuSuccess == false) {
 
+		if (CardUtil.droppedOnTableuSuccess == false)
+			{
 			var i = BoardManager.NUM_TABLEU_COLUMNS;
-			while (i-- > 0) {
+
+			while (i-- > 0)
+				{
 				var idx = 9 - i;
-				if (CardUtil.checkIfTabEmpty(idx) && idx != card.tableuIdx) {
+				if (CardUtil.checkIfTabEmpty(idx) && idx != card.tableuIdx)
+					{
 					CardUtil.dropOnEmptyTableu(card, idx);
 					CardUtil.droppedOnTableuSuccess = true;
 					break;
+					}
 				}
 			}
-		}
-		if (CardUtil.droppedOnTableuSuccess) {
+
+		if (CardUtil.droppedOnTableuSuccess)
+			{
 			GameUI.moves++;
 			BoardManager.undoDisabled = false;
-			SimpleGame.myGame.time.events.add(150, function() {
+			SimpleGame.myGame.time.events.add(150, function()
+				{
 				GameUI.score--;
-			});
-		}
+				});
+			}
+
 		CardUtil.autoclickMode = false;
 		card.selectedFlag = false;
-	};
-	CardUtil.returnUnplacedTabCards = function() {
-		// console.log("return unplaced tableu cards")
+		};
+
+	CardUtil.returnUnplacedTabCards = function()
+		{
 		var arr = Card.cardArray;
 		var i = arr.length;
-		while (i-- > 0) {
+		while (i-- > 0)
+			{
 			var c = arr[i];
-			if (c.myState == Card.STATE_DRAGGED) {
+			if (c.myState == Card.STATE_DRAGGED)
+				{
 				c.myState = Card.STATE_TABLEU;
-				// c.setToTableu(true)
+				}
 			}
-		}
-	};
-	CardUtil.getFreeFoundationIdx = function() {
+		};
+
+	CardUtil.getFreeFoundationIdx = function()
+		{
 		var freeFoundPos = 0;
 		var arr = Card.cardArray;
 		var i = arr.length;
-		while (i-- > 0) {
+		while (i-- > 0)
+			{
 			var c = arr[i];
-			if (c.myState == Card.STATE_FOUNDATION) {
-				if (c.foundationIdx >= freeFoundPos) {
+			if (c.myState == Card.STATE_FOUNDATION)
+				{
+				if (c.foundationIdx >= freeFoundPos)
+					{
 					freeFoundPos = c.foundationIdx + 1;
+					}
 				}
 			}
-		}
 		return freeFoundPos;
-	};
-	CardUtil.tryToPlaceCardsOnFoundation = function() {
-		SimpleGame.myGame.time.events.add(250, function() {
+		};
+
+	CardUtil.tryToPlaceCardsOnFoundation = function()
+		{
+		SimpleGame.myGame.time.events.add(250, function()
+			{
 			var stack = CardUtil.getCompletedStack();
 			if (stack == null)
+				{
 				return;
+				}
+
 			GameUI.score++;
-			//	console.log("try to place cards on found: " + stack.length)
+
 			var freeFoundPos = CardUtil.getFreeFoundationIdx();
-			// console.log("freefoundpos: " +freeFoundPos)
-			// 
-			// console.log("stacklen: " + stack.length)
+
 			var i = stack.length;
-			while (i-- > 0) {
+			while (i-- > 0)
+				{
 				var c = stack[i];
-				// console.log(c.myState, c.tableuIdx, c.tableuPosition)
 				c.myState = Card.STATE_FOUNDATION;
 				c.foundationIdx = freeFoundPos;
 				c.foundationPosition = 11 - c.cardIdx;
-				if (c.foundationPosition < 0) {
+				if (c.foundationPosition < 0)
+					{
 					c.foundationPosition = 12;
+					}
 				}
-				//  Trace.TraceCardByIdxAndPos(c.tableuIdx, c.tableuPosition)
-				//   console.log(c.foundationPosition, c.myState)
-			}
+
 			CardUtil.uncoverTableu(c);
 			BoardManager.generateBoardSnapshot();
 			BoardManager.undoDisabled = true;
 			BoardManager.sort();
-		});
-	};
-	CardUtil.getCompletedStack = function() {
-		// console.log("getCompletedStack()....")
+			});
+		};
+
+	CardUtil.getCompletedStack = function()
+		{
 		var arr = Card.cardArray;
 		var i = arr.length;
-		// console.log("arr len: " + i)
 		var retArr = [];
-		while (i-- > 0) {
+
+		while (i-- > 0)
+			{
 			var c = arr[i];
-			// console.log("check card: ", i, c.cardIdx == CardUtil.CARD_IDX_K, c.turned, c.myState, c.tableuIdx, c.tableuPosition)
-			if (c.cardIdx == CardUtil.CARD_IDX_K && c.turned && c.myState == Card.STATE_TABLEU) {
-				// console.log("king found")
+
+			if (c.cardIdx == CardUtil.CARD_IDX_K && c.turned && c.myState == Card.STATE_TABLEU)
+				{
 				var j = CardUtil.NUM_CARDS_PER_SUIT;
 				retArr = [];
 				retArr.push(c);
-				do {
-					// 
+
+				do
+					{
 					var c1 = CardUtil.getByTabIdxAndPos(c.tableuIdx, c.tableuPosition + 1);
-					if (c1 == null || CardUtil.isCardIdxFollowing(c, c1, true) == false) {
-						// console.log("not following or null, break")
+					if (c1 == null || CardUtil.isCardIdxFollowing(c, c1, true) == false)
+						{
 						break;
-					}
-					// console.log("following found!")
+						}
 					retArr.push(c1);
-					// Trace.TraceCardByIdxAndPos(c1.tableuIdx, c1.tableuPosition)
 					c = c1;
-				} while (j-- > 1);
-				if (retArr.length == CardUtil.NUM_CARDS_PER_SUIT) {
-					// console.log("return correct array")
+					}
+					while (j-- > 1);
+
+				if (retArr.length == CardUtil.NUM_CARDS_PER_SUIT)
+					{
 					return retArr;
+					}
 				}
 			}
-		}
 		return null;
-	};
-	CardUtil.isValidMoveStack = function(card) {
+		};
+
+	CardUtil.isValidMoveStack = function(card)
+		{
 		var c = CardUtil.getByTabIdxAndPos(card.tableuIdx, card.tableuPosition + 1);
-		if (c != null) {
-			if (c.suitIdx != card.suitIdx) {
-				// console.log("different suit indexes, not valid")
+		if (c != null)
+			{
+			if (c.suitIdx != card.suitIdx)
+				{
 				return false;
-			}
-			else if (CardUtil.isCardIdxFollowing(card, c) == false) {
-				// console.log("same suit indexes but not following, not valid")
+				}
+			else if (CardUtil.isCardIdxFollowing(card, c) == false)
+				{
 				return false;
-			}
-			else {
+				}
+			else
+				{
 				return CardUtil.isValidMoveStack(c);
+				}
 			}
-		}
-		else {
+			else
+			{
 			return true;
-		}
-	};
-	CardUtil.getPeekedPosition = function(tabidx) {
+			}
+		};
+
+	CardUtil.getPeekedPosition = function(tabidx)
+		{
 		var arr = Card.cardArray;
 		var i = arr.length;
-		while (i-- > 0) {
+		while (i-- > 0)
+			{
 			var c = arr[i];
-			if (c.tableuIdx == tabidx && c.peekedFlag) {
+			if (c.tableuIdx == tabidx && c.peekedFlag)
+				{
 				return c.tableuPosition;
+				}
 			}
-		}
 		return -1;
-	};
-	CardUtil.isCardIdxFollowing = function(card1, card2, respectSuit) {
-		if (respectSuit === void 0) { respectSuit = false; }
-		if (respectSuit) {
+		};
+
+	CardUtil.isCardIdxFollowing = function(card1, card2, respectSuit)
+		{
+		if (respectSuit === void 0)
+			{
+			respectSuit = false;
+			}
+		if (respectSuit)
+			{
 			if (card1.suitIdx != card2.suitIdx)
+				{
 				return false;
-		}
-		// console.log(card1.cardIdx, card2.cardIdx)
-		if (card2.cardIdx <= CardUtil.CARD_IDX_Q && card1.cardIdx == card2.cardIdx + 1) {
-			// console.log("return following")
+				}
+			}
+
+		if (card2.cardIdx <= CardUtil.CARD_IDX_Q && card1.cardIdx == card2.cardIdx + 1)
+			{
 			return true;
-		}
-		else if (card2.cardIdx == CardUtil.CARD_IDX_A && card1.cardIdx == CardUtil.CARD_IDX_02) {
+			}
+		else if (card2.cardIdx == CardUtil.CARD_IDX_A && card1.cardIdx == CardUtil.CARD_IDX_02)
+			{
 			return true;
-		}
+			}
 		return false;
-	};
-	CardUtil.getByTabIdxAndPos = function(tabIdx, tabPos) {
+		};
+
+	CardUtil.getByTabIdxAndPos = function(tabIdx, tabPos)
+		{
 		var arr = Card.cardArray;
 		var i = arr.length;
-		while (i-- > 0) {
+		while (i-- > 0)
+			{
 			var c = arr[i];
-			if (c.myState == Card.STATE_TABLEU && c.tableuIdx == tabIdx && c.tableuPosition == tabPos) {
+			if (c.myState == Card.STATE_TABLEU && c.tableuIdx == tabIdx && c.tableuPosition == tabPos)
+				{
 				return c;
+				}
 			}
-		}
 		return null;
-	};
-	CardUtil.uncoverStock = function(stockPos) {
-		// GameUI.moves++;
+		};
+
+	CardUtil.uncoverStock = function(stockPos)
+		{
 		GameUI.score--;
+
 		var arr = Card.cardArray;
 		var i = arr.length;
-		while (i-- > 0) {
+		while (i-- > 0)
+			{
 			var c = arr[i];
-			if (c.stockPosition > stockPos && c.myState == Card.STATE_STOCK) {
+			if (c.stockPosition > stockPos && c.myState == Card.STATE_STOCK)
+				{
 				stockPos = c.stockPosition;
+				}
 			}
-		}
+
 		var arr = Card.cardArray;
 		var i = arr.length;
 		var totalCardsOnStock = 0;
-		while (i-- > 0) {
+		while (i-- > 0)
+			{
 			var c = arr[i];
 			if (c.myState == Card.STATE_STOCK)
+				{
 				totalCardsOnStock++;
-			if (c.myState == Card.STATE_STOCK && stockPos == c.stockPosition) {
+				}
+			if (c.myState == Card.STATE_STOCK && stockPos == c.stockPosition)
+				{
 				var myTabIdx = c.myStockIdx % 10;
 				c.cardImgFront.y = 60;
 				c.cardImgFront.x = 30;
 				c.setFromStockToTabStart(myTabIdx);
+				}
 			}
-		}
-		// console.log("total cards on stock: " + totalCardsOnStock)
-		// Card.items.sort()
+
 		SimpleGame.myGame.time.events.add(1000, BoardManager.generateBoardSnapshot, this);
 		CardUtil.getMaxTableuPosition(0);
 		BoardManager.undoDisabled = true;
 		Card.disableSelect = true;
-		SimpleGame.myGame.time.events.add(450, function() {
-			// BoardManager.undoDisabled = false;
+		SimpleGame.myGame.time.events.add(450, function()
+			{
 			Card.disableSelect = false;
 			CardUtil.tryToPlaceCardsOnFoundation();
-		});
-	};
-	CardUtil.getMaxTableuPosition = function(idx) {
+			});
+		};
+
+	CardUtil.getMaxTableuPosition = function(idx)
+		{
 		var arr = Card.cardArray;
 		var size = -1;
 		var i = arr.length;
-		while (i-- > 0) {
+
+		while (i-- > 0)
+			{
 			var c = arr[i];
-			//  console.log(c.myState, c.tableuIdx, c.tableuPosition)
-			if (c.myState == Card.STATE_TABLEU && c.tableuIdx == idx && c.tableuPosition > size) {
+			if (c.myState == Card.STATE_TABLEU && c.tableuIdx == idx && c.tableuPosition > size)
+				{
 				size = c.tableuPosition;
+				}
 			}
-		}
 		return size;
-	};
-	CardUtil.checkIfDroppedOnEmptyTableu = function(card) {
+		};
+
+	CardUtil.checkIfDroppedOnEmptyTableu = function(card)
+		{
 		var cardimgfrontX = card.cardImgFront.x;
 		CardUtil.checkIfDroppedOnEmptyTableuCoords(card);
-		if (CardUtil.droppedOnTableuSuccess == false) {
+		if (CardUtil.droppedOnTableuSuccess == false)
+			{
 			card.cardImgFront.x += 70;
 			CardUtil.checkIfDroppedOnEmptyTableuCoords(card);
-		}
+			}
 		card.cardImgFront.x = cardimgfrontX;
-	};
-	CardUtil.checkIfDroppedOnEmptyTableuCoords = function(card) {
+		};
+
+	CardUtil.checkIfDroppedOnEmptyTableuCoords = function(card)
+		{
 		var img = card.cardImgFront;
 		var myTableuoIdx = Math.ceil((card.cardImgFront.x - card.cardImgFront.width - Card.CARD_TAB_POS_X_INIT) / Card.CARD_TAB_POS_X_DELTA);
-		//	console.log(myTableuoIdx)
 		if (myTableuoIdx < 0 || myTableuoIdx > 9)
+			{
 			return;
-		if (CardUtil.checkIfTabEmpty(myTableuoIdx)) {
+			}
+		if (CardUtil.checkIfTabEmpty(myTableuoIdx))
+			{
 			CardUtil.dropOnEmptyTableu(card, myTableuoIdx);
 			CardUtil.droppedOnTableuSuccess = true;
 			card.isMoving = true;
 			BoardManager.sortImmediately();
-		}
-	};
-	CardUtil.dropOnEmptyTableu = function(card, myTableuoIdx) {
-		// console.log("droppped on empty tab: " + card, myTableuoIdx)
+			}
+		};
+
+	CardUtil.dropOnEmptyTableu = function(card, myTableuoIdx)
+		{
 		CardUtil.uncoverTableu(card);
 		card.tableuIdx = myTableuoIdx;
 		card.tableuPosition = 0;
 		card.myState = Card.STATE_TABLEU;
 		CardUtil.manageDragged(card);
-	};
-	CardUtil.checkIfTabEmpty = function(idx) {
+		};
+
+	CardUtil.checkIfTabEmpty = function(idx)
+		{
 		var tabEmpty = true;
 		var arr = Card.cardArray;
 		var i = arr.length;
-		while (i-- > 0) {
+
+		while (i-- > 0)
+			{
 			var c = arr[i];
-			if (c.tableuIdx == idx && c.myState == Card.STATE_TABLEU) {
+			if (c.tableuIdx == idx && c.myState == Card.STATE_TABLEU)
+				{
 				tabEmpty = false;
+				}
 			}
-		}
 		return tabEmpty;
-	};
-	CardUtil.checkIfDroppedOnTableu = function(card) {
+		};
+
+	CardUtil.checkIfDroppedOnTableu = function(card)
+		{
 		var arr = Card.cardArray;
-		if (card.newX > card.cardImgFront.x) {
-			// console.log("moved left")
-			arr.sort(function(a, b) {
-				if (a.tableuIdx > b.tableuIdx) {
+
+		if (card.newX > card.cardImgFront.x)
+			{
+			arr.sort(function(a, b)
+				{
+				if (a.tableuIdx > b.tableuIdx)
+					{
 					return -1;
-				}
-				else if (a.tableuIdx < b.tableuIdx) {
+					}
+				else if (a.tableuIdx < b.tableuIdx)
+					{
 					return 1;
-				}
+					}
 				return 0;
-			});
-		}
-		else {
-			// console.log("moved right")
-			arr.sort(function(a, b) {
-				if (a.tableuIdx > b.tableuIdx) {
+				});
+			}
+			else
+			{
+			arr.sort(function(a, b)
+				{
+				if (a.tableuIdx > b.tableuIdx)
+					{
 					return 1;
-				}
-				else if (a.tableuIdx < b.tableuIdx) {
+					}
+				else if (a.tableuIdx < b.tableuIdx)
+					{
 					return -1;
-				}
+					}
 				return 0;
-			});
-		}
+				});
+			}
 		CardUtil.manageMultipleOverlaps(card);
 		var multipleOverlaps = false;
 		var arr = Card.cardArray;
 		var i = arr.length;
-		while (i-- > 0) {
+		while (i-- > 0)
+			{
 			var c = arr[i];
-			if (CardUtil.overlapping(c.cardImgFront, card.cardImgFront)) {
-				// console.log("cards overlapping")
-				if (c.myState == Card.STATE_TABLEU) {
-				}
-			}
-		}
-	};
-	CardUtil.manageMultipleOverlaps = function(card) {
-		//  console.log("check by card bounds")
-		var arr = Card.cardArray;
-		var i = arr.length;
-		while (i-- > 0) {
-			var c = arr[i];
-			// console.log("tab idx: " + c.tableuIdx)
-			if (CardUtil.overlapping(c.cardImgFront, card.cardImgFront)) {
-				// console.log("cards overlapping")
-				if (arr[i].myState == Card.STATE_TABLEU) {
-					// console.log("state tableu")
-					if (CardUtil.droppedOnTableuSuccess == false) {
-						// console.log("drop on tab")
-						CardUtil.droppedOnTableu(card, c);
+			if (CardUtil.overlapping(c.cardImgFront, card.cardImgFront))
+				{
+				if (c.myState == Card.STATE_TABLEU)
+					{
 					}
 				}
 			}
-			if (CardUtil.droppedOnTableuSuccess) {
+		};
+
+	CardUtil.manageMultipleOverlaps = function(card)
+		{
+		var arr = Card.cardArray;
+		var i = arr.length;
+
+		while (i-- > 0)
+			{
+			var c = arr[i];
+
+			if (CardUtil.overlapping(c.cardImgFront, card.cardImgFront))
+				{
+				if (arr[i].myState == Card.STATE_TABLEU)
+					{
+					if (CardUtil.droppedOnTableuSuccess == false)
+						{
+						CardUtil.droppedOnTableu(card, c);
+						}
+					}
+				}
+			if (CardUtil.droppedOnTableuSuccess)
+				{
 				break;
+				}
 			}
-		}
 		card.selectedFlag = false;
-	};
-	CardUtil.overlapsMouse = function(card) {
-		if (card.getBounds().contains(SimpleGame.myGame.input.x, SimpleGame.myGame.input.y)) {
+		};
+
+	CardUtil.overlapsMouse = function(card)
+		{
+		if (card.getBounds().contains(SimpleGame.myGame.input.x, SimpleGame.myGame.input.y))
+			{
 			return true;
-		}
-		return false;
-	};
-	CardUtil.getSelectedCard = function() {
-		var i = Card.cardArray.length;
-		while (i-- > 0) {
-			if (Card.cardArray[i].selectedFlag) {
-				return Card.cardArray[i];
 			}
-		}
+		return false;
+		};
+
+	CardUtil.getSelectedCard = function()
+		{
+		var i = Card.cardArray.length;
+
+		while (i-- > 0)
+			{
+			if (Card.cardArray[i].selectedFlag)
+				{
+				return Card.cardArray[i];
+				}
+			}
 		return null;
-	};
-	CardUtil.droppedOnTableu = function(cardPlaced, cardTableu) {
-		// Trace.TraceCardByIdxAndPos(cardTableu.tableuIdx, cardTableu.tableuPosition)
-		if (CardUtil.isOnTableuTop(cardTableu)) {
-			//	console.log("is on tab top")
+		};
+
+	CardUtil.droppedOnTableu = function(cardPlaced, cardTableu)
+		{
+		if (CardUtil.isOnTableuTop(cardTableu))
+			{
 			return CardUtil.tryToPlaceonTableu(cardPlaced, cardTableu);
-		}
-		else {
-			//	console.log("is not on tab top")
-		}
-	};
-	CardUtil.tryToPlaceonTableu = function(cardPlaced, cardTableu) {
-		if (cardTableu.cardIdx != CardUtil.CARD_IDX_A && (cardPlaced.cardIdx == CardUtil.CARD_IDX_A && cardTableu.cardIdx == CardUtil.CARD_IDX_02 || cardPlaced.cardIdx + 1 == cardTableu.cardIdx)) {
+			}
+		};
+
+	CardUtil.tryToPlaceonTableu = function(cardPlaced, cardTableu)
+		{
+		if (cardTableu.cardIdx != CardUtil.CARD_IDX_A && (cardPlaced.cardIdx == CardUtil.CARD_IDX_A && cardTableu.cardIdx == CardUtil.CARD_IDX_02 || cardPlaced.cardIdx + 1 == cardTableu.cardIdx))
+			{
 			return CardUtil.placeOnTableu(cardPlaced, cardTableu);
-		}
+			}
 		return null;
-	};
-	CardUtil.placeOnTableu = function(cardPlaced, cardTableu) {
-		
+		};
+
+	CardUtil.placeOnTableu = function(cardPlaced, cardTableu)
+		{
 		CardUtil.droppedOnTableuSuccess = true;
 		CardUtil.uncoverTableu(cardPlaced);
+
 		cardPlaced.myState = Card.STATE_TABLEU;
 		cardPlaced.tableuIdx = cardTableu.tableuIdx;
 		cardPlaced.tableuPosition = cardTableu.tableuPosition + 1;
 		cardPlaced.selectedFlag = false;
-		// 
 		cardPlaced.setToTableu(true);
+
 		Card.items.add(cardPlaced.cardImgFront);
-		// Card.items.sort();
+
 		CardUtil.manageDragged(cardPlaced);
 		BoardManager.sort();
-	};
-	CardUtil.manageDragged = function(cardTableu) {
+		};
+
+	CardUtil.manageDragged = function(cardTableu)
+		{
 		var arr = Card.cardArray;
 		var i = arr.length;
 		var minPos = 999;
-		while (i-- > 0) {
+
+		while (i-- > 0)
+			{
 			var c = arr[i];
-			if (c.myState == Card.STATE_DRAGGED) {
-				if (c.tableuPosition < minPos) {
+			if (c.myState == Card.STATE_DRAGGED)
+				{
+				if (c.tableuPosition < minPos)
+					{
 					minPos = c.tableuPosition;
+					}
 				}
 			}
-		}
-		// console.log(cardTableu.tableuIdx)
+
 		i = arr.length;
-		while (i-- > 0) {
+
+		while (i-- > 0)
+			{
 			var c = arr[i];
-			if (c.myState == Card.STATE_DRAGGED) {
-				if (minPos == c.tableuPosition) {
+			if (c.myState == Card.STATE_DRAGGED)
+				{
+				if (minPos == c.tableuPosition)
+					{
 					CardUtil.placeOnTableu(c, cardTableu);
+					}
 				}
 			}
-		}
-	};
-	CardUtil.uncoverTableu = function(cardPlaced) {
-		// console.log("uncover tableu started")
+		};
+
+	CardUtil.uncoverTableu = function(cardPlaced)
+		{
 		var arr = Card.cardArray;
 		var i = arr.length;
-		while (i-- > 0) {
-			if (arr[i].myState == Card.STATE_TABLEU) {
-				if (arr[i].tableuIdx == cardPlaced.tableuIdx) {
-					//trace("same idx, " + arr[i].tableouPosition, cardPlaced.tableouPosition);
-					if (arr[i].tableuPosition + 1 == cardPlaced.tableuPosition) {
-						//trace("turned");
-						if (arr[i].flipcard(true)) {
+
+		while (i-- > 0)
+			{
+			if (arr[i].myState == Card.STATE_TABLEU)
+				{
+				if (arr[i].tableuIdx == cardPlaced.tableuIdx)
+					{
+					if (arr[i].tableuPosition + 1 == cardPlaced.tableuPosition)
+						{
+						if (arr[i].flipcard(true))
+							{
+							}
 						}
 					}
 				}
 			}
-		}
-	};
-	CardUtil.overlapping = function(rect1, rect2) {
+		};
+
+	CardUtil.overlapping = function(rect1, rect2)
+		{
 		if (rect1 == rect2)
+			{
 			return false;
-		if (rect1.x < rect2.x + rect2.width + 1 && rect1.x + rect1.width + 1 > rect2.x && rect1.y < rect2.y + rect2.height + 1 && rect1.height + 1 + rect1.y > rect2.y) {
+			}
+		if (rect1.x < rect2.x + rect2.width + 1 && rect1.x + rect1.width + 1 > rect2.x && rect1.y < rect2.y + rect2.height + 1 && rect1.height + 1 + rect1.y > rect2.y)
+			{
 			return true;
-		}
+			}
 		return false;
-	};
-	CardUtil.getCardImgName = function(suitidx, cardidx) {
+		};
+
+	CardUtil.getCardImgName = function(suitidx, cardidx)
+		{
 		return CardUtil.cardNameArray[suitidx * CardUtil.NUM_CARDS_PER_SUIT + cardidx];
-	};
-	CardUtil.getCardNameURLs = function() {
+		};
+
+	CardUtil.getCardNameURLs = function()
+		{
 		CardUtil.cardNameArrayUrl = new Array();
+
 		var i = CardUtil.cardNameArray.length;
-		while (i-- > 0) {
+
+		while (i-- > 0)
+			{
 			var str = CardUtil.cardNameArray[i];
 			var strURL = "CARDS/" + str + ".gif";
 			CardUtil.cardNameArrayUrl[i] = strURL;
-		}
-		// console.log(CardUtil.cardNameArray, CardUtil.cardNameArrayUrl)
+			}
+
 		return CardUtil.cardNameArrayUrl;
-	};
-	CardUtil.isOnTableuTop = function(card) {
-		if (card.myState != Card.STATE_TABLEU) {
-			// console.log("card is not on tableu")
+		};
+
+	CardUtil.isOnTableuTop = function(card)
+		{
+		if (card.myState != Card.STATE_TABLEU)
+			{
 			return false;
-		}
+			}
+
 		var arr = Card.cardArray;
 		var i = arr.length;
-		while (i-- > 0) {
+		while (i-- > 0)
+			{
 			var c = arr[i];
 			if (c == card)
+				{
 				continue;
-			if (c.myState == Card.STATE_TABLEU) {
-				if (c.tableuIdx == card.tableuIdx) {
-					if (c.tableuPosition > card.tableuPosition) {
-						// console.log("card not on tab top, another card exists higher")
+				}
+			if (c.myState == Card.STATE_TABLEU)
+				{
+				if (c.tableuIdx == card.tableuIdx)
+					{
+					if (c.tableuPosition > card.tableuPosition)
+						{
 						return false;
+						}
 					}
 				}
 			}
-		}
+
 		return true;
-	};
-	CardUtil.canUncoverStock = function() {
+		};
+
+	CardUtil.canUncoverStock = function()
+		{
 		var i = 10;
-		while (i-- > 0) {
-			if (CardUtil.checkIfTabEmpty(i)) {
+		while (i-- > 0)
+			{
+			if (CardUtil.checkIfTabEmpty(i))
+				{
 				return false;
-			}
-		}
-		return true;
-	};
-	CardUtil.checkIfSelectedCardExists = function() {
-		var i = Card.cardArray.length;
-		while (i-- > 0) {
-			var c = Card.cardArray[i];
-			if (c.selectedFlag) {
-				return true;
-			}
-		}
-		return false;
-	};
-	CardUtil.isMovingCardWithSmallestZ = function(card) {
-		var arr = Card.cardArray;
-		var i = arr.length;
-		while (i-- > 0) {
-			var c = arr[i];
-			if (c != card && c.isMoving) {
-				// 
-				// Trace.TraceCardByIdxAndPos(c.tableuIdx, c.tableuPosition)
-				if (c.tableuPosition < card.tableuPosition) {
-					return false;
 				}
 			}
-		}
 		return true;
-	};
+		};
+
+	CardUtil.checkIfSelectedCardExists = function()
+		{
+		var i = Card.cardArray.length;
+		while (i-- > 0)
+			{
+			var c = Card.cardArray[i];
+			if (c.selectedFlag)
+				{
+				return true;
+				}
+			}
+		return false;
+		};
+
+	CardUtil.isMovingCardWithSmallestZ = function(card)
+		{
+		var arr = Card.cardArray;
+		var i = arr.length;
+		while (i-- > 0)
+			{
+			var c = arr[i];
+			if (c != card && c.isMoving)
+				{
+				if (c.tableuPosition < card.tableuPosition)
+					{
+					return false;
+					}
+				}
+			}
+		return true;
+		};
+
 	CardUtil.cardNameArray = ["spades2", "spades3", "spades4", "spades5", "spades6", "spades7", "spades8", "spades9", "spades10", "spadesj", "spadesq", "spadesk", "spadesa", "heats2", "heats3", "heats4", "heats5", "heats6", "heats7", "heats8", "heats9", "heats10", "heatsj", "heatsq", "heatsk", "heatsa", "diamonds2", "diamonds3", "diamonds4", "diamonds5", "diamonds6", "diamonds7", "diamonds8", "diamonds9", "diamonds10", "diamondsj", "diamondsq", "diamondsk", "diamondsa", "clubs02", "clubs03", "clubs04", "clubs05", "clubs06", "clubs07", "clubs08", "clubs09", "clubs10", "clubsj", "clubsq", "clubsk", "clubsa"];
 	CardUtil.NUM_CARDS_PER_SUIT = 13;
 	CardUtil.NUM_SUITS = 8;
@@ -2759,374 +3242,58 @@ var CardUtil = (function() {
 	CardUtil.tabIdxCurrent = -1;
 	CardUtil.autoclickMode = false;
 	return CardUtil;
-}());
-var AreYouSurePrompt = (function() {
-	function AreYouSurePrompt(startNewFlag) {
-		if (startNewFlag === void 0) { startNewFlag = false; }
-		if (this.startNewFlag) {
-			// var yesBut:ButtonWithOverAndText = new ButtonWithOverAndText(yesText, GameUI.promptLayer, "button_textboxes", "button_over_textboxes", 0, 0, function()
-			// {
-			
-			
-			GameUI.promptLayer.removeAll(true);
-			
-			BoardManager.removeAllCards();
-			//  BoardManager.InitializeBoard()
-			// BoardManager.
-			var initprompt = new InitMenuPrompt(false);
-			// } )
-		}
-		else {
-			// var yesBut:ButtonWithOverAndText = new ButtonWithOverAndText(yesText, GameUI.promptLayer, "button_textboxes", "button_over_textboxes", 0, 0, function()
-			// {
-			
-			
-			GameUI.promptLayer.removeAll(true);
-			BoardManager.resetBoard();
-			// } )
-		}
-		return;
-	}
-	return AreYouSurePrompt;
-}());
-var CannotUncoverStock = (function() {
+	}());
+
+var CannotUncoverStock = (function()
+	{
 	function CannotUncoverStock() {}
 	CannotUncoverStock.shownAlready = false;
 	return CannotUncoverStock;
-}());
-var GameWonPrompt = (function() {
+	}());
+
+var GameWonPrompt = (function()
+	{
 	function GameWonPrompt(gameWon) {}
 	return GameWonPrompt;
-}());
-var GameWonPrompt2 = (function() {
-	function GameWonPrompt2(gameWon) {
-		if (gameWon === void 0) { gameWon = true; }
+	}());
+
+var GameWonPrompt2 = (function()
+	{
+	function GameWonPrompt2(gameWon)
+		{
+		if (gameWon === void 0)
+			{
+			gameWon = true;
+			}
+
 		GameUI.gameStarted = false;
 		this.blackbg = SimpleGame.myGame.make.graphics(0, 0);
 		this.blackbg.beginFill(0x000000);
-		this.blackbg.drawRect(0, 0, 880, 600);
+		this.blackbg.drawRect(0, 40, 880, 600);
 		this.blackbg.endFill();
 		this.blackbg.alpha = 0.00001;
 		this.blackbg.inputEnabled = true;
+
 		GameUI.promptLayer.add(this.blackbg);
-		this.blackbg.events.onInputDown.add(function() {
-			GameUI.promptLayer.removeAll(true);
-			BoardManager.InitializeBoard();
-		});
+
 		var gamewonanim = new GameWonAnim(GameUI.promptLayer, 440, 320);
-	}
+		}
 	return GameWonPrompt2;
-}());
-var InitMenuPrompt = (function() {
-	function InitMenuPrompt(firstGame) {
-		if (firstGame === void 0) { firstGame = true; }
-		
-		var initmenugroup = SimpleGame.myGame.add.group();
-		if (firstGame) {
-			SimpleGame.myGame.input.reset();
-		}
-		this.gamebg = SimpleGame.myGame.add.sprite(0, 0, "game_bg");
-		initmenugroup.add(this.gamebg);
-		this.blackbg = SimpleGame.myGame.make.graphics(0, 0);
-		this.blackbg.beginFill(0x000000);
-		this.blackbg.drawRect(0, 0, 880, 700);
-		this.blackbg.endFill();
-		this.blackbg.alpha = 0.7;
-		this.blackbg.inputEnabled = true;
-		SimpleGame.myGame.time.events.add(250, function() {
-			this.blackbg.events.onInputUp.add(function() {
-				SimpleGame.myGame.input.mspointer.capture = false;
-				if (GameUI.promptLayer != null) {
-					GameUI.promptLayer.removeAll(true);
-				}
-				// SimpleGame.myGame.time.events.remove(timerEvent)	 
-			});
-		}, this);
-		initmenugroup.add(this.blackbg);
-		this.menuBG = SimpleGame.myGame.add.sprite(0, 0, "prompt_bg_levels_empty_slots");
-		this.menuBG.x = (SimpleGame.myGame.width - this.menuBG.width) * 0.5;
-		this.menuBG.y = 120;
-		initmenugroup.add(this.menuBG);
-		var leveltxt = SimpleGame.myGame.make.text(0, 0, "" + Language.NEW_GAME[Language.langIdx].toUpperCase(), {
-			font: "24px Open Sans", fill: "#6993d1", fontWeight: "800"
-		});
-		initmenugroup.add(leveltxt);
-		leveltxt.anchor.set(0.5);
-		leveltxt.x = 440;
-		leveltxt.y = 144;
-		var selleveltxt = SimpleGame.myGame.make.text(0, 0, "", {
-			font: "21px Open Sans", fill: "#263b5b", fontWeight: "600"
-		});
-		initmenugroup.add(selleveltxt);
-		selleveltxt.anchor.set(0.5);
-		selleveltxt.x = 440;
-		selleveltxt.y = 200;
-		var easyText = SimpleGame.myGame.make.text(0, 0, "" + Language.EASY[Language.langIdx], {
-			font: "20px Open Sans", fill: "#ffffff", fontWeight: "700"
-		});
-		var easyButton = new ButtonWithOverAndText(easyText, initmenugroup, "prompt_button", "prompt_button_over", 0, 500, function() {
-			// SimpleGame.gameEngineStarted = false;
-			GameUI.gameStarted = false;
-			CardUtil.NUM_SUIT_COLORS = 1;
-			initmenugroup.removeAll(true);
-			SimpleGame.startGame(firstGame);
-			InitMenuPrompt.startFullScreen = true;
-			SimpleGame.myGame.time.events.add(350, function() {
-				InitMenuPrompt.startFullScreen = false;
-			}, this);
-			// BoardManager.InitializeBoard()
-		});
-		easyButton.setXY(440 - easyButton.imgNormal.width * 0.5, 230 - 3);
-		var normalText = SimpleGame.myGame.make.text(0, 0, "" + Language.NORMAL[Language.langIdx], {
-			font: "20px Open Sans", fill: "#ffffff", fontWeight: "700"
-		});
-		var normalButton = new ButtonWithOverAndText(normalText, initmenugroup, "prompt_button", "prompt_button_over", 0, 500, function() {
-			// SimpleGame.gameEngineStarted = false;
-			GameUI.gameStarted = false;
-			CardUtil.NUM_SUIT_COLORS = 2;
-			initmenugroup.removeAll(true);
-			SimpleGame.startGame(false);
-			InitMenuPrompt.startFullScreen = true;
-			SimpleGame.myGame.time.events.add(350, function() {
-				InitMenuPrompt.startFullScreen = false;
-			}, this);
-		});
-		normalButton.setXY(440 - normalButton.imgNormal.width * 0.5, 305 - 3 + 1);
-		var hardText = SimpleGame.myGame.make.text(0, 0, "" + Language.HARD[Language.langIdx], {
-			font: "20px Open Sans", fill: "#ffffff", fontWeight: "700"
-		});
-		var hardButton = new ButtonWithOverAndText(hardText, initmenugroup, "prompt_button", "prompt_button_over", 0, 500, function() {
-			// SimpleGame.gameEngineStarted = false;
-			GameUI.gameStarted = false;
-			CardUtil.NUM_SUIT_COLORS = 4;
-			initmenugroup.removeAll(true);
-			SimpleGame.startGame(firstGame);
-			InitMenuPrompt.startFullScreen = true;
-			SimpleGame.myGame.time.events.add(350, function() {
-				InitMenuPrompt.startFullScreen = false;
-			}, this);
-		});
-		hardButton.setXY(440 - hardButton.imgNormal.width * 0.5, 380 - 3 + 2);
-		// this.gamebg.
-		// easyButton.y += 300;
-		// normalButton.y += 300;
-		// hardButton.y += 300;
-		// normalButton.y -= 8;
-		// hardButton.y -= 16;
-		// easyButton.imgNormal.alpha = 0;
-		// normalButton.imgNormal.alpha = 0;
-		//	easyButton.update()
-		//	normalButton.update()
-		//	hardButton.update()
-		//	var tweenE = SimpleGame.myGame.add.tween(easyButton).to(
-		//	 { y:easyButton.y-300 }, 300, Phaser.Easing.Circular.Out, true, 500 );
-		//  var tweenN = SimpleGame.myGame.add.tween(normalButton).to(
-		//	 { y:normalButton.y-300 }, 300, Phaser.Easing.Circular.Out, true, 500 );
-		// var tweenH = SimpleGame.myGame.add.tween(hardButton).to(
-		//	 { y:hardButton.y-300 }, 300, Phaser.Easing.Circular.Out, true, 500 );
-		//	 tweenE.onComplete.add(this.onTweenComplete, this)
-		SimpleGame.myGame.renderer.renderSession.roundPixels = true;
-	}
-	;
-	InitMenuPrompt.prototype.onTweenComplete = function() {
-	};
-	return InitMenuPrompt;
-}());
-var InitMenuPrompt2 = (function() {
-	function InitMenuPrompt2(firstGame) {
-		if (firstGame === void 0) { firstGame = true; }
-		var initmenugroup = SimpleGame.myGame.add.group();
-		SimpleGame.myGame.input.reset();
-		this.menuBG = SimpleGame.myGame.make.sprite(0, 0, "menu_bg");
-		this.menuBG.x = this.menuBG.y = 0;
-		initmenugroup.add(this.menuBG);
-		this.menuText = SimpleGame.myGame.make.text(0, 0, Language.HOW_TO_PLAY_FULL[Language.langIdx], {
-			font: "23px Open Sans", fill: "#e3e8f6", fontWeight: "400"
-		});
-		this.menuText.y = this.menuBG.y + 270;
-		this.menuText.wordWrap = true;
-		this.menuText.wordWrapWidth = 450;
-		this.menuText.align = "CENTER";
-		initmenugroup.add(this.menuText);
-		this.menuText.x = this.menuBG.x + (this.menuBG.width - this.menuText.width) * 0.5;
-		this.menuText.x = Math.round(this.menuText.x);
-		this.menuText.y = Math.round(this.menuText.y);
-		this.menuText.smoothed = true;
-		if (this.menuText.text.length % 2 == 1) {
-			this.menuText.text += " ";
-		}
-		var microsoft;
-		microsoft = SimpleGame.myGame.make.graphics(0, 0);
-		microsoft.beginFill(0xffffff);
-		microsoft.drawRect(SimpleGame.myGame.width * 0.5 - 190, SimpleGame.myGame.height - 40, 330, 40);
-		// GameUI.microsoft.x = SimpleGame.myGame.width * 0.5 - GameUI.microsoft.width;
-		microsoft.endFill();
-		microsoft.inputEnabled = true;
-		microsoft.alpha = 0.01;
-		initmenugroup.add(microsoft);
-		microsoft.input.useHandCursor = true;
-		window.addEventListener("click", onWindowClicked);
-		var easyText = SimpleGame.myGame.make.text(0, 0, "" + Language.EASY[Language.langIdx], {
-			font: "19px Open Sans", fill: "#ffffff", fontWeight: "500"
-		});
-		var easyButton = new ButtonWithOverAndText(easyText, initmenugroup, "menu1", "menu1_over", 0, 500, function() {
-			CardUtil.NUM_SUIT_COLORS = 1;
-			initmenugroup.removeAll(true);
-			SimpleGame.startGame(firstGame);
-			GameUI.gameTime = Consts.GAMETIME_EASY;
-			// GameUI.gameTime = 15;
-			InitMenuPrompt.startFullScreen = true;
-			SimpleGame.myGame.time.events.add(350, function() {
-				InitMenuPrompt.startFullScreen = false;
-			}, this);
-		});
-		easyButton.setXY(240 - easyButton.imgNormal.width * 0.5, 370);
-		easyButton.textYDelta += 31;
-		var normalText = SimpleGame.myGame.make.text(0, 0, "" + Language.NORMAL[Language.langIdx], {
-			font: "19px Open Sans", fill: "#ffffff", fontWeight: "500"
-		});
-		var normalButton = new ButtonWithOverAndText(normalText, initmenugroup, "menu2", "menu2_over", 0, 500, function() {
-			CardUtil.NUM_SUIT_COLORS = 2;
-			initmenugroup.removeAll(true);
-			SimpleGame.startGame(firstGame);
-			GameUI.gameTime = Consts.GAMETIME_MEDIUM;
-			InitMenuPrompt.startFullScreen = true;
-			SimpleGame.myGame.time.events.add(350, function() {
-				InitMenuPrompt.startFullScreen = false;
-			}, this);
-		});
-		normalButton.setXY(440 - normalButton.imgNormal.width * 0.5, 370);
-		normalButton.textYDelta += 31;
-		var hardText = SimpleGame.myGame.make.text(0, 0, "" + Language.HARD[Language.langIdx], {
-			font: "19px Open Sans", fill: "#ffffff", fontWeight: "500"
-		});
-		var hardButton = new ButtonWithOverAndText(hardText, initmenugroup, "menu3", "menu3_over", 0, 500, function() {
-			CardUtil.NUM_SUIT_COLORS = 4;
-			initmenugroup.removeAll(true);
-			SimpleGame.startGame(firstGame);
-			GameUI.gameTime = Consts.GAMETIME_HARD;
-			InitMenuPrompt.startFullScreen = true;
-			SimpleGame.myGame.time.events.add(350, function() {
-				InitMenuPrompt.startFullScreen = false;
-			}, this);
-		});
-		hardButton.setXY(640 - hardButton.imgNormal.width * 0.5, 370);
-		hardButton.textYDelta += 31;
-		SimpleGame.myGame.renderer.renderSession.roundPixels = true;
-	}
-	;
-	InitMenuPrompt2.prototype.onTweenComplete = function() {
-	};
-	return InitMenuPrompt2;
-}());
-var MainMenu = (function() {
-	function MainMenu() {
-		// var timerEvent:Phaser.TimerEvent = SimpleGame.myGame.time.events.loop(200, function()
-		// {
-		//	 console.log("reset input")
-		//	 SimpleGame.myGame.input.reset()
-		// }, this)
-		//   SimpleGame.myGame.input.mspointer.capture = true;	
-		this.blackbg = SimpleGame.myGame.make.graphics(0, 0);
-		this.blackbg.beginFill(0x000000);
-		this.blackbg.drawRect(0, 0, 880, 700);
-		this.blackbg.endFill();
-		this.blackbg.alpha = 0.9;
-		this.blackbg.inputEnabled = true;
-		SimpleGame.myGame.time.events.add(250, function() {
-			this.blackbg.events.onInputUp.add(function() {
-				// SimpleGame.myGame.input.mspointer.capture = false;	
-				GameUI.promptLayer.removeAll(true);
-				GameUI.resetMenuButton();
-				// SimpleGame.myGame.time.events.remove(timerEvent)	 
-			});
-		}, this);
-		GameUI.promptLayer.add(this.blackbg);
-		GameUI.promptLayer.y -= 100;
-		SimpleGame.myGame.add.tween(GameUI.promptLayer).to({
-			y: GameUI.promptLayer.y + 100
-		}, 100, Phaser.Easing.Default, true);
-		this.menuBG = SimpleGame.myGame.add.sprite(0, 0, "prompt_bg_menu");
-		this.menuBG.x = (SimpleGame.myGame.width - this.menuBG.width) * 0.5;
-		this.menuBG.y = 60;
-		GameUI.promptLayer.add(this.menuBG);
-		this.menuBG.inputEnabled = true;
-		this.menuBG.visible = false;
-		// this.xbutton = SimpleGame.myGame.make.graphics(0, 0)
-		// this.xbutton.beginFill(0x000000)
-		// this.xbutton.drawRect(575, 95, 40, 40)
-		// this.xbutton.endFill()
-		// this.xbutton.inputEnabled = true;
-		// this.xbutton.events.onInputDown.add(function()
-		// {
-		//	 SimpleGame.myGame.input.mspointer.capture = false;	
-		//   GameUI.promptLayer.removeAll(true);   
-		// //   SimpleGame.myGame.time.events.remove(timerEvent)
-		// }, this)
-		// this.xbutton.alpha = 0.0001;	 
-		// GameUI.promptLayer.add(this.xbutton)
-		this.menuText = SimpleGame.myGame.make.text(0, 0, "" + Language.MENU[Language.langIdx].toUpperCase(), {
-			font: "24px Open Sans", fill: "#252525", fontWeight: "800"
-		});
-		this.menuText.anchor.set(0, 0.5);
-		this.menuText.x = this.menuBG.x + (this.menuBG.width - this.menuText.width) * 0.5;
-		this.menuText.y = this.menuBG.y + 23;
-		GameUI.promptLayer.add(this.menuText);
-		this.menuText.visible = false;
-		var resumeText = SimpleGame.myGame.make.text(0, 0, "" + Language.RESUME[Language.langIdx].toUpperCase(), {
-			font: "16px Open Sans", fill: "#252525", fontWeight: "700"
-		});
-		var resumeBut = new ButtonWithOverAndText(resumeText, GameUI.promptLayer, "prompt_button", "prompt_button_over", 0, 0, function() {
-			
-			GameUI.promptLayer.removeAll(true);
-			SimpleGame.myGame.input.mspointer.capture = false;
-			// SimpleGame.myGame.time.events.remove(timerEvent)
-			GameUI.resetMenuButton();
-		});
-		resumeBut.setXY(this.menuBG.x + (this.menuBG.width - resumeBut.imgNormal.width) * 0.5, this.menuBG.y + 72 - 5);
-		resumeBut.text.y -= 1;
-		var newgametexteasy = SimpleGame.myGame.make.text(0, 0, "" + Language.NEW_GAME[Language.langIdx].toUpperCase(), {
-			font: "16px Open Sans", fill: "#252525", fontWeight: "700"
-		});
-		var newgamebuteasy = new ButtonWithOverAndText(newgametexteasy, GameUI.promptLayer, "prompt_button", "prompt_button_over", 0, 0, function() {
-			
-			// GameUI.promptLayer.removeAll(true);
-			// SimpleGame.myGame.time.events.remove(timerEvent)
-			SimpleGame.myGame.input.mspointer.capture = false;
-			// GameUI.promptLayer.removeAll(true);
-			CardUtil.NUM_SUIT_COLORS = 1;
-			// BoardManager.InitializeBoard();
-			// var areyousureprompt = new AreYouSurePrompt(true)
-			GameUI.promptLayer.removeAll(true);
-			
-			BoardManager.removeAllCards();
-			var initprompt = new InitMenuPrompt2(false);
-		});
-		newgamebuteasy.setXY(this.menuBG.x + (this.menuBG.width - newgamebuteasy.imgNormal.width) * 0.5, resumeBut.imgNormal.y + 76);
-		var resetgametext = SimpleGame.myGame.make.text(0, 0, "" + Language.RESTART[Language.langIdx].toUpperCase(), {
-			font: "16px Open Sans", fill: "#252525", fontWeight: "700"
-		});
-		var resetgamebut = new ButtonWithOverAndText(resetgametext, GameUI.promptLayer, "prompt_button", "prompt_button_over", 0, 0, function() {
-			
-			GameUI.promptLayer.removeAll(true);
-			// SimpleGame.myGame.time.events.remove(timerEvent)
-			SimpleGame.myGame.input.mspointer.capture = false;
-			// var areyousureprompt = new AreYouSurePrompt();
-			// GameUI.promptLayer.removeAll(true);
-			BoardManager.resetBoard();
-			GameUI.resetMenuButton();
-		});
-		resetgamebut.setXY(this.menuBG.x + (this.menuBG.width - resetgamebut.imgNormal.width) * 0.5, newgamebuteasy.imgNormal.y + 76);
-	}
-	MainMenu.prototype.remove = function() {
-	};
-	return MainMenu;
-}());
-var NewGamePrompt = (function() {
-	function NewGamePrompt(showXBut) {
+	}());
+
+var NewGamePrompt = (function()
+	{
+	function NewGamePrompt(showXBut)
+		{
 		document.getElementById("loading").style.display="none";
-		if (showXBut === void 0) { showXBut = false; }
+
+		if (showXBut === void 0)
+			{
+			showXBut = false;
+			}
+
 		SimpleGame.myGame.renderer.renderSession.roundPixels = true;
+
 		this.blackbg = SimpleGame.myGame.make.graphics(0, 0);
 		this.blackbg.beginFill(0xffffff);
 		this.blackbg.drawRect(0, 0, 880, 600);
@@ -3134,314 +3301,74 @@ var NewGamePrompt = (function() {
 		this.blackbg.alpha = 0.000001;
 		this.blackbg.inputEnabled = true;
 		GameUI.promptLayer.add(this.blackbg);
+
 		this.menuBG = SimpleGame.myGame.add.sprite(0, 0, "prompt_difficulty");
 		this.menuBG.x = (SimpleGame.myGame.width - this.menuBG.width) * 0.5;
 		this.menuBG.y = 0;
 		GameUI.promptLayer.add(this.menuBG);
-		var spidersol = "" + STRING_NEWGAME;
-		this.menuText = SimpleGame.myGame.make.text(0, 0, "" + spidersol, {
+
+		this.menuText = SimpleGame.myGame.make.text(0, 0, "" + STRING_NEWGAME,
+			{
 			font: "16px Arial", fill: "#ffffff", fontWeight: "600", align: "Left"
-		});
+			});
 		this.menuText.y = this.menuBG.y + 220;
 		GameUI.promptLayer.add(this.menuText);
+
 		this.menuText.wordWrap = true;
 		this.menuText.wordWrapWidth = 380;
 		this.menuText.x = this.menuBG.x + (this.menuBG.width) * 0.5 - 160 + 5;
 		this.menuText.anchor.set(0, 0);
-		this.menuText = SimpleGame.myGame.make.text(0, 0, STRING_SELECTDIFFICULTY, {
+		this.menuText = SimpleGame.myGame.make.text(0, 0, STRING_SELECTDIFFICULTY,
+			{
 			font: "14px Arial", fill: "#000000", fontWeight: "400"
-		});
+			});
 		this.menuText.x = this.menuBG.x + (this.menuBG.width - this.menuText.width) * 0.5;
 		this.menuText.y = this.menuBG.y + 260;
 		GameUI.promptLayer.add(this.menuText);
-		// var easyText = SimpleGame.myGame.make.text(0,0, Language.EASY[Language.langIdx],{
-		//	 font:"15px Open Sans", fill:"#000000", fontWeight:"500"
-		// } )
-		var easyBut = new ButtonTextOnly(GameUI.promptLayer, this.menuBG.x + (this.menuBG.width - 80) * 0.5, this.menuBG.y + 303, 0, 0, STRING_EASY, function() {
-			
+
+		var easyBut = new ButtonTextOnly(GameUI.promptLayer, this.menuBG.x + (this.menuBG.width - 80) * 0.5, this.menuBG.y + 303, 0, 0, STRING_EASY, function()
+			{
 			GameUI.promptLayer.removeAll(true);
 			CardUtil.NUM_SUIT_COLORS = 1;
 			BoardManager.InitializeBoard();
-		});
-		// easyBut.setXY(this.menuBG.x + (this.menuBG.width - easyBut.imgNormal.width)*0.5, this.menuBG.y + 60)
-		var normalBut = new ButtonTextOnly(GameUI.promptLayer, this.menuBG.x + (this.menuBG.width - 80) * 0.5, this.menuBG.y + 335, 0, 0, STRING_MEDIUM, function() {
-			
+			});
+
+		var normalBut = new ButtonTextOnly(GameUI.promptLayer, this.menuBG.x + (this.menuBG.width - 80) * 0.5, this.menuBG.y + 335, 0, 0, STRING_MEDIUM, function()
+			{
 			GameUI.promptLayer.removeAll(true);
 			CardUtil.NUM_SUIT_COLORS = 2;
 			BoardManager.InitializeBoard();
-		});
-		// normalBut.setXY(this.menuBG.x + (this.menuBG.width - normalBut.imgNormal.width)*0.5, this.menuBG.y + 130)
-		// var hardText = SimpleGame.myGame.make.text(0,0, Language.HARD[Language.langIdx],{
-		//	 font:"15px Open Sans", fill:"#000000", fontWeight:"500"
-		// } )
-		var hardBut = new ButtonTextOnly(GameUI.promptLayer, this.menuBG.x + (this.menuBG.width - 80) * 0.5, this.menuBG.y + 367, 0, 0, STRING_HARD, function() {
-			
+			});
+
+		var hardBut = new ButtonTextOnly(GameUI.promptLayer, this.menuBG.x + (this.menuBG.width - 80) * 0.5, this.menuBG.y + 367, 0, 0, STRING_HARD, function()
+			{
 			GameUI.promptLayer.removeAll(true);
 			CardUtil.NUM_SUIT_COLORS = 4;
 			BoardManager.InitializeBoard();
-		});
-		// hardBut.setXY(this.menuBG.x + (this.menuBG.width - hardBut.imgNormal.width)*0.5, this.menuBG.y + 200)
-		if (showXBut) {
-			var removeButton = new ButtonWithOverState(GameUI.promptLayer, "prompt_close", "prompt_close_over", 576, 219, function() {
-				GameUI.promptLayer.removeAll(true);
 			});
+
+		if (showXBut)
+			{
+			var removeButton = new ButtonWithOverState(GameUI.promptLayer, "prompt_close", "prompt_close_over", 576, 219, function()
+				{
+				GameUI.promptLayer.removeAll(true);
+				});
+			}
 		}
-	}
 	return NewGamePrompt;
-}());
-var NewGamePrompt2 = (function() {
-	function NewGamePrompt2() {
-		this.blackbg = SimpleGame.myGame.make.graphics(0, 0);
-		this.blackbg.beginFill(0x000000);
-		this.blackbg.drawRect(0, 0, 880, 600);
-		this.blackbg.endFill();
-		this.blackbg.alpha = 0.001;
-		this.blackbg.inputEnabled = true;
-		GameUI.promptLayer.add(this.blackbg);
-		this.menuBG = SimpleGame.myGame.add.sprite(0, 0, "prompt_rest");
-		this.menuBG.x = (SimpleGame.myGame.width - this.menuBG.width) * 0.5;
-		this.menuBG.y = 0;
-		GameUI.promptLayer.add(this.menuBG);
-		this.mainText = SimpleGame.myGame.make.text(0, 0, "" + Language.NEW_GAME[Language.langIdx], {
-			font: "16px Arial", fill: "#ffffff", fontWeight: "600", align: "Center"
-		});
-		this.mainText.y = this.menuBG.y + 220;
-		GameUI.promptLayer.add(this.mainText);
-		this.mainText.wordWrap = true;
-		this.mainText.wordWrapWidth = 650;
-		this.mainText.x = 290;
-		// this.mainText.visible = false;
-		var wongameTxt = Language.YOUWONGAME[Language.langIdx];
-		// if (gameWon == false)
-		// {
-		//	 wongameTxt = Language.youlostgame[Language.langIdx];
-		// }
-		this.menuText = SimpleGame.myGame.make.text(0, 0, "" + Language.ARE_YOU_SURE_NEW[Language.langIdx], {
-			font: "15px Open Sans", fill: "#000000", fontWeight: "500", align: "Center"
-		});
-		this.menuText.y = this.menuBG.y + 270;
-		GameUI.promptLayer.add(this.menuText);
-		this.menuText.wordWrap = true;
-		this.menuText.wordWrapWidth = 250;
-		this.menuText.x = this.menuBG.x + (this.menuBG.width) * 0.5 - this.menuText.width * 0.5;
-		var newGameText = SimpleGame.myGame.make.text(0, 0, Language.YES[Language.langIdx], {
-			font: "15px Arial", fill: "#000000", fontWeight: "500"
-		});
-		var newGameBut = new ButtonWithOverAndText(newGameText, GameUI.promptLayer, "prompt_button", "prompt_button_over", 0, 0, function() {
-			
-			GameUI.promptLayer.removeAll(true);
-			GameUI.promptLayer.removeAll(true);
-			// CardUtil.NUM_SUIT_COLORS = 1;
-			BoardManager.InitializeBoard();
-		});
-		newGameBut.setXY(this.menuBG.x + (this.menuBG.width - newGameBut.imgNormal.width) * 0.50 - 50, this.menuBG.y + 340);
-		var restartText = SimpleGame.myGame.make.text(0, 0, "" + Language.NO[Language.langIdx], {
-			font: "15px Arial", fill: "#000000", fontWeight: "500"
-		});
-		var restartBut = new ButtonWithOverAndText(restartText, GameUI.promptLayer, "prompt_button", "prompt_button_over", 0, 0, function() {
-			
-			GameUI.promptLayer.removeAll(true);
-			// BoardManager.resetBoard()
-		});
-		restartBut.setXY(this.menuBG.x + (this.menuBG.width - restartBut.imgNormal.width) * 0.5 + 50, this.menuBG.y + 340);
-		var removeButton = new ButtonWithOverState(GameUI.promptLayer, "prompt_close", "prompt_close_over", 576, 219, function() {
-			GameUI.promptLayer.removeAll(true);
-		});
-	}
-	return NewGamePrompt2;
-}());
-var RestartGamePrompt = (function() {
-	function RestartGamePrompt() {
-		this.blackbg = SimpleGame.myGame.make.graphics(0, 0);
-		this.blackbg.beginFill(0x000000);
-		this.blackbg.drawRect(0, 0, 880, 600);
-		this.blackbg.endFill();
-		this.blackbg.alpha = 0.001;
-		this.blackbg.inputEnabled = true;
-		GameUI.promptLayer.add(this.blackbg);
-		this.menuBG = SimpleGame.myGame.add.sprite(0, 0, "prompt_rest");
-		this.menuBG.x = (SimpleGame.myGame.width - this.menuBG.width) * 0.5;
-		this.menuBG.y = 0;
-		GameUI.promptLayer.add(this.menuBG);
-		this.mainText = SimpleGame.myGame.make.text(0, 0, "" + Language.restart_this_game[Language.langIdx], {
-			font: "16px Arial", fill: "#ffffff", fontWeight: "600", align: "Left"
-		});
-		this.mainText.y = this.menuBG.y + 220;
-		GameUI.promptLayer.add(this.mainText);
-		this.mainText.wordWrap = true;
-		this.mainText.wordWrapWidth = 650;
-		this.mainText.x = 290;
-		// this.mainText.visible = false;
-		var wongameTxt = Language.YOUWONGAME[Language.langIdx];
-		// if (gameWon == false)
-		// {
-		//	 wongameTxt = Language.youlostgame[Language.langIdx];
-		// }
-		this.menuText = SimpleGame.myGame.make.text(0, 0, "" + Language.ARE_YOU_SURE_RESTART[Language.langIdx], {
-			font: "15px Open Sans", fill: "#000000", fontWeight: "500", align: "Center"
-		});
-		this.menuText.y = this.menuBG.y + 270;
-		GameUI.promptLayer.add(this.menuText);
-		this.menuText.wordWrap = true;
-		this.menuText.wordWrapWidth = 250;
-		this.menuText.x = this.menuBG.x + (this.menuBG.width) * 0.5 - this.menuText.width * 0.5;
-		var newGameText = SimpleGame.myGame.make.text(0, 0, Language.YES[Language.langIdx], {
-			font: "15px Arial", fill: "#000000", fontWeight: "500"
-		});
-		var newGameBut = new ButtonWithOverAndText(newGameText, GameUI.promptLayer, "prompt_button", "prompt_button_over", 0, 0, function() {
-			
-			GameUI.promptLayer.removeAll(true);
-			GameUI.promptLayer.removeAll(true);
-			// CardUtil.NUM_SUIT_COLORS = 1;
-			BoardManager.resetBoard();
-		});
-		newGameBut.setXY(this.menuBG.x + (this.menuBG.width - newGameBut.imgNormal.width) * 0.50 - 50, this.menuBG.y + 340);
-		var restartText = SimpleGame.myGame.make.text(0, 0, "" + Language.NO[Language.langIdx], {
-			font: "15px Arial", fill: "#000000", fontWeight: "500"
-		});
-		var restartBut = new ButtonWithOverAndText(restartText, GameUI.promptLayer, "prompt_button", "prompt_button_over", 0, 0, function() {
-			
-			GameUI.promptLayer.removeAll(true);
-			// BoardManager.resetBoard()
-		});
-		restartBut.setXY(this.menuBG.x + (this.menuBG.width - restartBut.imgNormal.width) * 0.5 + 50, this.menuBG.y + 340);
-		var removeButton = new ButtonWithOverState(GameUI.promptLayer, "prompt_close", "prompt_close_over", 576, 219, function() {
-			GameUI.promptLayer.removeAll(true);
-		});
-	}
-	return RestartGamePrompt;
-}());
-var StatisticsPrompt = (function() {
-	function StatisticsPrompt() {
-		this.yDelta = 35;
-		var gamesPlayedC = Util.getStorage("gamesPlayed") - 1;
-		if (gamesPlayedC < 0) {
-			gamesPlayedC = 0;
-		}
-		var gamesWonC = Util.getStorage("gamesWon");
-		var gamesLostC = gamesPlayedC - gamesWonC;
-		if (gamesLostC < 0) {
-			gamesLostC = 0;
-		}
-		var winPerc = Math.round(gamesWonC / gamesPlayedC * 100);
-		if (isNaN(winPerc)) {
-			winPerc = 0;
-		}
-		var topScore = Util.getStorage("bestScore");
-		this.blackbg = SimpleGame.myGame.make.graphics(0, 0);
-		this.blackbg.beginFill(0x000000);
-		this.blackbg.drawRect(0, 0, 880, 600);
-		this.blackbg.endFill();
-		this.blackbg.alpha = 0.85;
-		this.blackbg.inputEnabled = true;
-		GameUI.promptLayer.add(this.blackbg);
-		this.menuBG = SimpleGame.myGame.add.sprite(0, 0, "prompt_bg_levels_won");
-		this.menuBG.x = (SimpleGame.myGame.width - this.menuBG.width) * 0.5;
-		this.menuBG.y = 60;
-		GameUI.promptLayer.add(this.menuBG);
-		this.menuText = SimpleGame.myGame.make.text(0, 0, Language.ALLTIMESTATS[Language.langIdx] + "", {
-			font: "20px Open Sans", fill: "#ffffff", fontWeight: "700"
-		});
-		this.menuText.x = this.menuBG.x + (this.menuBG.width - this.menuText.width) * 0.5;
-		this.menuText.y = this.menuBG.y + 28;
-		GameUI.promptLayer.add(this.menuText);
-		this.playedgamesText = SimpleGame.myGame.make.text(0, 0, Language.playedgames[Language.langIdx], {
-			font: "20px Open Sans", fill: "#464646", fontWeight: "500"
-		});
-		this.playedgamesText.x = this.menuBG.x + (this.menuBG.width - this.playedgamesText.width - 30) * 0.5;
-		this.playedgamesText.y = this.menuBG.y + 90;
-		GameUI.promptLayer.add(this.playedgamesText);
-		this.playedgamesCount = SimpleGame.myGame.make.text(0, 0, "" + gamesPlayedC, {
-			font: "20px Open Sans", fill: "#464646", fontWeight: "800"
-		});
-		this.playedgamesCount.x = this.playedgamesText.x + this.playedgamesText.width + 3;
-		this.playedgamesCount.y = this.playedgamesText.y;
-		GameUI.promptLayer.add(this.playedgamesCount);
-		this.wongamesText = SimpleGame.myGame.make.text(0, 0, Language.wongames[Language.langIdx], {
-			font: "20px Open Sans", fill: "#464646", fontWeight: "500"
-		});
-		this.wongamesText.x = this.menuBG.x + (this.menuBG.width - this.wongamesText.width - 10) * 0.5;
-		this.wongamesText.y = this.menuBG.y + 90 + 1 * this.yDelta;
-		GameUI.promptLayer.add(this.wongamesText);
-		this.wongamesCount = SimpleGame.myGame.make.text(0, 0, "" + gamesWonC, {
-			font: "20px Open Sans", fill: "#464646", fontWeight: "700"
-		});
-		this.wongamesCount.x = this.wongamesText.x + this.wongamesText.width + 3;
-		this.wongamesCount.y = this.wongamesText.y;
-		GameUI.promptLayer.add(this.wongamesCount);
-		this.lostgamesText = SimpleGame.myGame.make.text(0, 0, Language.lostgames[Language.langIdx], {
-			font: "20px Open Sans", fill: "#464646", fontWeight: "500"
-		});
-		this.lostgamesText.x = this.menuBG.x + (this.menuBG.width - this.lostgamesText.width - 20) * 0.5;
-		this.lostgamesText.y = this.menuBG.y + 90 + 2 * this.yDelta;
-		GameUI.promptLayer.add(this.lostgamesText);
-		this.lostgamesCount = SimpleGame.myGame.make.text(0, 0, "" + gamesLostC, {
-			font: "20px Open Sans", fill: "#464646", fontWeight: "700"
-		});
-		this.lostgamesCount.x = this.lostgamesText.x + this.lostgamesText.width + 3;
-		this.lostgamesCount.y = this.lostgamesText.y;
-		GameUI.promptLayer.add(this.lostgamesCount);
-		this.winpercText = SimpleGame.myGame.make.text(0, 0, Language.win_percentage[Language.langIdx], {
-			font: "20px Open Sans", fill: "#464646", fontWeight: "500"
-		});
-		this.winpercText.x = this.menuBG.x + (this.menuBG.width - this.winpercText.width - 40) * 0.5;
-		this.winpercText.y = this.menuBG.y + 90 + 3 * this.yDelta;
-		GameUI.promptLayer.add(this.winpercText);
-		this.winpercCount = SimpleGame.myGame.make.text(0, 0, "" + winPerc + "%", {
-			font: "20px Open Sans", fill: "#464646", fontWeight: "700"
-		});
-		this.winpercCount.x = this.winpercText.x + this.winpercText.width + 3;
-		this.winpercCount.y = this.winpercText.y;
-		GameUI.promptLayer.add(this.winpercCount);
-		this.topscoreText = SimpleGame.myGame.make.text(0, 0, Language.top_score[Language.langIdx], {
-			font: "20px Open Sans", fill: "#464646", fontWeight: "500"
-		});
-		this.topscoreText.x = this.menuBG.x + (this.menuBG.width - this.topscoreText.width - 66) * 0.5 + 6;
-		this.topscoreText.y = this.menuBG.y + 90 + 4 * this.yDelta;
-		GameUI.promptLayer.add(this.topscoreText);
-		this.topscoreCount = SimpleGame.myGame.make.text(0, 0, "" + topScore, {
-			font: "20px Open Sans", fill: "#464646", fontWeight: "700"
-		});
-		this.topscoreCount.x = this.topscoreText.x + this.topscoreText.width + 3;
-		this.topscoreCount.y = this.topscoreText.y;
-		GameUI.promptLayer.add(this.topscoreCount);
-		this.besttimeText = SimpleGame.myGame.make.text(0, 0, Language.best_time[Language.langIdx], {
-			font: "20px Open Sans", fill: "#464646", fontWeight: "500"
-		});
-		this.besttimeText.x = this.menuBG.x + (this.menuBG.width - this.besttimeText.width - 70) * 0.5 - 10;
-		this.besttimeText.y = this.menuBG.y + 90 + 5 * this.yDelta;
-		GameUI.promptLayer.add(this.besttimeText);
-		this.besttimeCount = SimpleGame.myGame.make.text(0, 0, "" + Util.convertToHHMMSS(Util.getStorage("bestTime")), {
-			font: "20px Open Sans", fill: "#464646", fontWeight: "700"
-		});
-		this.besttimeCount.x = this.besttimeText.x + this.besttimeText.width + 3;
-		this.besttimeCount.y = this.besttimeText.y;
-		GameUI.promptLayer.add(this.besttimeCount);
-		var yesText = SimpleGame.myGame.make.text(0, 0, Language.ok[Language.langIdx], {
-			font: "20px Open Sans", fill: "#ffffff", fontWeight: "700"
-		});
-		var yesBut = new ButtonWithOverAndText(yesText, GameUI.promptLayer, "button", "button_over", 0, 0, function() {
-			
-			GameUI.promptLayer.removeAll(true);
-		});
-		yesBut.setXY(this.menuBG.x + (this.menuBG.width - yesBut.imgNormal.width) * 0.2, this.menuBG.y + 325);
-		var clearText = SimpleGame.myGame.make.text(0, 0, Language.clear[Language.langIdx].toUpperCase(), {
-			font: "20px Open Sans", fill: "#ffffff", fontWeight: "700"
-		});
-		var clearBut = new ButtonWithOverAndText(clearText, GameUI.promptLayer, "button", "button_over", 0, 0, function() {
-			
-			GameUI.promptLayer.removeAll(true);
-			// window.localStorage.clear()
-			var stats = new StatisticsPrompt();
-		});
-		clearBut.setXY(this.menuBG.x + (this.menuBG.width - clearBut.imgNormal.width) * 0.79, this.menuBG.y + 325);
-	}
-	return StatisticsPrompt;
-}());
-var ButtonTextOnly = (function() {
-	function ButtonTextOnly(parent, x, y, width, height, text, onClickFunction) {
-		if (onClickFunction === void 0) { onClickFunction = function() {
-		}; }
+	}());
+
+var ButtonTextOnly = (function()
+	{
+	function ButtonTextOnly(parent, x, y, width, height, text, onClickFunction)
+		{
+		if (onClickFunction === void 0)
+			{
+			onClickFunction = function()
+				{
+				};
+			}
+
 		this.disabled = false;
 		this.isVisible = true;
 		this.parent = parent;
@@ -3451,17 +3378,15 @@ var ButtonTextOnly = (function() {
 		this.width = width;
 		this.height = height;
 		this.onClickFunction = onClickFunction;
-		this.buttonText = SimpleGame.myGame.make.text(x, y, this.text, {
+		this.buttonText = SimpleGame.myGame.make.text(x, y, this.text,
+			{
 			font: "14px Arial", fill: "#000000", fontWeight: "400", align: "Right"
-		});
+			});
 		this.buttonText.inputEnabled = true;
 		this.buttonText.anchor.set(0, 0.5);
 		this.underline = SimpleGame.myGame.make.graphics(this.buttonText.left, this.buttonText.bottom - 5);
-		// Specify the line (size, color)
 		this.underline.lineStyle(2, 0x000000);
-		// Location to start drawing the line (x, y)
 		this.underline.moveTo(0, 0);
-
 		this.underline.lineTo(this.buttonText.width, 0);
 		this.buttonText.events.onInputDown.add(this.executeOnClickFunction, this);
 		this.buttonText.events.onInputOver.add(this.addUnderline, this);
@@ -3470,74 +3395,88 @@ var ButtonTextOnly = (function() {
 		this.underline.visible = false;
 		parent.add(this.underline);
 		parent.add(this.buttonText);
-		
-	}
-	ButtonTextOnly.prototype.executeOnClickFunction = function() {
+		}
+
+	ButtonTextOnly.prototype.executeOnClickFunction = function()
+		{
 		if (this.disabled)
+			{
 			return;
+			}
 		if (this.isVisible == false)
+			{
 			return;
-		
+			}
+
 		this.onClickFunction();
 		SimpleGame.myGame.input.reset();
-		// this.buttonText.inputEnabled = true;
-		//	 SimpleGame.myGame.time.events.add(10, function()
-		// {
-		//	 if (this.buttonText==null) return ;
-		//	 this.buttonText.events.onInputDown.add(this.executeOnClickFunction, this)
-		//	 this.buttonText.events.onInputOver.add(this.addUnderline,this)
-		//	 this.buttonText.events.onInputOut.add(this.removeUnderline,this)
-		//	 this.buttonText.input.useHandCursor  = true; 
-		// })
-	};
-	ButtonTextOnly.prototype.addUnderline = function() {
+		};
+
+	ButtonTextOnly.prototype.addUnderline = function()
+		{
 		if (this.disabled)
+			{
 			return;
+			}
+
 		if (SimpleGame.myGame.device.touch)
+			{
 			return;
+			}
+
 		this.underline.visible = true;
-	};
-	ButtonTextOnly.prototype.removeUnderline = function() {
+		};
+
+	ButtonTextOnly.prototype.removeUnderline = function()
+		{
 		this.underline.visible = false;
-	};
-	ButtonTextOnly.prototype.disable = function() {
+		};
+
+	ButtonTextOnly.prototype.disable = function()
+		{
 		this.disabled = true;
 		this.removeUnderline();
 		this.buttonText.addColor("#87888b", 0);
-	};
-	ButtonTextOnly.prototype.enable = function() {
+		};
+
+	ButtonTextOnly.prototype.enable = function()
+		{
 		this.disabled = false;
 		this.buttonText.addColor("#000000", 0);
-	};
-	ButtonTextOnly.prototype.goInvisible = function() {
-		
+		};
+
+	ButtonTextOnly.prototype.goInvisible = function()
+		{
 		this.parent.remove(this.underline);
 		this.parent.remove(this.buttonText);
 		this.isVisible = false;
-		// this.underline.y = -1000;
-		// this.buttonText.y = -1000;
-		// this.parent.removeAll()
-		// this.underline.visible = false;
-		// this.buttonText.visible = false;
-	};
-	ButtonTextOnly.prototype.goVisible = function() {
-		
+		};
+
+	ButtonTextOnly.prototype.goVisible = function()
+		{
 		this.parent.add(this.underline);
 		this.parent.add(this.buttonText);
-		// this.underline.y = this.y;
-		SimpleGame.myGame.time.events.add(50, function() {
+
+		SimpleGame.myGame.time.events.add(50, function()
+			{
 			this.isVisible = true;
-		}, this);
-		// this.buttonText.y = this.buttonText.bottom - 5
-		// this.underline.visible = true;
-		// this.buttonText.visible = true;
-	};
+			}, this);
+		};
+
 	return ButtonTextOnly;
-}());
-var ButtonWithOverState = (function() {
-	function ButtonWithOverState(parent, imgNormalName, imgOverName, x, y, onClickFunction) {
-		if (onClickFunction === void 0) { onClickFunction = function() {
-		}; }
+	}());
+
+var ButtonWithOverState = (function()
+	{
+	function ButtonWithOverState(parent, imgNormalName, imgOverName, x, y, onClickFunction)
+		{
+		if (onClickFunction === void 0)
+			{
+			onClickFunction = function()
+				{
+				};
+			}
+
 		this.onClickExecuted = false;
 		this.skipMouseOver = false;
 		this.imgnormalnamestr = imgNormalName;
@@ -3548,156 +3487,177 @@ var ButtonWithOverState = (function() {
 		this.y = y;
 		this.imgNormal = SimpleGame.myGame.make.sprite(this.x, this.y, imgNormalName);
 		this.imgOver = SimpleGame.myGame.make.sprite(this.x, this.y, imgOverName);
+
 		parent.add(this.imgNormal);
 		parent.add(this.imgOver);
+
 		this.imgNormal.inputEnabled = this.imgOver.inputEnabled = false;
 		this.imgOver.inputEnabled = false;
 		this.imgNormal.events.onInputOver.add(this.onButtonOver, this, 0);
-		// this.imgOver.events.onInputOver.add(this.onButtonOver, this, 0)
 		this.imgNormal.events.onInputUp.add(this.banInput, this, 100);
 		this.imgNormal.events.onInputDown.add(this.onButtonClicked, this, 2);
 		this.imgNormal.events.onInputOut.add(this.onButtonOut, this, 1);
 		this.imgOver.events.onInputOut.add(this.onButtonOut, this, 1);
-		// this.imgOver.events.onInputDown.add(this.onButtonClicked, this,3)
 		this.imgOver.events.onInputUp.add(this.onButtonOut, this, 4);
-		this.imgNormal.events.onInputDown.add(function() {
-			
-		}, this);
-		this.imgOver.events.onInputDown.add(function() {
-			
-		}, this);
+
+		this.imgNormal.events.onInputDown.add(function()
+			{
+			}, this);
+
+		this.imgOver.events.onInputDown.add(function()
+			{
+			}, this);
+
 		this.onClickFunction = onClickFunction;
 		this.imgOver.visible = false;
 		this.loopEvent = SimpleGame.myGame.time.events.loop(100, this.update, this);
 		this.loopEvent1 = SimpleGame.myGame.time.events.loop(10, this.update1, this);
-		
-		SimpleGame.myGame.time.events.add(150, function() {
+
+		SimpleGame.myGame.time.events.add(150, function()
+			{
 			this.imgNormal.inputEnabled = true;
-			if (GameUI.promptLayer != null) {
-				if (GameUI.promptLayer.countLiving() <= 0) {
+			if (GameUI.promptLayer != null)
+				{
+				if (GameUI.promptLayer.countLiving() <= 0)
+					{
 					this.imgNormal.input.useHandCursor = true;
-				}
-				else {
+					}
+					else
+					{
 					this.imgNormal.input.useHandCursor = true;
+					}
 				}
-			}
-			else {
+				else
+				{
 				this.imgNormal.input.useHandCursor = true;
-			}
-			
-		}, this);
-		SimpleGame.myGame.input.onTap.add(function() {
-			// console.log("mouse tapped")
-		});
-		this.imgNormal.events.onInputUp.add(function() {
-			// console.log("input up")
-		});
-	}
-	ButtonWithOverState.prototype.update = function() {
-		//   console.log("update button: " + this.onClickExecuted)
-		if (this.imgNormal.input != null) {
-			if (this.skipMouseOver) {
-				
-				// this.imgNormal.input.useHandCursor = false;
+				}
+			}, this);
+
+		SimpleGame.myGame.input.onTap.add(function()
+			{
+			});
+
+		this.imgNormal.events.onInputUp.add(function()
+			{
+			});
+		}
+
+	ButtonWithOverState.prototype.update = function()
+		{
+		if (this.imgNormal.input != null)
+			{
+			if (this.skipMouseOver)
+				{
 				this.imgOver.visible = false;
+				}
 			}
-			else {
-				// this.imgNormal.input.useHandCursor = true;
+		if (this.imgOver.parent)
+			{
+			if (!this.imgOver.getBounds().contains(SimpleGame.myGame.input.x, SimpleGame.myGame.input.y))
+				{
+				}
+				else
+				{
+				}
 			}
-		}
-		if (this.imgOver.parent) {
-			if (!this.imgOver.getBounds().contains(SimpleGame.myGame.input.x, SimpleGame.myGame.input.y)) {
-				// this.onButtonOut();
-				// this.imgNormal.input.useHandCursor = false;
-			}
-			else {
-				//very dirty hack
-				// if (this.imgnormalnamestr == "open_menu2")
-				// {
-				//	 this.imgNormal.input.useHandCursor = true;
-				//	 this.onButtonOver();
-				// }
-			}
-		}
-		else {
+			else
+			{
 			SimpleGame.myGame.time.events.remove(this.loopEvent);
-		}
+			}
 		this.setXY(this.x, this.y);
-	};
-	ButtonWithOverState.prototype.update1 = function() {
-		//   console.log("update button: " + this.onClickExecuted)
+		};
+
+	ButtonWithOverState.prototype.update1 = function()
+		{
 		this.setXY(this.x, this.y);
-	};
-	ButtonWithOverState.prototype.banInput = function() {
+		};
+
+	ButtonWithOverState.prototype.banInput = function()
+		{
 		this.onClickExecuted = true;
-		// console.log("button click success")
-		SimpleGame.myGame.time.events.add(50, function() {
-			// console.log("can click button")
+
+		SimpleGame.myGame.time.events.add(50, function()
+			{
 			this.onClickExecuted = false;
-		}, this);
-	};
-	ButtonWithOverState.prototype.onButtonOver = function() {
-		
+			}, this);
+		};
+
+	ButtonWithOverState.prototype.onButtonOver = function()
+		{
 		this.imgNormal.input.useHandCursor = true;
-		if (this.skipMouseOver) {
-			// this.imgNormal.input.useHandCursor = false;
-			
+
+		if (this.skipMouseOver)
+			{
 			return;
-		}
+			}
+
 		this.imgOver.visible = true;
 		this.imgNormal.alpha = 0.00001;
+
 		SimpleGame.myGame.canvas.style.cursor = "pointer";
-		
-		if (SimpleGame.myGame.device.touch) {
-			// this.imgOver.visible = false;
-		}
-	};
-	ButtonWithOverState.prototype.onButtonOut = function() {
-		if (this.imgnormalnamestr == "open_menu2") {
-			// console.log("button out")
-		}
+
+		if (SimpleGame.myGame.device.touch)
+			{
+			}
+		};
+
+	ButtonWithOverState.prototype.onButtonOut = function()
+		{
+		if (this.imgnormalnamestr == "open_menu2")
+			{
+			}
 		this.imgOver.visible = false;
 		this.imgNormal.alpha = 1;
-		// this.imgNormal.input.useHandCursor = false;
-	};
-	ButtonWithOverState.prototype.onButtonClicked = function(evt) {
-		//   console.log("button click attempt registered")
-		//  var delay = Consts.DELAY_BETWEEN_EVENTS_DESKTOP;
-		//  if (SimpleGame.myGame.device.touch)
-		//  {
-		//	 delay = Consts.DELAY_BETWEEN_EVENTS_TOUCH;
-		//  }
-		// this.imgNormal.input.useHandCursor = false;
-		if (this.onClickExecuted == false) {
+		};
+
+	ButtonWithOverState.prototype.onButtonClicked = function(evt)
+		{
+		if (this.onClickExecuted == false)
+			{
 			this.onClickExecuted = true;
-			// console.log("button click success")
-			SimpleGame.myGame.time.events.add(60, function() {
-				// console.log("can click button")
+
+			SimpleGame.myGame.time.events.add(60, function()
+				{
 				this.onClickExecuted = false;
-			}, this);
+				}, this);
+
 			this.onClickFunction();
-		}
+			}
+
 		SimpleGame.myGame.input.enabled = false;
-		SimpleGame.myGame.time.events.add(60, function() {
+
+		SimpleGame.myGame.time.events.add(60, function()
+			{
 			SimpleGame.myGame.input.enabled = true;
 			SimpleGame.myGame.input.reset();
-		});
-	};
-	ButtonWithOverState.prototype.setXY = function(x, y) {
+			});
+		};
+
+	ButtonWithOverState.prototype.setXY = function(x, y)
+		{
 		this.imgNormal.x = x;
 		this.imgOver.x = x;
 		this.x = x;
 		this.imgNormal.y = y;
 		this.imgOver.y = y;
 		this.y = y;
-	};
+		};
 	return ButtonWithOverState;
-}());
-var ButtonWithOverAndText = (function(_super) {
+	}());
+
+var ButtonWithOverAndText = (function(_super)
+	{
 	__extends(ButtonWithOverAndText, _super);
-	function ButtonWithOverAndText(text, parent, imgNormalName, imgOverName, x, y, onClickFunction) {
-		if (onClickFunction === void 0) { onClickFunction = function() {
-		}; }
+
+	function ButtonWithOverAndText(text, parent, imgNormalName, imgOverName, x, y, onClickFunction)
+		{
+		if (onClickFunction === void 0)
+			{
+			onClickFunction = function()
+				{
+				};
+			}
+
 		var _this = _super.call(this, parent, imgNormalName, imgOverName, x, y, onClickFunction) || this;
 		_this.fixedTxtCoords = false;
 		_this.fixedTxtX = 0;
@@ -3706,242 +3666,170 @@ var ButtonWithOverAndText = (function(_super) {
 		_this.textX = 0;
 		_this.textYDelta = 0;
 		_this.text = text;
-		// this.text.inputEnabled = false;
-		// this.text.interactive = false;
-		// this.text.input.useHandCursor = true;
+
 		parent.add(text);
 		return _this;
-	}
-	ButtonWithOverAndText.prototype.setXY = function(x, y) {
+		}
+
+	ButtonWithOverAndText.prototype.setXY = function(x, y)
+		{
 		_super.prototype.setXY.call(this, x, y);
-		if (this.fixedTxtCoords) {
+
+		if (this.fixedTxtCoords)
+			{
 			this.text.x = this.imgNormal.x + this.fixedTxtX;
 			this.text.y = this.imgNormal.y + this.fixedTxtY;
-		}
-		else {
+			}
+			else
+			{
 			this.text.x = this.imgNormal.x + 0.5 * (this.imgNormal.width - this.text.width);
 			this.text.y = this.imgNormal.y + 0.5 * (this.imgNormal.height - 0.85 * this.text.height) + 1;
-		}
+			}
+
 		this.textX = this.text.x;
 		this.textY = this.text.y + this.textYDelta;
-		if (this.imgOver.visible) {
+
+		if (this.imgOver.visible)
+			{
 			this.text.y = this.textY;
-		}
-		else {
+			}
+			else
+			{
 			this.text.y = this.textY;
-		}
-	};
-	ButtonWithOverAndText.prototype.update = function() {
+			}
+		};
+
+	ButtonWithOverAndText.prototype.update = function()
+		{
 		_super.prototype.update.call(this);
-		if (this.imgOver.visible) {
+
+		if (this.imgOver.visible)
+			{
 			this.text.y = this.textY;
-		}
-		else {
+			}
+			else
+			{
 			this.text.y = this.textY;
-		}
-	};
-	ButtonWithOverAndText.prototype.setVisible = function() {
-		
+			}
+		};
+
+	ButtonWithOverAndText.prototype.setVisible = function()
+		{
 		this.parent.add(this.imgNormal);
 		this.parent.add(this.imgOver);
 		this.parent.add(this.text);
-	};
-	ButtonWithOverAndText.prototype.setInvisible = function() {
+		};
+
+	ButtonWithOverAndText.prototype.setInvisible = function()
+		{
 		this.parent.remove(this.imgNormal);
 		this.parent.remove(this.imgOver);
 		this.parent.remove(this.text);
-	};
-	return ButtonWithOverAndText;
-}(ButtonWithOverState));
-var CheckboxControl = (function() {
-	function CheckboxControl(parent, uncheckedImageName, checkedImageName, x, y) {
-		this.isChecked = false;
-		this.x = x;
-		this.y = y;
-		var uncheckedImage = SimpleGame.myGame.make.sprite(x, y, uncheckedImageName);
-		parent.add(uncheckedImage);
-		uncheckedImage.inputEnabled = true;
-		uncheckedImage.events.onInputDown.add(this.switchState, this);
-		var checkedImage = SimpleGame.myGame.make.sprite(x, y, checkedImageName);
-		parent.add(checkedImage);
-		checkedImage.inputEnabled = true;
-		checkedImage.events.onInputDown.add(this.switchState, this);
-		this.uncheckedImage = uncheckedImage;
-		this.checkedImage = checkedImage;
-		this.update();
-	}
-	CheckboxControl.prototype.update = function() {
-		if (this.isChecked) {
-			this.uncheckedImage.visible = false;
-			this.checkedImage.visible = true;
-		}
-		else {
-			this.uncheckedImage.visible = true;
-			this.checkedImage.visible = false;
-		}
-	};
-	CheckboxControl.prototype.switchState = function() {
-		this.isChecked = !this.isChecked;
-		this.update();
-	};
-	return CheckboxControl;
-}());
-var Utils;
-(function(Utils) {
-	var ScreenMetrics = (function() {
-		function ScreenMetrics() {
-		}
-		return ScreenMetrics;
-	}());
-	Utils.ScreenMetrics = ScreenMetrics;
-	var Orientation;
-	(function(Orientation) {
-		Orientation[Orientation["PORTRAIT"] = 0] = "PORTRAIT";
-		Orientation[Orientation["LANDSCAPE"] = 1] = "LANDSCAPE";
-	})(Orientation = Utils.Orientation || (Utils.Orientation = {}));
-	;
-	var ScreenUtils = (function() {
-		function ScreenUtils() {
-		}
-		// -------------------------------------------------------------------------
-		ScreenUtils.calculateScreenMetrics = function(aDefaultWidth, aDefaultHeight, aOrientation, aMaxGameWidth, aMaxGameHeight) {
-			if (aOrientation === void 0) { aOrientation = Orientation.LANDSCAPE; }
-			// get dimension of window
-			var windowWidth = window.innerWidth;
-			var windowHeight = window.innerHeight;
-			// swap if window dimensions do not match orientation
-			if ((windowWidth < windowHeight && aOrientation === Orientation.LANDSCAPE) ||
-				(windowHeight < windowWidth && aOrientation === Orientation.PORTRAIT)) {
-				var tmp = windowWidth;
-				windowWidth = windowHeight;
-				windowHeight = tmp;
-			}
-			// calculate max game dimension. The bounds are iPad and iPhone 
-			if (typeof aMaxGameWidth === "undefined" || typeof aMaxGameHeight === "undefined") {
-				if (aOrientation === Orientation.LANDSCAPE) {
-					aMaxGameWidth = Math.round(aDefaultWidth * 1420 / 1280);
-					aMaxGameHeight = Math.round(aDefaultHeight * 960 / 800);
-				}
-				else {
-					aMaxGameWidth = Math.round(aDefaultWidth * 960 / 800);
-					aMaxGameHeight = Math.round(aDefaultHeight * 1420 / 1280);
-				}
-			}
-			// default aspect and current window aspect
-			var defaultAspect = (aOrientation === Orientation.LANDSCAPE) ? 1280 / 800 : 800 / 1280;
-			var windowAspect = windowWidth / windowHeight;
-			var offsetX = 0;
-			var offsetY = 0;
-			var gameWidth = 0;
-			var gameHeight = 0;
-			// if (aOrientation === Orientation.LANDSCAPE) {
-			// "iPhone" landscape ... and "iPad" portrait
-			if (windowAspect > defaultAspect) {
-				gameHeight = aDefaultHeight;
-				gameWidth = Math.ceil((gameHeight * windowAspect) / 2.0) * 2;
-				gameWidth = Math.min(gameWidth, aMaxGameWidth);
-				offsetX = (gameWidth - aDefaultWidth) / 2;
-				offsetY = 0;
-			}
-			else {
-				gameWidth = aDefaultWidth;
-				gameHeight = Math.ceil((gameWidth / windowAspect) / 2.0) * 2;
-				gameHeight = Math.min(gameHeight, aMaxGameHeight);
-				offsetX = 0;
-				offsetY = (gameHeight - aDefaultHeight) / 2;
-			}
-
-			// calculate scale
-			var scaleX = windowWidth / gameWidth;
-			var scaleY = windowHeight / gameHeight;
-			// store values
-			this.screenMetrics = new ScreenMetrics();
-			this.screenMetrics.windowWidth = windowWidth;
-			this.screenMetrics.windowHeight = windowHeight;
-			this.screenMetrics.defaultGameWidth = aDefaultWidth;
-			this.screenMetrics.defaultGameHeight = aDefaultHeight;
-			this.screenMetrics.maxGameWidth = aMaxGameWidth;
-			this.screenMetrics.maxGameHeight = aMaxGameHeight;
-			this.screenMetrics.gameWidth = gameWidth;
-			this.screenMetrics.gameHeight = gameHeight;
-			this.screenMetrics.scaleX = scaleX;
-			this.screenMetrics.scaleY = scaleY;
-			this.screenMetrics.offsetX = offsetX;
-			this.screenMetrics.offsetY = offsetY;
-			return this.screenMetrics;
 		};
-		return ScreenUtils;
-	}());
-	Utils.ScreenUtils = ScreenUtils;
-})(Utils || (Utils = {}));
-var Util = (function() {
-	function Util() {
-	}
-	Util.convertToHHMMSS = function(seconds) {
+	return ButtonWithOverAndText;
+	}(ButtonWithOverState));
+
+var Util = (function()
+	{
+	function Util()
+		{
+		}
+
+	Util.convertToHHMMSS = function(seconds)
+		{
 		var s = seconds % 60;
 		var m = Math.floor((seconds % 3600) / 60);
 		var h = Math.floor(seconds / (60 * 60));
-		//var hourStr:String = (h == 0) ? "" : doubleDigitFormat(h) + ":";
+
 		var hourStr = (false) ? "" : Util.doubleDigitFormat(h) + ":";
 		var minuteStr = Util.doubleDigitFormat(m) + ":";
 		var secondsStr = Util.doubleDigitFormat(s);
 		return hourStr + minuteStr + secondsStr;
-	};
-	Util.convertToMMSS = function(seconds) {
+		};
+
+	Util.convertToMMSS = function(seconds)
+		{
 		var s = seconds % 60;
 		var m = Math.floor((seconds % 3600) / 60);
 		var h = Math.floor(seconds / (60 * 60));
-		//var hourStr:String = (h == 0) ? "" : doubleDigitFormat(h) + ":";
+
 		var hourStr = (false) ? "" : Util.doubleDigitFormat(h) + ":";
 		var minuteStr = Util.doubleDigitFormat(m) + ":";
 		var secondsStr = Util.doubleDigitFormat(s);
 		return minuteStr + secondsStr;
-	};
-	Util.doubleDigitFormat = function(num) {
-		if (num < 10) {
+		};
+
+	Util.doubleDigitFormat = function(num)
+		{
+		if (num < 10)
+			{
 			return ("0" + num);
-		}
+			}
 		return "" + num;
-	};
-	Util.getStorage = function(s, defaultRetValue) {
-		if (defaultRetValue === void 0) { defaultRetValue = 0; }
+		};
+
+	Util.getStorage = function(s, defaultRetValue)
+		{
+		if (defaultRetValue === void 0)
+			{
+			defaultRetValue = 0;
+			}
+
 		var storageData = 0;
-		try {
+		try
+			{
 			storageData = parseInt(window.localStorage.getItem(s));
-		}
-		catch (error) {
+			}
+			catch(error)
+			{
 			return 0;
-		}
-		if (isNaN(storageData)) {
+			}
+
+		if (isNaN(storageData))
+			{
 			storageData = 0;
-			try {
+			try
+				{
 				window.localStorage.setItem(s, defaultRetValue.toString());
-			}
-			catch (error) {
+				}
+				catch(error)
+				{
 				return 0;
+				}
 			}
-		}
 		return storageData;
-	};
-	Util.setStorage = function(s, val) {
-		try {
+		};
+
+	Util.setStorage = function(s, val)
+		{
+		try
+			{
 			window.localStorage.setItem(s, val.toString());
-		}
-		catch (error) {
-		}
-	};
-	Util.clearStorage = function(s, defaultVal) {
-		if (defaultVal === void 0) { defaultVal = 0; }
-	};
-	Util.fixedDigitCount = function(digits, number) {
+			}
+			catch(error)
+			{
+			}
+		};
+
+	Util.clearStorage = function(s, defaultVal)
+		{
+		if (defaultVal === void 0)
+			{
+			defaultVal = 0;
+			}
+		};
+
+	Util.fixedDigitCount = function(digits, number)
+		{
 		var digitCount = number.toString().length;
 		var deltaCount = digits - digitCount;
 		var retStr = "";
-		while (deltaCount-- > 0) {
+		while (deltaCount-- > 0)
+			{
 			retStr += "0";
-		}
+			}
 		retStr += number.toString();
 		return retStr;
-	};
+		};
 	return Util;
-}());
+	}());
