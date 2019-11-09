@@ -4,7 +4,6 @@ Spider Solitaire in JavaScript.
 
 ![alt screenshot](https://raw.githubusercontent.com/lrusso/Spider/master/Spider.png)
 
-
 ## Web:
 
 https://lrusso.github.io/Spider/Spider.htm
