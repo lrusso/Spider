@@ -3389,6 +3389,10 @@ var NewGamePrompt = (function()
 			var removeButton = new ButtonWithOverState(GameUI.promptLayer, "prompt_close", "prompt_close_over", 576, 219, function()
 				{
 				GameUI.promptLayer.removeAll(true);
+				if (BoardManager.checkForGameOver())
+					{
+					var gamewon = new GameWonPrompt2();
+					}
 				});
 			}
 		}
