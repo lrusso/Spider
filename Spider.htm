@@ -46,6 +46,12 @@
 				// RESIZING THE IFRAME
 				resizeContent();
 
+				// TO KEEP FOCUS IN THE IFRAME
+				setInterval(function()
+					{
+					document.getElementById("content").focus();
+					}, 250);
+
 				// LOADING THE GAME
 				document.getElementById("content").src = "SpiderGame.htm";
 
