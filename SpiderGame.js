@@ -59,7 +59,7 @@ var SimpleGame = (function()
 		{
 		this.mouseMovedWithinGameTicks = 0;
 		this.ticks = 0;
-		var config = {width: 880, height: 600, renderer: Phaser.CANVAS, parent: "content", disableVisibilityChange: true};
+		var config = {width: 880, height: 600, renderer: Phaser.WEBGL, parent: "content", disableVisibilityChange: true, preserveDrawingBuffer: true};
 		this.game = new Phaser.Game(config);
 		SimpleGame.myGame = this.game;
 
@@ -143,7 +143,7 @@ var SimpleGame = (function()
 
 		text.visible = false;
 
-		SimpleGame.game_bg = this.game.add.sprite(0, 0, "game_bg");
+		SimpleGame.game_bg = this.game.add.sprite(-1, 0, "game_bg");
 		SimpleGame.game_bg.visible = false;
 
 		SimpleGame.checkAssetsLoaded();
