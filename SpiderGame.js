@@ -3354,8 +3354,8 @@ var NewGamePrompt = (function()
 			buttonRestartShadow.tint = 0x000000;
 			buttonRestartShadow.alpha = 0.7;
 			buttonRestartShadow.x = 29;
-			buttonRestartShadow.y = 544;
-			var buttonRestart = SimpleGame.myGame.add.button(3, 518, "restart", null, this, 2, 1, 0);
+			buttonRestartShadow.y = 545;
+			var buttonRestart = SimpleGame.myGame.add.button(3, 519, "restart", null, this, 2, 1, 0);
 			buttonRestart.onInputUp.add(GameUI.restartGame, this);
 			});
 
