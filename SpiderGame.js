@@ -351,21 +351,6 @@ var GameUI = (function()
 		GameUI.uiLayer.add(GameUI.hintBigBut);
 		GameUI.hintBigBut.alpha = 0.01;
 		GameUI.hintBigBut.input.useHandCursor = true;
-
-		/*
-		var buttondelta = 50;
-		var newgamebut = new ButtonTextOnly(GameUI.uiLayer, buttondelta / 2, 17, 160, 30, STRING_NEWGAME, function()
-			{
-			var newgame = new NewGamePrompt(true);
-			newgamebut.removeUnderline();
-			});
-		var aboutButton = new ButtonTextOnly(GameUI.uiLayer, newgamebut.x + newgamebut.buttonText.width + buttondelta, 17, 100, 100, "info@lrusso.com", function()
-			{
-			aboutButton.removeUnderline();
-			window.location = "mailto:info@lrusso.com";
-			});
-		*/
-
 		GameUI.uiLayer.add(GameUI.scoreTxt);
 		GameUI.uiLayer.add(GameUI.stepsText);
 		GameUI.reinitData();
@@ -3334,17 +3319,6 @@ var NewGamePrompt = (function()
 		this.blackbg.alpha = 0.000001;
 		this.blackbg.inputEnabled = true;
 		GameUI.promptLayer.add(this.blackbg);
-
-		/*
-		var buttonRestartShadow = SimpleGame.myGame.add.sprite(29, 29, "restart");
-		buttonRestartShadow.anchor.set(0.5);
-		buttonRestartShadow.tint = 0x000000;
-		buttonRestartShadow.alpha = 0.7;
-		buttonRestartShadow.x = 31;
-		buttonRestartShadow.y = 543;
-		var buttonRestart = SimpleGame.myGame.add.button(5, 517, "restart", null, this, 2, 1, 0);
-		buttonRestart.onInputUp.add(GameUI.restartGame, this);
-		*/
 
 		this.menuBG = SimpleGame.myGame.add.sprite(0, 0, "prompt_difficulty");
 		this.menuBG.x = (SimpleGame.myGame.width - this.menuBG.width) * 0.5;
