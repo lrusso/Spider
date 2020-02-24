@@ -322,10 +322,8 @@ var GameUI = (function()
 		GameUI.topLayer = SimpleGame.myGame.add.group();
 		GameUI.scoreTxt = SimpleGame.myGame.make.text(440, 502, "0500", { font: "16px Arial", fill: "#ffffff", fontWeight: "500", align: "Right" });
 		GameUI.stepsText = SimpleGame.myGame.make.text(440, 532, "0500", { font: "16px Arial", fill: "#ffffff", fontWeight: "500", align: "Right" });
-		GameUI.timeTxt = SimpleGame.myGame.make.text(440, 372, "0500", { font: "16px Arial", fill: "#ffffff", fontWeight: "500", align: "Right" });
 		GameUI.scoreTxt.anchor.set(0.5, 0.5);
 		GameUI.stepsText.anchor.set(0.5, 0.5);
-		GameUI.timeTxt.anchor.set(0.5, 0.5);
 		GameUI.menuButton = SimpleGame.myGame.make.graphics(0, 0);
 		GameUI.menuButton.beginFill(0xffffff);
 		GameUI.menuButton.drawRect(0, 2, 60, 40);
@@ -425,15 +423,8 @@ var GameUI = (function()
 				}
 			}
 
-		GameUI.timeTxt.text = Util.convertToMMSS(currentTime);
 		GameUI.scoreTxt.text = STRING_SCORE + GameUI.scoreTotal;
 		GameUI.stepsText.text = STRING_MOVES + GameUI.moves;
-
-		var bestScore = Util.getStorage("bestScore1", 0);
-		if (bestScore < GameUI.scoreTotal)
-			{
-			Util.setStorage("bestScore1", GameUI.scoreTotal);
-			}
 		};
 
 	GameUI.onMenuButtonPressed = function()
@@ -1228,9 +1219,6 @@ var BoardManager = (function()
 		BoardManager.sortImmediately();
 		BoardManager.initialTween();
 		GameUI.reinitData();
-		var gamesPlayed = Util.getStorage("gamesPlayed");
-		gamesPlayed++;
-		Util.setStorage("gamesPlayed", gamesPlayed);
 		};
 
 	BoardManager.initialTween = function()
@@ -1264,9 +1252,6 @@ var BoardManager = (function()
 
 	BoardManager.resetBoard = function()
 		{
-		var gamesPlayed = Util.getStorage("gamesPlayed");
-		gamesPlayed++;
-		Util.setStorage("gamesPlayed", gamesPlayed);
 		GameUI.resetUI();
 		BoardManager.fromSnapshotToBoard(BoardData.boardDataArray[0]);
 		BoardData.boardDataArray = new Array();
@@ -3774,108 +3759,3 @@ var ButtonWithOverAndText = (function(_super)
 		};
 	return ButtonWithOverAndText;
 	}(ButtonWithOverState));
-
-var Util = (function()
-	{
-	function Util()
-		{
-		}
-
-	Util.convertToHHMMSS = function(seconds)
-		{
-		var s = seconds % 60;
-		var m = Math.floor((seconds % 3600) / 60);
-		var h = Math.floor(seconds / (60 * 60));
-
-		var hourStr = (false) ? "" : Util.doubleDigitFormat(h) + ":";
-		var minuteStr = Util.doubleDigitFormat(m) + ":";
-		var secondsStr = Util.doubleDigitFormat(s);
-		return hourStr + minuteStr + secondsStr;
-		};
-
-	Util.convertToMMSS = function(seconds)
-		{
-		var s = seconds % 60;
-		var m = Math.floor((seconds % 3600) / 60);
-		var h = Math.floor(seconds / (60 * 60));
-
-		var hourStr = (false) ? "" : Util.doubleDigitFormat(h) + ":";
-		var minuteStr = Util.doubleDigitFormat(m) + ":";
-		var secondsStr = Util.doubleDigitFormat(s);
-		return minuteStr + secondsStr;
-		};
-
-	Util.doubleDigitFormat = function(num)
-		{
-		if (num < 10)
-			{
-			return ("0" + num);
-			}
-		return "" + num;
-		};
-
-	Util.getStorage = function(s, defaultRetValue)
-		{
-		if (defaultRetValue === void 0)
-			{
-			defaultRetValue = 0;
-			}
-
-		var storageData = 0;
-		try
-			{
-			storageData = parseInt(window.localStorage.getItem(s));
-			}
-			catch(error)
-			{
-			return 0;
-			}
-
-		if (isNaN(storageData))
-			{
-			storageData = 0;
-			try
-				{
-				window.localStorage.setItem(s, defaultRetValue.toString());
-				}
-				catch(error)
-				{
-				return 0;
-				}
-			}
-		return storageData;
-		};
-
-	Util.setStorage = function(s, val)
-		{
-		try
-			{
-			window.localStorage.setItem(s, val.toString());
-			}
-			catch(error)
-			{
-			}
-		};
-
-	Util.clearStorage = function(s, defaultVal)
-		{
-		if (defaultVal === void 0)
-			{
-			defaultVal = 0;
-			}
-		};
-
-	Util.fixedDigitCount = function(digits, number)
-		{
-		var digitCount = number.toString().length;
-		var deltaCount = digits - digitCount;
-		var retStr = "";
-		while (deltaCount-- > 0)
-			{
-			retStr += "0";
-			}
-		retStr += number.toString();
-		return retStr;
-		};
-	return Util;
-	}());
