@@ -3309,7 +3309,7 @@ var GameWonPrompt2 = (function()
 
 		GameUI.promptLayer.add(this.blackbg);
 
-		var gamewonanim = new GameWonAnim(GameUI.promptLayer, 440, 320);
+		var gamewonanim = new GameWonAnim(GameUI.promptLayer, 440, 300);
 		}
 	return GameWonPrompt2;
 	}());
