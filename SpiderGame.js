@@ -134,8 +134,6 @@ var SimpleGame = (function()
 
 	SimpleGame.prototype.create = function()
 		{
-		SimpleGame.handleOrientation();
-
 		this.ticks = 0;
 		var text = this.game.add.text(870, 32, "", { font: "35px Comic Sans MS", fill: "#ff0000" });
 		text.text = "super";
@@ -153,38 +151,6 @@ var SimpleGame = (function()
 		SimpleGame.myGame.input.onDown.add(SimpleGame.onPointerDown, this);
 		SimpleGame.myGame.input.mspointer.capture = false;
 		document.addEventListener("contextmenu", function(event) { return event.preventDefault(); });
-		};
-
-	SimpleGame.handleOrientation = function()
-		{
-		SimpleGame.myGame.scale.forceOrientation(false, false);
-		SimpleGame.myGame.scale.enterIncorrectOrientation.add(function()
-			{
-			SimpleGame.myGame.time.events.add(1, function()
-				{
-				var deviceWidth = window.innerWidth;
-				var deviceHeight = window.innerHeight;
-
-				var isIframed = false;
-				if (window.self !== window.top)
-					{
-					isIframed = true;
-					}
-				if (isIframed)
-					{
-					return;
-					}
-
-				SimpleGame.myGame.input.enabled = false;
-				}, this);
-			}, this);
-
-		SimpleGame.myGame.scale.leaveIncorrectOrientation.add(function()
-			{
-			var deviceWidth = window.outerWidth;
-			var deviceHeight = window.outerHeight;
-			SimpleGame.myGame.input.enabled = true;
-			}, this);
 		};
 
 	SimpleGame.onPointerDown = function()
