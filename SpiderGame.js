@@ -237,14 +237,6 @@ var SimpleGame = (function()
 
 			GameUI.promptLayer.removeAll(true);
 			var newgame = new NewGamePrompt();
-			if (SimpleGame.myGame.device.safari == false && SimpleGame.myGame.device.firefox == false && SimpleGame.myGame.input.touch && (SimpleGame.myGame.device.android || SimpleGame.myGame.device.iOS))
-				{
-				SimpleGame.myGame.input.mouse.stop();
-				}
-			else if (SimpleGame.myGame.device.safari == false && SimpleGame.myGame.device.firefox == false && SimpleGame.myGame.device.ie == false && SimpleGame.myGame.input.touch)
-				{
-				SimpleGame.myGame.input.mouse.stop();
-				}
 			}
 			else
 			{
