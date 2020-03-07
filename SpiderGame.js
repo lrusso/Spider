@@ -318,6 +318,19 @@ var GameUI = (function()
 		GameUI.stepsText.y = Math.round(GameUI.stepsText.y);
 		this.update();
 		this.reinitData();
+
+
+		GameUI.buttonRestartShadow = SimpleGame.myGame.add.sprite(29, 29, "restart");
+		GameUI.buttonRestartShadow.anchor.set(0.5);
+		GameUI.buttonRestartShadow.tint = 0x000000;
+		GameUI.buttonRestartShadow.alpha = 0.7;
+		GameUI.buttonRestartShadow.x = 29;
+		GameUI.buttonRestartShadow.y = 545;
+		GameUI.buttonRestartShadow.visible = false;
+
+		GameUI.buttonRestart = SimpleGame.myGame.add.button(3, 519, "restart", null, this, 2, 1, 0);
+		GameUI.buttonRestart.onInputUp.add(GameUI.restartGame, this);
+		GameUI.buttonRestart.visible = false;
 		};
 
 	GameUI.restartGame = function ()
@@ -3292,14 +3305,8 @@ var NewGamePrompt = (function()
 			GameUI.promptLayer.removeAll(true);
 			CardUtil.NUM_SUIT_COLORS = 1;
 			BoardManager.InitializeBoard();
-			var buttonRestartShadow = SimpleGame.myGame.add.sprite(29, 29, "restart");
-			buttonRestartShadow.anchor.set(0.5);
-			buttonRestartShadow.tint = 0x000000;
-			buttonRestartShadow.alpha = 0.7;
-			buttonRestartShadow.x = 29;
-			buttonRestartShadow.y = 545;
-			var buttonRestart = SimpleGame.myGame.add.button(3, 519, "restart", null, this, 2, 1, 0);
-			buttonRestart.onInputUp.add(GameUI.restartGame, this);
+			GameUI.buttonRestartShadow.visible = true;
+			GameUI.buttonRestart.visible = true;
 			});
 
 		var normalBut = new ButtonTextOnly(GameUI.promptLayer, this.menuBG.x + (this.menuBG.width - 80) * 0.5, this.menuBG.y + 335, 0, 0, STRING_MEDIUM, function()
@@ -3307,14 +3314,8 @@ var NewGamePrompt = (function()
 			GameUI.promptLayer.removeAll(true);
 			CardUtil.NUM_SUIT_COLORS = 2;
 			BoardManager.InitializeBoard();
-			var buttonRestartShadow = SimpleGame.myGame.add.sprite(29, 29, "restart");
-			buttonRestartShadow.anchor.set(0.5);
-			buttonRestartShadow.tint = 0x000000;
-			buttonRestartShadow.alpha = 0.7;
-			buttonRestartShadow.x = 31;
-			buttonRestartShadow.y = 543;
-			var buttonRestart = SimpleGame.myGame.add.button(5, 517, "restart", null, this, 2, 1, 0);
-			buttonRestart.onInputUp.add(GameUI.restartGame, this);
+			GameUI.buttonRestartShadow.visible = true;
+			GameUI.buttonRestart.visible = true;
 			});
 
 		var hardBut = new ButtonTextOnly(GameUI.promptLayer, this.menuBG.x + (this.menuBG.width - 80) * 0.5, this.menuBG.y + 367, 0, 0, STRING_HARD, function()
@@ -3322,14 +3323,8 @@ var NewGamePrompt = (function()
 			GameUI.promptLayer.removeAll(true);
 			CardUtil.NUM_SUIT_COLORS = 4;
 			BoardManager.InitializeBoard();
-			var buttonRestartShadow = SimpleGame.myGame.add.sprite(29, 29, "restart");
-			buttonRestartShadow.anchor.set(0.5);
-			buttonRestartShadow.tint = 0x000000;
-			buttonRestartShadow.alpha = 0.7;
-			buttonRestartShadow.x = 31;
-			buttonRestartShadow.y = 543;
-			var buttonRestart = SimpleGame.myGame.add.button(5, 517, "restart", null, this, 2, 1, 0);
-			buttonRestart.onInputUp.add(GameUI.restartGame, this);
+			GameUI.buttonRestartShadow.visible = true;
+			GameUI.buttonRestart.visible = true;
 			});
 
 		if (showXBut)
