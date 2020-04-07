@@ -1,0 +1,17 @@
+{
+  "short_name": "Spider",
+  "name": "Spider",
+  "description": "Solitaire Spider",
+  "icons": [
+    {
+      "src": "SpiderShare.png",
+      "type": "image/png",
+      "sizes": "300x300"
+    }
+  ],
+  "start_url": "https://lrusso.github.io/Spider/Spider.htm",
+  "background_color": "#000000",
+  "orientation": "landscape",
+  "display": "standalone",
+  "theme_color": "0000000"
+}
