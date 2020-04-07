@@ -64,6 +64,9 @@
 
 				// SHOWING THE IFRAME
 				document.getElementById("content").style.display = "block";
+
+				// IMPLEMENTING AN EMPTY SERVICE WORKER IN ORDER TO USE THIS WEB AS A PWA
+				try{navigator.serviceWorker.register("Spider.js")}catch(err){}
 				}
 
 			window.onresize = function()
