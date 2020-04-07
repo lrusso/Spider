@@ -4,9 +4,9 @@
   "description": "Solitaire Spider",
   "icons": [
     {
-      "src": "SpiderShare.png",
+      "src": "Spider192.png",
       "type": "image/png",
-      "sizes": "300x300"
+      "sizes": "192x192"
     }
   ],
   "start_url": "https://lrusso.github.io/Spider/Spider.htm",
