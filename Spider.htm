@@ -64,9 +64,6 @@
 
 				// SHOWING THE IFRAME
 				document.getElementById("content").style.display = "block";
-
-				// IMPLEMENTING AN EMPTY SERVICE WORKER IN ORDER TO USE THIS WEB AS A PWA
-				try{navigator.serviceWorker.register("Spider.js")}catch(err){}
 				}
 
 			window.onresize = function()
@@ -81,6 +78,21 @@
 				// RESIZING THE IFRAME WHEN THE SCREEN ORIENTATION CHANGES
 				resizeContent();
 				}, false);
+
+			// IMPLEMENTING AN EMPTY SERVICE WORKER IN ORDER TO USE THIS WEB AS A PWA
+			if ("serviceWorker" in navigator)
+				{
+				window.addEventListener('load', function()
+					{
+					navigator.serviceWorker.register("/Spider.js").then(function(registration)
+						{
+						// Registration was successful
+						},
+					function(err)
+						{
+						});
+					});
+				}
 		</script>
 	</body>
 </html>
