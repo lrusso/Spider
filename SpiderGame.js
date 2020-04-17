@@ -262,10 +262,10 @@ var SimpleGame = (function()
 	return SimpleGame;
 	}());
 
-window.onload = function()
+window.addEventListener("load", function()
 	{
 	var game = new SimpleGame();
-	};
+	});
 
 var GameUI = (function()
 	{
