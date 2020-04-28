@@ -5,8 +5,8 @@
 		<title>Spider</title>
 		<style>
 			html,body{background-color:black;height:100%;padding:0;margin:0;overflow:hidden;touch-action:none}
-			#content{position:fixed;height:100%;width:100%;margin:0;padding:0}
-			.pleasewait{position:fixed;width:64px;height:64px;left:0;right:0;top:0;bottom:0;margin:auto auto;border:0;z-index:99}
+			#content{position:fixed;height:100%;width:100%;margin:0;padding:0;z-index:99}
+			.pleasewait{position:fixed;width:64px;height:64px;left:0;right:0;top:0;bottom:0;margin:auto auto;border:0;z-index:9}
 			.lds-spinner{color:white;display:inline-block;position:relative;width:64px;height:64px}
 			.lds-spinner div{transform-origin:32px 32px;animation:lds-spinner 1.2s linear infinite}
 			.lds-spinner div:after{content:" ";display:block;position:absolute;top:3px;left:29px;width:5px;height:14px;border-radius:20%;background:white}
@@ -27,7 +27,7 @@
 	</head>
 	<body>
 		<div class="pleasewait" id="loading"><div class="lds-spinner"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div></div>
-		<div id="content"></div>
+		<div id="content" oncontextmenu="return false;"></div>
 		<script src="SpiderGame.js"></script>
 	</body>
 </html>
