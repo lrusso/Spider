@@ -21,13 +21,12 @@
 
 			@media only screen and (orientation:portrait)
 				{
-				body{margin:0;overflow:hidden}
-				#content{transform:rotate(90deg);transform-origin:bottom left;position:absolute;top:-100vw;left:0;overflow:auto}
+				.portrait{transform:rotate(-90deg);transform-origin:left top;width:100vh;overflow-x:hidden;position:absolute;top:100%;left:0}
 				}
 		</style>
 	</head>
 	<body>
-		<iframe id="content" src="about:blank"></iframe>
+		<iframe id="content" class="portrait" src="about:blank"></iframe>
 		<script>
 
 			function resizeContent()
