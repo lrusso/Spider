@@ -59,7 +59,7 @@ var SimpleGame = (function()
 		{
 		this.mouseMovedWithinGameTicks = 0;
 		this.ticks = 0;
-		var config = {width: 880, height: 572, renderer: Phaser.WEBGL, parent: "content", disableVisibilityChange: true, preserveDrawingBuffer: true};
+		var config = {width: 880, height: 572, renderer: Phaser.WEBGL, parent: "content", disableVisibilityChange: true};
 		this.game = new Phaser.Game(config);
 		SimpleGame.myGame = this.game;
 
