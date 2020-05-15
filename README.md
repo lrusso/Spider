@@ -8,6 +8,10 @@ Spider Solitaire in JavaScript.
 
 https://lrusso.github.io/Spider/Spider.htm
 
+## Android:
+
+https://lrusso.github.io/Spider/Spider.apk
+
 ## Based on the work of:
 
 https://games.gameboss.com/spidersolitairewindowsxp/index.html?lang=en
