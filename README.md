@@ -4,11 +4,11 @@ Spider Solitaire in JavaScript.
 
 ![alt screenshot](https://raw.githubusercontent.com/lrusso/Spider/master/Spider.png)
 
-## Web:
+## Web version:
 
 https://lrusso.github.io/Spider/Spider.htm
 
-## Android:
+## Android version:
 
 https://lrusso.github.io/Spider/Spider.apk
 
