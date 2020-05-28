@@ -3,6 +3,7 @@ package phaser.spider;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.view.View;
 import android.webkit.WebView;
 
 import java.io.BufferedReader;
@@ -16,6 +17,8 @@ public class MainActivity extends Activity
         {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+
+        hideNavigationBar();
 
         WebView webView = (WebView) findViewById(R.id.webView1);
         webView.getSettings().setJavaScriptEnabled(true);
@@ -72,5 +75,24 @@ public class MainActivity extends Activity
                 }
             }
         return null;
+        }
+
+    @Override public void onResume()
+        {
+        super.onResume();
+        hideNavigationBar();
+        }
+
+    private void hideNavigationBar()
+        {
+        try
+            {
+            View decorView = getWindow().getDecorView();
+            int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
+            decorView.setSystemUiVisibility(uiOptions);
+            }
+            catch(Exception e)
+            {
+            }
         }
     }
