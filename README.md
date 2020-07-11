@@ -4,6 +4,12 @@ Multiplatform Spider Solitaire porting.
 
 ![alt screenshot](https://raw.githubusercontent.com/lrusso/Spider/master/Spider.png)
 
+## Web:
+
+https://lrusso.github.io/Spider/
+
+## Available portings:
+
 | PLATFORM  | URL
 | :------------ |:---------------:|
 | Web | https://lrusso.github.io/Spider/Spider.htm
