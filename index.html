@@ -74,34 +74,103 @@
 		</style>
 	</head>
 	<body>
+		<script>
+			var userLanguage = window.navigator.userLanguage || window.navigator.language; 
+
+			var STRING_ABOUT = "";
+
+			var STRING_APPNAME = "";
+			var STRING_APPDESC = "";
+
+			var STRING_PLAYMAC = "";
+			var STRING_PLAYANDROID = "";
+			var STRING_PLAYWEBBROWSER = "";
+
+			var STRING_PROJECTFEATURES = "";
+			var STRING_PROJECTFEATURES1 = "";
+			var STRING_PROJECTFEATURES1_DESC = "";
+			var STRING_PROJECTFEATURES2 = "";
+			var STRING_PROJECTFEATURES2_DESC = "";
+			var STRING_PROJECTFEATURES3 = "";
+			var STRING_PROJECTFEATURES3_DESC = "";
+
+			var STRING_CONTACT_INFORMATION = "";
+
+			if (userLanguage.substring(0,2)=="es")
+				{
+				STRING_ABOUT = "Redise&ntilde;ado por LRusso.com";
+
+				STRING_APPNAME = "Solitario Spider";
+				STRING_APPDESC = "El cl&aacute;sico Spider redise&ntilde;ado y porteado.";
+
+				STRING_PLAYMAC = "Jugalo en tu Mac";
+				STRING_PLAYANDROID = "Jugalo en tu Android";
+				STRING_PLAYWEBBROWSER = "Jugalo en tu navegador";
+
+				STRING_PROJECTFEATURES = "Detalles del proyecto";
+
+				STRING_PROJECTFEATURES1 = "Software gratuito";
+				STRING_PROJECTFEATURES1_DESC = "Este software es gratuito, no tiene publicidad de ning&uacute;n tipo y puedes descargarlo, copiarlo y distribuirlo.";
+				STRING_PROJECTFEATURES2 = "C&oacute;digo libre";
+				STRING_PROJECTFEATURES2_DESC = "Esto implica que cualquiera puede sugerir una funci&oacute;n, reportar un error o hacer su versi&oacute;n.";
+				STRING_PROJECTFEATURES3 = "Multiplataforma";
+				STRING_PROJECTFEATURES3_DESC = "Hasta el momento, el Solitario Spider fue porteado a Android, Mac e incluso c&oacute;mo una p&aacute;gina Web.";
+
+				STRING_CONTACT_INFORMATION = "Informaci&oacute;n de contacto";
+
+				document.title = STRING_APPNAME;
+				}
+				else
+				{
+				STRING_ABOUT = "Redesigned by LRusso.com";
+
+				STRING_APPNAME = "Spider Solitaire";
+				STRING_APPDESC = "The classic Spider redesigned and ported.";
+
+				STRING_PLAYMAC = "Play it in your Mac";
+				STRING_PLAYANDROID = "Play it in your Android";
+				STRING_PLAYWEBBROWSER = "Play it in your Web browser";
+
+				STRING_PROJECTFEATURES = "Project features";
+
+				STRING_PROJECTFEATURES1 = "Free software";
+				STRING_PROJECTFEATURES1_DESC = "This software is free and has no ads of any kind and you can download, copy or share it freely.";
+				STRING_PROJECTFEATURES2 = "Open source";
+				STRING_PROJECTFEATURES2_DESC = "This implies that everybody can suggest a feature, report a bug or have a version of their own for free.";
+				STRING_PROJECTFEATURES3 = "Multiplatform";
+				STRING_PROJECTFEATURES3_DESC = "At the moment, the Spider Solitaire project has been ported to Android, Mac and even to a Web format.";
+
+				STRING_CONTACT_INFORMATION = "Contact information";
+				}
+		</script>
 		<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
 			<div class="container">
-				<a class="navbar-brand" href="#home"><div class="lrussoIcon">Spider Solitaire</div></a>
-				<div class="collapse navbar-collapse" id="navbarResponsive">
+				<a class="navbar-brand" href="#home"><div class="lrussoIcon"><script>document.write(STRING_APPNAME)</script></div></a>
+				<div class="collapse navbar-collapse">
 					<ul class="navbar-nav ml-auto">
-						<li class="nav-item"><a class="nav-link" target="_blank" href="https://www.lrusso.com">Redesigned by LRusso.com</a></li>
+						<li class="nav-item"><a class="nav-link" target="_blank" href="https://www.lrusso.com"><script>document.write(STRING_ABOUT)</script></a></li>
 					</ul>
 				</div>
 			</div>
 		</nav>
 
-		<div class="container" id="home">
+		<div class="container">
 
 			<div class="row align-items-center my-5">
 				<div class="col-lg-7">
 					<img class="img-fluid rounded mb-4 mb-lg-0" src="index1.png" alt="cover">
 				</div>
 				<div class="col-lg-5">
-					<h1 class="font-weight-light">Spider Solitaire</h1>
-					<p>The classic Spider redesigned and ported.</p>
-					<a class="btnWeb btnWebMargin" href="https://lrusso.github.io/Spider/Spider.zip">Play it in your Mac</a><br/>
-					<a class="btnWeb btnWebMargin" href="https://lrusso.github.io/Spider/Spider.apk">Play it in your Android</a><br/>
-					<a class="btnWeb btnWebMargin" href="https://lrusso.github.io/Spider/Spider.htm">Play it in your Web browser</a>
+					<h1 class="font-weight-light"><script>document.write(STRING_APPNAME)</script></h1>
+					<p><script>document.write(STRING_APPDESC)</script></p>
+					<a class="btnWeb btnWebMargin" href="https://lrusso.github.io/Spider/Spider.zip"><script>document.write(STRING_PLAYMAC)</script></a><br/>
+					<a class="btnWeb btnWebMargin" href="https://lrusso.github.io/Spider/Spider.apk"><script>document.write(STRING_PLAYANDROID)</script></a><br/>
+					<a class="btnWeb btnWebMargin" href="https://lrusso.github.io/Spider/Spider.htm"><script>document.write(STRING_PLAYWEBBROWSER)</script></a>
 				</div>
 			</div>
 
 			<div class="text-black my-4 py-0 text-left bottomBarTitle">
-				<h2 class="bottomBarTitleMargin" id="projects">Project features</h2>
+				<h2 class="bottomBarTitleMargin"><script>document.write(STRING_PROJECTFEATURES)</script></h2>
 			</div>
 
 			<div class="row">
@@ -109,8 +178,8 @@
 					<div class="card h-70">
 						<img src="index2.png" class="projectFeature" alt="img"/>
 						<div class="card-body">
-							<h4 class="card-title">Free software</h4>
-							<p class="card-text">This software is free and has no ads of any kind and you can download, copy or share it freely.</p>
+							<h4 class="card-title"><script>document.write(STRING_PROJECTFEATURES1)</script></h4>
+							<p class="card-text"><script>document.write(STRING_PROJECTFEATURES1_DESC)</script></p>
 						</div>
 					</div>
 				</div>
@@ -118,8 +187,8 @@
 					<div class="card h-70">
 						<img src="index3.png" class="projectFeature" alt="img"/>
 						<div class="card-body">
-							<h4 class="card-title">Open source</h4>
-							<p class="card-text">This means that everybody can suggest a feature, report a bug or have a version of their own for free.</p>
+							<h4 class="card-title"><script>document.write(STRING_PROJECTFEATURES2)</script></h4>
+							<p class="card-text"><script>document.write(STRING_PROJECTFEATURES2_DESC)</script></p>
 						</div>
 					</div>
 				</div>
@@ -127,15 +196,15 @@
 					<div class="card h-70">
 						<img src="index4.png" class="projectFeature" alt="img"/>
 						<div class="card-body">
-							<h4 class="card-title">Multiplatform</h4>
-							<p class="card-text">At the moment, the Spider Solitaire project has been ported to Android, OS X and even to a Web format.</p>
+							<h4 class="card-title"><script>document.write(STRING_PROJECTFEATURES3)</script></h4>
+							<p class="card-text"><script>document.write(STRING_PROJECTFEATURES3_DESC)</script></p>
 						</div>
 					</div>
 				</div>
 			</div>
 
 			<div class="text-black my-4 py-0 text-left bottomBarTitle">
-				<h2 class="bottomBarTitleMargin" id="contact">Contact information</h2>
+				<h2 class="bottomBarTitleMargin"><script>document.write(STRING_CONTACT_INFORMATION)</script></h2>
 			</div>
 
 			<div class="row">
