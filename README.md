@@ -32,7 +32,7 @@ https://games.gameboss.com/spidersolitairewindowsxp/index.html?lang=en
 
 * Select **Create folder references for any added folders** and select **Add**.
 
-* Select **ViewController.swift** from the Navigator pane and replace everything with with code shown below, changing **www** to the folder name containing your html etc and changing **AppName** to the name of your html file.
+* Select **ViewController.swift** from the Navigator pane and replace everything with with code shown below, changing **www** to the folder name containing your html etc and changing **SpiderGame** to the name of your html file.
 
 ```
 import Cocoa
