@@ -16,7 +16,7 @@ https://games.gameboss.com/spidersolitairewindowsxp/index.html?lang=en
 
 ## How to develop a similar Mac App for another project
 
-* Install XCode and open it.
+* Install Xcode and open it.
 
 * Select **File/New/Project** from the main menu.
 
