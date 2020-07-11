@@ -82,3 +82,19 @@ class ViewController: NSViewController, WKUIDelegate
 * Check "Incoming Connections (Server)" and "Outgoing Connections (Client)".
 
 * Click "Run" and use your new app.
+
+## For getting the .app file
+
+* Back in Xcode, open your Mac OS Project and then click in Product/Archive.
+
+* Right click in the first item of the list and then click in "Show in Finder".
+
+* Right click to (ProductName….). xcarchive file.
+
+* Click in "Show package contents".
+
+* Go to "Products" folder.
+
+* Go to "Applications" folder.
+
+* There is your .app project file.
