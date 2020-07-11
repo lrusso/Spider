@@ -85,6 +85,6 @@ class ViewController: NSViewController, WKUIDelegate
 
 * Click in your project name (first item at the left panel) and go to Signing & Capabilities.
 
-* Check 'Incoming Connections (Server)' and 'Outgoing Connections (Client)'.
+* Check "Incoming Connections (Server)" and "Outgoing Connections (Client)".
 
-* Press "Run" and use your new app.
+* Click "Run" and use your new app.
