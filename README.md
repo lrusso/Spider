@@ -51,12 +51,12 @@ class ViewController: NSViewController, WKUIDelegate
             let rect = screen.frame
             myHeight = Int(rect.size.height)
             myWidth = Int(rect.size.width)
-        }
+            }
 
         let webConfiguration = WKWebViewConfiguration ();
         webConfiguration.preferences.setValue(true, forKey: "allowFileAccessFromFileURLs");
         webView = WKWebView (frame: CGRect(x:0, y:0, width: myWidth, height: myHeight), configuration:webConfiguration);
-        webView.uiDelegate = self ;
+        webView.uiDelegate = self;
         view = webView;
         }
 
@@ -71,7 +71,7 @@ class ViewController: NSViewController, WKUIDelegate
         self.webView.loadFileURL ( url
                                  , allowingReadAccessTo: path);
         self.view = webView ;
-            view.window?.center()
+        view.window?.center();
         }
     }
     
