@@ -14,7 +14,7 @@ Multiplatform Spider Solitaire porting.
 
 https://games.gameboss.com/spidersolitairewindowsxp/index.html?lang=en
 
-## How to use this Mac App for another project
+## How to develop a similar Mac App for another project
 
 * Install XCode and open it.
 
