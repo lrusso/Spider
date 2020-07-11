@@ -7,7 +7,7 @@ Multiplatform Spider Solitaire porting.
 | PLATFORM  | URL
 | :------------ |:---------------:|
 | Web | https://lrusso.github.io/Spider/Spider.htm
-| OS X | https://lrusso.github.io/Spider/Spider.zip
+| Mac | https://lrusso.github.io/Spider/Spider.zip
 | Android | https://lrusso.github.io/Spider/Spider.apk
 
 ## Based on the work of:
