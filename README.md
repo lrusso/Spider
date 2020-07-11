@@ -77,7 +77,7 @@ class ViewController: NSViewController, WKUIDelegate
 }
 ```
 
-* Click in your project name (first item at the left panel) and go to Signing & Capabilities.
+* Click in your project name (first item at the left panel) and go to "Signing & Capabilities".
 
 * Check "Incoming Connections (Server)" and "Outgoing Connections (Client)".
 
