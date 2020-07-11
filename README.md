@@ -53,31 +53,25 @@ class ViewController: NSViewController, WKUIDelegate
             myWidth = Int(rect.size.width)
             }
 
-        let webConfiguration = WKWebViewConfiguration ();
-        webConfiguration.preferences.setValue(true, forKey: "allowFileAccessFromFileURLs");
-        webView = WKWebView (frame: CGRect(x:0, y:0, width: myWidth, height: myHeight), configuration:webConfiguration);
-        webView.uiDelegate = self;
-        view = webView;
+        let webConfiguration = WKWebViewConfiguration()
+        webConfiguration.preferences.setValue(true, forKey: "allowFileAccessFromFileURLs")
+        webView = WKWebView (frame: CGRect(x:0, y:0, width: myWidth, height: myHeight), configuration:webConfiguration)
+        webView.uiDelegate = self
+        view = webView
         }
 
     override func viewDidLoad() {
     super.viewDidLoad()
-
-    if let url = Bundle.main.url ( forResource: "SpiderGame"
-                                 , withExtension: "htm"
-                                 , subdirectory: "www")
-        {
-        let path = url.deletingLastPathComponent();
-        self.webView.loadFileURL ( url
-                                 , allowingReadAccessTo: path);
-        self.view = webView ;
-        view.window?.center();
+    if let url = Bundle.main.url (forResource: "SpiderGame", withExtension: "htm", subdirectory: "www") {
+        let path = url.deletingLastPathComponent()
+        self.webView.loadFileURL ( url, allowingReadAccessTo: path)
+        self.view = webView
+        view.window?.center()
         }
     }
     
     override func viewDidAppear() {
         super.viewDidAppear()
-
         self.view.window?.center()
     }
 }
