@@ -12,6 +12,10 @@ https://lrusso.github.io/Spider/Spider.htm
 
 https://lrusso.github.io/Spider/Spider.apk
 
+## Mac version:
+
+https://lrusso.github.io/Spider/Spider.zip
+
 ## Based on the work of:
 
 https://games.gameboss.com/spidersolitairewindowsxp/index.html?lang=en
