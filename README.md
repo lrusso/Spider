@@ -85,7 +85,7 @@ class ViewController: NSViewController, WKUIDelegate
 
 * For changing the App icon, click "Assets.xcassets" in the Project navigator.
 
-* Click in "AppIcon" and insert the icons into the grid that just showed up (check the icon resolution for each case).
+* Click in "AppIcon" and insert the icons into the grid that just showed up (check the required icon resolution for each case).
 
 * For getting the .app file, go back to Xcode and then click in Product/Archive.
 
