@@ -44,18 +44,18 @@ class ViewController: NSViewController, WKUIDelegate
 
     override func loadView()
         {
-            var myWidth = 800
-            var myHeight = 600
+        var myWidth = 800
+        var myHeight = 600
 
-            if let screen = NSScreen.main {
-                let rect = screen.frame
-                myHeight = Int(rect.size.height)
-                myWidth = Int(rect.size.width)
-            }
+        if let screen = NSScreen.main {
+            let rect = screen.frame
+            myHeight = Int(rect.size.height)
+            myWidth = Int(rect.size.width)
+        }
 
         let webConfiguration = WKWebViewConfiguration ();
         webConfiguration.preferences.setValue(true, forKey: "allowFileAccessFromFileURLs");
-        webView = WKWebView (frame: CGRect(x:0, y:0, width: myWidth, height:myHeight), configuration:webConfiguration);
+        webView = WKWebView (frame: CGRect(x:0, y:0, width: myWidth, height: myHeight), configuration:webConfiguration);
         webView.uiDelegate = self ;
         view = webView;
         }
