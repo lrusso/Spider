@@ -83,9 +83,7 @@ class ViewController: NSViewController, WKUIDelegate
 
 * Click "Run" and use your new app.
 
-### For getting the .app file
-
-* Back in Xcode, open your Mac OS Project and then click in Product/Archive.
+* For getting the .app file, go back to Xcode and then click in Product/Archive.
 
 * Right click in the first item of the list and then click in "Show in Finder".
 
