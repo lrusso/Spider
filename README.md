@@ -1,6 +1,6 @@
 # Spider Solitaire
 
-Multiplatform Spider Solitaire porting.
+The Spider Solitaire game ported to Web, Android and Mac.
 
 ![alt screenshot](https://raw.githubusercontent.com/lrusso/Spider/master/Spider.png)
 
