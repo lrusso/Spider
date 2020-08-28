@@ -2,7 +2,7 @@
 	"name": "Spider",
 	"short_name": "Spider",
 	"lang": "en-US",
-	"start_url": "https://lrusso.github.io/Spider/Spider.htm",
+	"start_url": "./Spider.htm",
 	"display": "standalone",
 	"orientation": "landscape",
 	"theme_color": "#000000",
