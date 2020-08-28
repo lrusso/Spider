@@ -1,20 +1,12 @@
 # Spider Solitaire
 
-The Spider Solitaire game ported to Web, Android and Mac.
+The Spider Solitaire developed in JavaScript.
 
 ![alt screenshot](https://raw.githubusercontent.com/lrusso/Spider/master/Spider.png)
 
 ## Web:
 
-https://lrusso.github.io/Spider/
-
-## Available portings:
-
-| PLATFORM  | URL
-| :------------ |:---------------:|
-| Web | https://lrusso.github.io/Spider/Spider.htm
-| Mac | https://lrusso.github.io/Spider/Spider.zip
-| Android | https://lrusso.github.io/Spider/Spider.apk
+https://lrusso.github.io/Spider/Spider.htm
 
 ## Based on the work of:
 
