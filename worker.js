@@ -1,5 +1,4 @@
 const filesToCache = [
-	"/",
 	"Spider.htm",
 	"Spider.json",
 	"Spider.png",
