@@ -5,6 +5,7 @@ const filesToCache = [
 	"Spider.png",
 	"SpiderFavIcon_16x16.png",
 	"SpiderFavIcon_192x192.png",
+	"SpiderFavIcon_512x512.png",
 	"SpiderGame.htm",
 	"SpiderGame.js",
 	"SpiderShare.png"
