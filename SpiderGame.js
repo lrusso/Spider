@@ -481,13 +481,13 @@ var GameWonAnim = (function()
 		var b = Math.floor(colors[previous][2] + db * (t % color_speed));
 		var color = this.rgb2hex(r, g, b);
 		this.colornum = this.colornum % 0xffffff;
-		this.text.tint = this.colornum;
+		this.text.tint = color;
 		};
 
 	GameWonAnim.prototype.rgb2hex = function(red, green, blue)
 		{
 		var rgb = blue | (green << 8) | (red << 16);
-		return "#" + (0x1000000 + rgb).toString(16).slice(1);
+		return "0x" + (0x1000000 + rgb).toString(16).slice(1);
 		};
 	return GameWonAnim;
 	}());
