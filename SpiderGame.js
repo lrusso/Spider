@@ -212,7 +212,6 @@ var SimpleGame = (function()
 
 	SimpleGame.addInitScreen = function()
 		{
-		//document.getElementById("content").style.backgroundColor = "#000000";
 		SimpleGame.myGame.time.events.add(1, function()
 			{
 			SimpleGame.startGame();
