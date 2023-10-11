@@ -15,7 +15,7 @@ var STRING_SCORE = "";
 var STRING_MOVES = "";
 var STRING_WIN = "";
 
-var showRestartGame = false;
+var showRestartGame = true;
 
 if (userLanguage.substring(0,2)=="es")
 	{
@@ -376,7 +376,7 @@ var GameUI = (function()
 		GameUI.buttonRestart = SimpleGame.myGame.add.button(3, 519, "restart", null, this, 2, 1, 0);
 		GameUI.buttonRestart.onInputUp.add(function()
 			{
-			if (showRestartGame == false)
+			if (showRestartGame == true)
 				{
 				GameUI.restartGame();
 				}
@@ -3320,7 +3320,7 @@ var NewGamePrompt = (function()
 	{
 	function NewGamePrompt(showXBut)
 		{
-		showRestartGame = true;
+		showRestartGame = false;
 
 		document.getElementById("loading").style.display="none";
 
@@ -3371,7 +3371,7 @@ var NewGamePrompt = (function()
 			BoardManager.InitializeBoard();
 			GameUI.buttonRestartShadow.visible = true;
 			GameUI.buttonRestart.visible = true;
-			showRestartGame = false;
+			showRestartGame = true;
 			});
 
 		var normalBut = new ButtonTextOnly(GameUI.promptLayer, this.menuBG.x + (this.menuBG.width - 80) * 0.5, this.menuBG.y + 342, 0, 0, STRING_MEDIUM, function()
@@ -3381,7 +3381,7 @@ var NewGamePrompt = (function()
 			BoardManager.InitializeBoard();
 			GameUI.buttonRestartShadow.visible = true;
 			GameUI.buttonRestart.visible = true;
-			showRestartGame = false;
+			showRestartGame = true;
 			});
 
 		var hardBut = new ButtonTextOnly(GameUI.promptLayer, this.menuBG.x + (this.menuBG.width - 80) * 0.5, this.menuBG.y + 374, 0, 0, STRING_HARD, function()
@@ -3391,14 +3391,14 @@ var NewGamePrompt = (function()
 			BoardManager.InitializeBoard();
 			GameUI.buttonRestartShadow.visible = true;
 			GameUI.buttonRestart.visible = true;
-			showRestartGame = false;
+			showRestartGame = true;
 			});
 
 		if (showXBut)
 			{
 			var removeButton = new ButtonWithOverState(GameUI.promptLayer, "prompt_close", "prompt_close_over", 576, 199, function()
 				{
-				showRestartGame = false;
+				showRestartGame = true;
 				GameUI.promptLayer.removeAll(true);
 				if (BoardManager.checkForGameOver())
 					{
