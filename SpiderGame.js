@@ -15,6 +15,8 @@ var STRING_SCORE = "";
 var STRING_MOVES = "";
 var STRING_WIN = "";
 
+var showRestartGame = false;
+
 if (userLanguage.substring(0,2)=="es")
 	{
 	STRING_NEWGAME = "Nuevo juego";
@@ -372,7 +374,13 @@ var GameUI = (function()
 		GameUI.buttonRestartShadow.visible = false;
 
 		GameUI.buttonRestart = SimpleGame.myGame.add.button(3, 519, "restart", null, this, 2, 1, 0);
-		GameUI.buttonRestart.onInputUp.add(GameUI.restartGame, this);
+		GameUI.buttonRestart.onInputUp.add(function()
+			{
+			if (showRestartGame == false)
+				{
+				GameUI.restartGame();
+				}
+			}, this);
 		GameUI.buttonRestart.visible = false;
 		};
 
@@ -3312,6 +3320,8 @@ var NewGamePrompt = (function()
 	{
 	function NewGamePrompt(showXBut)
 		{
+		showRestartGame = true;
+
 		document.getElementById("loading").style.display="none";
 
 		if (showXBut === void 0)
@@ -3361,6 +3371,7 @@ var NewGamePrompt = (function()
 			BoardManager.InitializeBoard();
 			GameUI.buttonRestartShadow.visible = true;
 			GameUI.buttonRestart.visible = true;
+			showRestartGame = false;
 			});
 
 		var normalBut = new ButtonTextOnly(GameUI.promptLayer, this.menuBG.x + (this.menuBG.width - 80) * 0.5, this.menuBG.y + 342, 0, 0, STRING_MEDIUM, function()
@@ -3370,6 +3381,7 @@ var NewGamePrompt = (function()
 			BoardManager.InitializeBoard();
 			GameUI.buttonRestartShadow.visible = true;
 			GameUI.buttonRestart.visible = true;
+			showRestartGame = false;
 			});
 
 		var hardBut = new ButtonTextOnly(GameUI.promptLayer, this.menuBG.x + (this.menuBG.width - 80) * 0.5, this.menuBG.y + 374, 0, 0, STRING_HARD, function()
@@ -3379,12 +3391,14 @@ var NewGamePrompt = (function()
 			BoardManager.InitializeBoard();
 			GameUI.buttonRestartShadow.visible = true;
 			GameUI.buttonRestart.visible = true;
+			showRestartGame = false;
 			});
 
 		if (showXBut)
 			{
 			var removeButton = new ButtonWithOverState(GameUI.promptLayer, "prompt_close", "prompt_close_over", 576, 199, function()
 				{
+				showRestartGame = false;
 				GameUI.promptLayer.removeAll(true);
 				if (BoardManager.checkForGameOver())
 					{
