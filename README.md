@@ -10,8 +10,8 @@ https://lrusso.github.io/Spider/Spider.htm
 
 ## Differences with the original project:
 
+- Fixed bitmaps.
 - Restart button.
-- Improved bitmaps.
 - Fullscreen layout.
 - Compatible with mobile devices.
 - Available in English and Spanish.
