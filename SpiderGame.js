@@ -1607,7 +1607,7 @@ var Card = (function()
 		this.colorInvertedFlag = true;
 		this.cardImgFront.visible = false;
 		this.invertedSprite.z = this.cardImgFront.z;
-		this.invertedSprite.y = 400;
+		this.invertedSprite.y = -400;
 		SimpleGame.myGame.time.events.add(Consts.timeToHint, function()
 			{
 			this.colorInvertedFlag = false;
