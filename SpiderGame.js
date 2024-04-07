@@ -16,7 +16,7 @@ var STRING_MOVES = "";
 var STRING_WIN = "";
 
 var showRestartGame = true;
-var gameStarted = false;
+var cardsAreMoving = false;
 
 if (userLanguage.substring(0,2)=="es")
 	{
@@ -112,6 +112,7 @@ var SimpleGame = (function()
 
 		this.boot.preload = function()
 			{
+			this.game.input.maxPointers = 1;
 			this.game.stage.backgroundColor = 0x000000;
 			this.game.add.text(0, 0, "Arial", { font: "1px peace_sans", fill: "#FFFFFF" });
 			SimpleGame.myGame.stage.disableVisibilityChange = true;
@@ -757,7 +758,7 @@ var BoardManager = (function()
 
 	BoardManager.Hint = function()
 		{
-		if (gameStarted == false)
+		if (cardsAreMoving == true)
 			{
 			return;
 			}
@@ -1178,7 +1179,6 @@ var BoardManager = (function()
 
 	BoardManager.InitializeBoard = function()
 		{
-		gameStarted = false;
 		BoardManager.removeAllCards();
 		BoardData.boardDataArray = new Array();
 		BoardManager.GenerateCards();
@@ -1188,9 +1188,10 @@ var BoardManager = (function()
 		BoardManager.sortImmediately();
 		BoardManager.initialTween();
 		GameUI.reinitData();
+		cardsAreMoving = true;
 		SimpleGame.myGame.time.events.add(1200, function()
 			{
-			gameStarted = true;
+			cardsAreMoving = false;
 			});
 		};
 
@@ -1630,6 +1631,11 @@ var Card = (function()
 			}
 		if (CardUtil.canUncoverStock())
 			{
+			cardsAreMoving = true;
+			SimpleGame.myGame.time.events.add(1000, function()
+				{
+				cardsAreMoving = false;
+				});
 			CardUtil.uncoverStock(this.stockPosition);
 			GameUI.gameStarted = true;
 			}
@@ -3517,12 +3523,6 @@ var ButtonWithOverState = (function()
 			}
 		if (this.imgOver.parent)
 			{
-			if (!this.imgOver.getBounds().contains(SimpleGame.myGame.input.x, SimpleGame.myGame.input.y))
-				{
-				}
-				else
-				{
-				}
 			}
 			else
 			{
