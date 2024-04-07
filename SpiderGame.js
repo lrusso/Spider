@@ -509,26 +509,6 @@ var GameWonAnim = (function()
 	return GameWonAnim;
 	}());
 
-var Trace = (function()
-	{
-	function Trace()
-		{
-		}
-		Trace.TraceCardByIdxAndPos = function(tableIdx, tablePos)
-			{
-			var i = Card.cardArray.length;
-			while (i-- > 0)
-				{
-				var c = Card.cardArray[i];
-				if (c.tableuIdx == tableIdx && c.tableuPosition == tablePos)
-					{
-					var name = CardUtil.cardNameArray[c.suitIdx * CardUtil.NUM_CARDS_PER_SUIT + c.cardIdx];
-					}
-				}
-			};
-		return Trace;
-	}());
-
 var OpenMenuBut = (function()
 	{
 	function OpenMenuBut()
@@ -1198,7 +1178,6 @@ var BoardManager = (function()
 
 	BoardManager.resultsInFullstackDownwards = function(cardObserved)
 		{
-		Trace.TraceCardByIdxAndPos(cardObserved.tableuIdx, cardObserved.tableuPosition);
 		if (cardObserved.cardIdx == CardUtil.CARD_IDX_A)
 			{
 			return true;
@@ -1965,7 +1944,6 @@ var Card = (function()
 			return;
 			}
 
-		Trace.TraceCardByIdxAndPos(this.tableuIdx, this.tableuPosition);
 		this.banInputDown = true;
 		this.cardImgFront.game.time.events.add(Consts.DELAY_BETWEEN_EVENTS_TOUCH, function()
 			{
