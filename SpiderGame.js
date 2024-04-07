@@ -235,7 +235,7 @@ var SimpleGame = (function()
 			GameUI.initialize();
 
 			GameUI.promptLayer.removeAll(true);
-			var newgame = new NewGamePrompt();
+			new NewGamePrompt();
 			}
 			else
 			{
@@ -297,7 +297,7 @@ var SimpleGame = (function()
 
 window.addEventListener("load", function()
 	{
-	var game = new SimpleGame();
+	new SimpleGame();
 	});
 
 var GameUI = (function()
@@ -441,7 +441,7 @@ var GameUI = (function()
 			currentTime = 0;
 			if (GameUI.gameStarted)
 				{
-				var gameLost = new GameWonPrompt(false);
+				new GameWonPrompt(false);
 				}
 			}
 
@@ -458,7 +458,7 @@ var GameUI = (function()
 			return;
 			}
 
-		var mainmenu = new MainMenu();
+		new MainMenu();
 		GameUI.menuButton.input.reset();
 		SimpleGame.myGame.canvas.style.cursor = "default";
 		};
@@ -1298,10 +1298,7 @@ var BoardManager = (function()
 		BoardManager.sort();
 		if (BoardManager.checkForGameOver() && GameUI.gameStarted)
 			{
-			var gamewon = new GameWonPrompt2();
-			}
-		if (BoardData.boardDataArray)
-			{
+			new GameWonPrompt2();
 			}
 		};
 
@@ -1527,7 +1524,7 @@ var BoardManager = (function()
 			var j = CardUtil.NUM_CARDS_PER_SUIT;
 			while (j-- > 0)
 				{
-				var card = new Card((i % CardUtil.NUM_SUIT_COLORS), j, i);
+				new Card((i % CardUtil.NUM_SUIT_COLORS), j, i);
 				}
 			}
 		Phaser.ArrayUtils.shuffle(Card.cardArray);
@@ -1703,7 +1700,7 @@ var Card = (function()
 			}
 			else
 			{
-			var cannotuncoverstock = new CannotUncoverStock();
+			new CannotUncoverStock();
 			}
 		};
 
@@ -3321,7 +3318,7 @@ var GameWonPrompt2 = (function()
 
 		GameUI.promptLayer.add(this.blackbg);
 
-		var gamewonanim = new GameWonAnim(GameUI.promptLayer, 440, 300);
+		new GameWonAnim(GameUI.promptLayer, 440, 300);
 		}
 	return GameWonPrompt2;
 	}());
@@ -3374,7 +3371,7 @@ var NewGamePrompt = (function()
 
 		GameUI.promptLayer.add(this.menuText);
 
-		var easyBut = new ButtonTextOnly(GameUI.promptLayer, this.menuBG.x + (this.menuBG.width - 80) * 0.5, this.menuBG.y + 310, 0, 0, STRING_EASY, function()
+		new ButtonTextOnly(GameUI.promptLayer, this.menuBG.x + (this.menuBG.width - 80) * 0.5, this.menuBG.y + 310, 0, 0, STRING_EASY, function()
 			{
 			GameUI.promptLayer.removeAll(true);
 			CardUtil.NUM_SUIT_COLORS = 1;
@@ -3384,7 +3381,7 @@ var NewGamePrompt = (function()
 			showRestartGame = true;
 			});
 
-		var normalBut = new ButtonTextOnly(GameUI.promptLayer, this.menuBG.x + (this.menuBG.width - 80) * 0.5, this.menuBG.y + 342, 0, 0, STRING_MEDIUM, function()
+		new ButtonTextOnly(GameUI.promptLayer, this.menuBG.x + (this.menuBG.width - 80) * 0.5, this.menuBG.y + 342, 0, 0, STRING_MEDIUM, function()
 			{
 			GameUI.promptLayer.removeAll(true);
 			CardUtil.NUM_SUIT_COLORS = 2;
@@ -3394,7 +3391,7 @@ var NewGamePrompt = (function()
 			showRestartGame = true;
 			});
 
-		var hardBut = new ButtonTextOnly(GameUI.promptLayer, this.menuBG.x + (this.menuBG.width - 80) * 0.5, this.menuBG.y + 374, 0, 0, STRING_HARD, function()
+		new ButtonTextOnly(GameUI.promptLayer, this.menuBG.x + (this.menuBG.width - 80) * 0.5, this.menuBG.y + 374, 0, 0, STRING_HARD, function()
 			{
 			GameUI.promptLayer.removeAll(true);
 			CardUtil.NUM_SUIT_COLORS = 4;
@@ -3406,13 +3403,13 @@ var NewGamePrompt = (function()
 
 		if (showXBut)
 			{
-			var removeButton = new ButtonWithOverState(GameUI.promptLayer, "prompt_close", "prompt_close_over", 576, 199, function()
+			new ButtonWithOverState(GameUI.promptLayer, "prompt_close", "prompt_close_over", 576, 199, function()
 				{
 				showRestartGame = true;
 				GameUI.promptLayer.removeAll(true);
 				if (BoardManager.checkForGameOver())
 					{
-					var gamewon = new GameWonPrompt2();
+					new GameWonPrompt2();
 					}
 				});
 			}
