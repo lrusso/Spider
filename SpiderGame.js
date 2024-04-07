@@ -255,15 +255,10 @@ var SimpleGame = (function()
 		this.ticks++;
 
 		var i = Card.cardArray.length;
-		var selectedCardExists = false;
 
 		while (i-- > 0)
 			{
 			Card.cardArray[i].update();
-			if (Card.cardArray[i].selectedFlag)
-				{
-				selectedCardExists = true;
-				}
 			}
 
 		GameUI.update();
@@ -549,8 +544,6 @@ var BoardData = (function()
 	BoardData.prototype.addToBdata = function(card)
 		{
 		var cardData = new CardData(card.suitIdx, card.cardIdx, card.turned, card.deckIdx);
-		var stockCards = 0;
-		var tabCards = 0;
 		if (card.myState == Card.STATE_STOCK)
 			{
 			this.stockPile[card.myStockIdx] = cardData;
@@ -727,7 +720,6 @@ var BoardData = (function()
 			return false;
 			}
 
-		var retVal = true;
 		var i = arr1.length;
 
 		while (i-- > 0)
@@ -751,7 +743,6 @@ var BoardData = (function()
 			return false;
 			}
 
-		var retVal = true;
 		var i = arr1.length;
 		while (i-- > 0)
 			{
@@ -816,7 +807,6 @@ var BoardManager = (function()
 		BoardManager.hintSuccess = false;
 		BoardManager.currentObservedColumn = BoardManager.NUM_TABLEU_COLUMNS;
 		isInitialHint = true;
-		var respectSuitIdx = true;
 
 		if (BoardManager.hintState == BoardManager.HINT_STATE_TRY_FIRST_CARD_ONLY_HINT)
 			{
@@ -1463,7 +1453,7 @@ var BoardManager = (function()
 
 		if (BoardData.boardDataArray.length > 1)
 			{
-			var bData = BoardData.boardDataArray.pop();
+			BoardData.boardDataArray.pop();
 			BoardManager.fromSnapshotToBoard(BoardData.boardDataArray[BoardData.boardDataArray.length - 1]);
 			GameUI.score--;
 			GameUI.moves++;
@@ -1868,10 +1858,9 @@ var Card = (function()
 			return;
 			}
 
-		var tween3 = SimpleGame.myGame.add.tween(this.cardImgFront.scale).to({x: Card.FOUNDATION_SCALE, y: Card.FOUNDATION_SCALE}, 200, Phaser.Easing.Default, true);
-		var tween1 = SimpleGame.myGame.add.tween(this.cardImgFront).to({ y: Card.CARD_FOUND_POS_Y_INIT }, 200, Phaser.Easing.Default, true);
-		var tween2 = SimpleGame.myGame.add.tween(this.cardImgFront).to({ x: Card.CARD_FOUND_POS_X_INIT + Card.CARD_FOUND_POS_X_DELTA * this.foundationIdx }, 200, Phaser.Easing.Default, true);
-		tween2.onComplete.add(function()
+		SimpleGame.myGame.add.tween(this.cardImgFront.scale).to({x: Card.FOUNDATION_SCALE, y: Card.FOUNDATION_SCALE}, 200, Phaser.Easing.Default, true);
+		SimpleGame.myGame.add.tween(this.cardImgFront).to({ y: Card.CARD_FOUND_POS_Y_INIT }, 200, Phaser.Easing.Default, true);
+		SimpleGame.myGame.add.tween(this.cardImgFront).to({ x: Card.CARD_FOUND_POS_X_INIT + Card.CARD_FOUND_POS_X_DELTA * this.foundationIdx }, 200, Phaser.Easing.Default, true).onComplete.add(function()
 			{
 			if (this.cardIdx != CardUtil.CARD_IDX_K)
 				{
@@ -2233,7 +2222,7 @@ var Card = (function()
 				}, this);
 			if (withAnim)
 				{
-				var scaleTween2 = SimpleGame.myGame.add.tween(this.cardImgBack.scale).to({x: 0.05, y: 1}, 60);
+				SimpleGame.myGame.add.tween(this.cardImgBack.scale).to({x: 0.05, y: 1}, 60);
 				}
 				else
 				{
@@ -2845,7 +2834,6 @@ var CardUtil = (function()
 
 	CardUtil.checkIfDroppedOnEmptyTableuCoords = function(card)
 		{
-		var img = card.cardImgFront;
 		var myTableuoIdx = Math.ceil((card.cardImgFront.x - card.cardImgFront.width - Card.CARD_TAB_POS_X_INIT) / Card.CARD_TAB_POS_X_DELTA);
 		if (myTableuoIdx < 0 || myTableuoIdx > 9)
 			{
@@ -2921,7 +2909,6 @@ var CardUtil = (function()
 				});
 			}
 		CardUtil.manageMultipleOverlaps(card);
-		var multipleOverlaps = false;
 		var arr = Card.cardArray;
 		var i = arr.length;
 		while (i-- > 0)
@@ -3646,7 +3633,7 @@ var ButtonWithOverState = (function()
 		this.imgNormal.alpha = 1;
 		};
 
-	ButtonWithOverState.prototype.onButtonClicked = function(evt)
+	ButtonWithOverState.prototype.onButtonClicked = function()
 		{
 		if (this.onClickExecuted == false)
 			{
