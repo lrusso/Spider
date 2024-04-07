@@ -1881,6 +1881,11 @@ var Card = (function()
 
 	Card.prototype.onCardImgFrontDown = function()
 		{
+		if (cardsAreMoving == true)
+			{
+			return;
+			}
+
 		BoardManager.HintReset();
 
 		if (CardUtil.checkIfSelectedCardExists())
