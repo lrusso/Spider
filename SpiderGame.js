@@ -44,7 +44,6 @@ if (userLanguage.substring(0,2)=="es")
 // game.js
 var __extends=this&&this.__extends||function(){var t=Object.setPrototypeOf||{__proto__:[]}instanceof Array&&function(t,o){t.__proto__=o}||function(t,o){for(var n in o)o.hasOwnProperty(n)&&(t[n]=o[n])};return function(o,n){function r(){this.constructor=o}t(o,n),o.prototype=null===n?Object.create(n):(r.prototype=n.prototype,new r)}}();
 
-var mouseIsWithinGame;
 var Consts = (function()
 	{
 	function Consts()
@@ -3706,87 +3705,3 @@ var ButtonWithOverState = (function()
 		};
 	return ButtonWithOverState;
 	}());
-
-var ButtonWithOverAndText = (function(_super)
-	{
-	__extends(ButtonWithOverAndText, _super);
-
-	function ButtonWithOverAndText(text, parent, imgNormalName, imgOverName, x, y, onClickFunction)
-		{
-		if (onClickFunction === void 0)
-			{
-			onClickFunction = function()
-				{
-				};
-			}
-
-		var _this = _super.call(this, parent, imgNormalName, imgOverName, x, y, onClickFunction) || this;
-		_this.fixedTxtCoords = false;
-		_this.fixedTxtX = 0;
-		_this.fixedTxtY = 0;
-		_this.textY = 0;
-		_this.textX = 0;
-		_this.textYDelta = 0;
-		_this.text = text;
-
-		parent.add(text);
-		return _this;
-		}
-
-	ButtonWithOverAndText.prototype.setXY = function(x, y)
-		{
-		_super.prototype.setXY.call(this, x, y);
-
-		if (this.fixedTxtCoords)
-			{
-			this.text.x = this.imgNormal.x + this.fixedTxtX;
-			this.text.y = this.imgNormal.y + this.fixedTxtY;
-			}
-			else
-			{
-			this.text.x = this.imgNormal.x + 0.5 * (this.imgNormal.width - this.text.width);
-			this.text.y = this.imgNormal.y + 0.5 * (this.imgNormal.height - 0.85 * this.text.height) + 1;
-			}
-
-		this.textX = this.text.x;
-		this.textY = this.text.y + this.textYDelta;
-
-		if (this.imgOver.visible)
-			{
-			this.text.y = this.textY;
-			}
-			else
-			{
-			this.text.y = this.textY;
-			}
-		};
-
-	ButtonWithOverAndText.prototype.update = function()
-		{
-		_super.prototype.update.call(this);
-
-		if (this.imgOver.visible)
-			{
-			this.text.y = this.textY;
-			}
-			else
-			{
-			this.text.y = this.textY;
-			}
-		};
-
-	ButtonWithOverAndText.prototype.setVisible = function()
-		{
-		this.parent.add(this.imgNormal);
-		this.parent.add(this.imgOver);
-		this.parent.add(this.text);
-		};
-
-	ButtonWithOverAndText.prototype.setInvisible = function()
-		{
-		this.parent.remove(this.imgNormal);
-		this.parent.remove(this.imgOver);
-		this.parent.remove(this.text);
-		};
-	return ButtonWithOverAndText;
-	}(ButtonWithOverState));
