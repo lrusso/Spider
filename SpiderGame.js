@@ -41,9 +41,6 @@ if (userLanguage.substring(0,2)=="es")
 	STRING_WIN = "You Won!";
 	}
 
-// game.js
-var __extends=this&&this.__extends||function(){var t=Object.setPrototypeOf||{__proto__:[]}instanceof Array&&function(t,o){t.__proto__=o}||function(t,o){for(var n in o)o.hasOwnProperty(n)&&(t[n]=o[n])};return function(o,n){function r(){this.constructor=o}t(o,n),o.prototype=null===n?Object.create(n):(r.prototype=n.prototype,new r)}}();
-
 var Consts = (function()
 	{
 	function Consts()
@@ -265,15 +262,12 @@ var SimpleGame = (function()
 		SimpleGame.myGame.input.update();
 		BoardManager.update();
 
-		var mouseIsMovedWithinGame;
 		if (this.lastMouseCoordX != SimpleGame.myGame.input.x || this.lastMouseCoordY != SimpleGame.myGame.input.y)
 			{
-			mouseIsMovedWithinGame = true;
 			this.mouseMovedWithinGameTicks++;
 			}
 			else
 			{
-			mouseIsMovedWithinGame = false;
 			this.mouseMovedWithinGameTicks = 0;
 			}
 
@@ -359,7 +353,6 @@ var GameUI = (function()
 		this.update();
 		this.reinitData();
 
-
 		GameUI.buttonRestartShadow = SimpleGame.myGame.add.sprite(29, 29, "restart");
 		GameUI.buttonRestartShadow.anchor.set(0.5);
 		GameUI.buttonRestartShadow.tint = 0x000000;
@@ -403,10 +396,6 @@ var GameUI = (function()
 	GameUI.resetUI = function()
 		{
 		GameUI.reinitData();
-		};
-
-	GameUI.onSecondTick = function()
-		{
 		};
 
 	GameUI.reinitData = function()
@@ -502,15 +491,6 @@ var GameWonAnim = (function()
 		return "0x" + (0x1000000 + rgb).toString(16).slice(1);
 		};
 	return GameWonAnim;
-	}());
-
-var OpenMenuBut = (function()
-	{
-	function OpenMenuBut()
-		{
-		SimpleGame.myGame.add.button();
-		}
-	return OpenMenuBut;
 	}());
 
 var BoardData = (function()
@@ -649,12 +629,6 @@ var BoardData = (function()
 					{
 					this.justUndoedArray.push(card);
 					}
-				if (card.tableuIdx != i || card.tableuPosition != j)
-					{
-					}
-					else
-					{
-					}
 				card.myState = Card.STATE_TABLEU;
 				card.tableuIdx = i;
 				card.tableuPosition = j;
@@ -682,11 +656,6 @@ var BoardData = (function()
 				return -1;
 				}
 			});
-
-		var i = this.justUndoedArray.length;
-		while (i-- > 0)
-			{
-			}
 		};
 
 	BoardData.isBdataChanged = function(data1, data2)
@@ -1608,9 +1577,6 @@ var Card = (function()
 		this.cardImgBack.anchor.set(0.5, 0.5);
 		SimpleGame.myGame.renderer.renderSession.roundPixels = true;
 		Card.cardArray.push(this);
-		SimpleGame.myGame.time.events.add(3000, function()
-			{
-			}, this);
 		}
 
 	Card.prototype.createInvertedSprite = function()
@@ -2002,9 +1968,6 @@ var Card = (function()
 			{
 			this.selectedFlag = false;
 			}
-			else
-			{
-			}
 
 		CardUtil.returnUnplacedTabCards();
 		CardUtil.tryToPlaceCardsOnFoundation();
@@ -2054,10 +2017,6 @@ var Card = (function()
 			var newY = Card.CARD_TAB_POS_Y_INIT + this.tableuPosition * (Card.CARD_TAB_POS_Y_DELTA - closedCardsDelta);
 			}
 
-		if (this.tableuIdx == 0)
-			{
-			}
-
 		if (Math.abs(newX - this.cardImgFront.x) > 5)
 			{
 			this.isMoving = true;
@@ -2072,9 +2031,6 @@ var Card = (function()
 			}
 			else
 			{
-			if (this.isMoving == true)
-				{
-				}
 			this.isMoving = false;
 			}
 
@@ -2443,9 +2399,6 @@ var CardUtil = (function()
 			if (c == null)
 				{
 				return null;
-				}
-				else
-				{
 				}
 
 			if (c.myState != Card.STATE_TABLEU)
@@ -2909,18 +2862,6 @@ var CardUtil = (function()
 				});
 			}
 		CardUtil.manageMultipleOverlaps(card);
-		var arr = Card.cardArray;
-		var i = arr.length;
-		while (i-- > 0)
-			{
-			var c = arr[i];
-			if (CardUtil.overlapping(c.cardImgFront, card.cardImgFront))
-				{
-				if (c.myState == Card.STATE_TABLEU)
-					{
-					}
-				}
-			}
 		};
 
 	CardUtil.manageMultipleOverlaps = function(card)
