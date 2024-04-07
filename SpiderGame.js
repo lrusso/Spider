@@ -16,6 +16,7 @@ var STRING_MOVES = "";
 var STRING_WIN = "";
 
 var showRestartGame = true;
+var gameStarted = false;
 
 if (userLanguage.substring(0,2)=="es")
 	{
@@ -817,6 +818,11 @@ var BoardManager = (function()
 
 	BoardManager.Hint = function()
 		{
+		if (gameStarted == false)
+			{
+			return;
+			}
+
 		if (BoardManager.currentObservedColumn == -1)
 			{
 			BoardManager.currentObservedColumn = BoardManager.NUM_TABLEU_COLUMNS;
@@ -1235,6 +1241,7 @@ var BoardManager = (function()
 
 	BoardManager.InitializeBoard = function()
 		{
+		gameStarted = false;
 		BoardManager.removeAllCards();
 		BoardData.boardDataArray = new Array();
 		BoardManager.GenerateCards();
@@ -1244,6 +1251,10 @@ var BoardManager = (function()
 		BoardManager.sortImmediately();
 		BoardManager.initialTween();
 		GameUI.reinitData();
+		SimpleGame.myGame.time.events.add(1200, function()
+			{
+			gameStarted = true;
+			});
 		};
 
 	BoardManager.initialTween = function()
