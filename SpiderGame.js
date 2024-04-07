@@ -161,7 +161,6 @@ var SimpleGame = (function()
 		text.text = "super";
 
 		this.game.physics.startSystem(Phaser.Physics.ARCADE);
-		this.game.time.desiredFps = 20;
 
 		text.visible = false;
 
