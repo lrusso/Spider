@@ -317,16 +317,9 @@ var GameUI = (function()
 		GameUI.menuButton.beginFill(0xffffff);
 		GameUI.menuButton.drawRect(0, 2, 60, 40);
 		GameUI.menuButton.endFill();
-		GameUI.menuButton.inputEnabled = false;
+		GameUI.menuButton.inputEnabled = true;
+		GameUI.menuButton.input.useHandCursor = true;
 		GameUI.menuButton.events.onInputDown.add(GameUI.onMenuButtonPressed, this);
-		GameUI.menuButton.events.onInputOver.add(function()
-			{
-			SimpleGame.myGame.canvas.style.cursor = "pointer";
-			}, GameUI.menuButton);
-		GameUI.menuButton.events.onInputOut.add(function()
-			{
-			SimpleGame.myGame.canvas.style.cursor = "default";
-			}, GameUI.menuButton);
 		GameUI.menuButton.alpha = 0.01;
 
 		GameUI.hintBigBut = SimpleGame.myGame.make.graphics(0, 0);
@@ -351,6 +344,7 @@ var GameUI = (function()
 		GameUI.stepsText.x = Math.round(GameUI.stepsText.x);
 		GameUI.scoreTxt.y = Math.round(GameUI.scoreTxt.y);
 		GameUI.stepsText.y = Math.round(GameUI.stepsText.y);
+
 		this.update();
 		this.reinitData();
 
@@ -382,15 +376,8 @@ var GameUI = (function()
 		{
 		GameUI.menuButton.input.reset();
 		GameUI.menuButton.inputEnabled = true;
+		GameUI.menuButton.input.useHandCursor = true;
 		GameUI.menuButton.events.onInputDown.add(GameUI.onMenuButtonPressed, this);
-		GameUI.menuButton.events.onInputOver.add(function()
-			{
-			SimpleGame.myGame.canvas.style.cursor = "pointer";
-			}, GameUI.menuButton);
-		GameUI.menuButton.events.onInputOut.add(function()
-			{
-			SimpleGame.myGame.canvas.style.cursor = "default";
-			}, GameUI.menuButton);
 		GameUI.uiLayer.add(GameUI.menuButton);
 		};
 
@@ -597,10 +584,7 @@ var BoardData = (function()
 				}
 
 			var card = CardUtil.getByCardAndSuitIdx(cdata.suitIdx, cdata.cardIdx, cdata.deckIdx);
-			if (card.myState == Card.STATE_STOCK && card.myStockIdx == i && card.turned == cdata.turned)
-				{
-				}
-				else
+			if (!(card.myState == Card.STATE_STOCK && card.myStockIdx == i && card.turned == cdata.turned))
 				{
 				this.justUndoedArray.push(card);
 				}
@@ -623,10 +607,7 @@ var BoardData = (function()
 				{
 				var cData = this.tableuPile[i][j];
 				var card = CardUtil.getByCardAndSuitIdx(cData.suitIdx, cData.cardIdx, cData.deckIdx);
-				if (card.myState == Card.STATE_TABLEU && card.tableuIdx == i && card.tableuPosition == j && card.turned == cData.turned)
-					{
-					}
-					else
+				if (!(card.myState == Card.STATE_TABLEU && card.tableuIdx == i && card.tableuPosition == j && card.turned == cData.turned))
 					{
 					this.justUndoedArray.push(card);
 					}
@@ -863,10 +844,7 @@ var BoardManager = (function()
 			BoardManager.currentObservedColumn = BoardManager.NUM_TABLEU_COLUMNS;
 			}
 
-		if (BoardManager.hintSuccess)
-			{
-			}
-			else
+		if (!BoardManager.hintSuccess)
 			{
 			if (!isInitialHint)
 				{
@@ -1397,11 +1375,6 @@ var BoardManager = (function()
 			BoardData.boardDataArray.push(bData);
 			BoardData.boardDataIdx = BoardData.boardDataArray.length - 1;
 			}
-
-		var i = BoardData.boardDataArray.length;
-		while (i-- > 0)
-			{
-			}
 		};
 
 	BoardManager.isBdataChanged = function(bData, boardData)
@@ -1566,9 +1539,6 @@ var Card = (function()
 				}, this);
 			}, this, 100);
 		this.cardimgfrontupsignal = this.cardImgFront.events.onInputUp.add(this.onCardImgFrontUp, this);
-		this.cardImgFront.events.onInputOver.add(function()
-			{
-			}, this);
 		this.cardImgBack = SimpleGame.myGame.make.sprite(-100, -100, "backside");
 		this.cardImgBack.inputEnabled = true;
 		this.cardImgBack.events.onInputDown.add(this.onCardImgBackDown, this);
@@ -1576,7 +1546,6 @@ var Card = (function()
 		Card.items.add(this.cardImgBack);
 		this.cardImgFront.anchor.set(0.5, 0.5);
 		this.cardImgBack.anchor.set(0.5, 0.5);
-		SimpleGame.myGame.renderer.renderSession.roundPixels = true;
 		Card.cardArray.push(this);
 		}
 
@@ -1694,10 +1663,6 @@ var Card = (function()
 			this.lastFrameWasOutsideOfScreen = true;
 			}
 
-		if (this.selectedFlag)
-			{
-			}
-
 		if (this.selectedFlag && SimpleGame.pointerDown == false && (((SimpleGame.myGame.device.tridentVersion != 0 || window.navigator.userAgent.indexOf("Edge") > -1) && SimpleGame.myGame.input.activePointer.targetObject != null) || SimpleGame.myGame.input.activePointer.withinGame || SimpleGame.myGame.input.mousePointer.withinGame) && SimpleGame.myGame.input.activePointer.isUp)
 			{
 			if (this.cardImgFront.parent)
@@ -1738,13 +1703,10 @@ var Card = (function()
 			this.cardImgFront.scale.x += 0.02;
 			this.cardImgFront.scale.y += 0.02;
 			}
-			else
+		else if (this.myState != Card.STATE_FOUNDATION)
 			{
-			if (this.myState != Card.STATE_FOUNDATION)
-				{
-				this.cardImgFront.scale.x = 1;
-				this.cardImgFront.scale.y = 1;
-				}
+			this.cardImgFront.scale.x = 1;
+			this.cardImgFront.scale.y = 1;
 			}
 
 		if (this.initTweenFlag)
@@ -2156,47 +2118,12 @@ var Card = (function()
 
 	Card.prototype.flipcard = function(withAnim)
 		{
-		if (withAnim === void 0)
-			{
-			withAnim = false;
-			}
-
 		if (this.turned)
 			{
 			return;
 			}
 
-		withAnim = false;
-		if (withAnim)
-			{
-			SimpleGame.myGame.time.events.add(200, function()
-				{
-				this.cardImgFront.scale.x = 1;
-				}, this);
-			}
-
 		this.turned = true;
-		if (withAnim)
-			{
-			SimpleGame.myGame.time.events.add(0, function()
-				{
-				this.cardImgFront.scale.x = 0.05;
-				var scaleTween = SimpleGame.myGame.add.tween(this.cardImgFront.scale).to({x: 1, y: 1}, 100, Phaser.Easing.Linear.None);
-				var scaleTween1 = SimpleGame.myGame.add.tween(this.cardImgBack.scale).to({x: 1, y: 1}, 200, Phaser.Easing.Linear.None);
-				scaleTween.start();
-				scaleTween1.start();
-				}, this);
-			if (withAnim)
-				{
-				SimpleGame.myGame.add.tween(this.cardImgBack.scale).to({x: 0.05, y: 1}, 60);
-				}
-				else
-				{
-				this.turned = true;
-				this.cardImgBack.visible = false;
-				this.cardImgFront.visible = true;
-				}
-			}
 		};
 
 	Card.prototype.setTableuZCoords = function()
@@ -3245,7 +3172,7 @@ var NewGamePrompt = (function()
 		{
 		showRestartGame = false;
 
-		document.getElementById("loading").style.display="none";
+		document.getElementById("loading").style.display = "none";
 
 		if (showXBut === void 0)
 			{
@@ -3465,8 +3392,8 @@ var ButtonWithOverState = (function()
 		parent.add(this.imgNormal);
 		parent.add(this.imgOver);
 
-		this.imgNormal.inputEnabled = this.imgOver.inputEnabled = false;
-		this.imgOver.inputEnabled = false;
+		this.imgNormal.inputEnabled = true;
+		this.imgNormal.input.useHandCursor = true;
 		this.imgNormal.events.onInputOver.add(this.onButtonOver, this, 0);
 		this.imgNormal.events.onInputUp.add(this.banInput, this, 100);
 		this.imgNormal.events.onInputDown.add(this.onButtonClicked, this, 2);
@@ -3474,46 +3401,10 @@ var ButtonWithOverState = (function()
 		this.imgOver.events.onInputOut.add(this.onButtonOut, this, 1);
 		this.imgOver.events.onInputUp.add(this.onButtonOut, this, 4);
 
-		this.imgNormal.events.onInputDown.add(function()
-			{
-			}, this);
-
-		this.imgOver.events.onInputDown.add(function()
-			{
-			}, this);
-
 		this.onClickFunction = onClickFunction;
 		this.imgOver.visible = false;
 		this.loopEvent = SimpleGame.myGame.time.events.loop(100, this.update, this);
 		this.loopEvent1 = SimpleGame.myGame.time.events.loop(10, this.update1, this);
-
-		SimpleGame.myGame.time.events.add(150, function()
-			{
-			this.imgNormal.inputEnabled = true;
-			if (GameUI.promptLayer != null)
-				{
-				if (GameUI.promptLayer.countLiving() <= 0)
-					{
-					this.imgNormal.input.useHandCursor = true;
-					}
-					else
-					{
-					this.imgNormal.input.useHandCursor = true;
-					}
-				}
-				else
-				{
-				this.imgNormal.input.useHandCursor = true;
-				}
-			}, this);
-
-		SimpleGame.myGame.input.onTap.add(function()
-			{
-			});
-
-		this.imgNormal.events.onInputUp.add(function()
-			{
-			});
 		}
 
 	ButtonWithOverState.prototype.update = function()
@@ -3525,10 +3416,7 @@ var ButtonWithOverState = (function()
 				this.imgOver.visible = false;
 				}
 			}
-		if (this.imgOver.parent)
-			{
-			}
-			else
+		if (!this.imgOver.parent)
 			{
 			SimpleGame.myGame.time.events.remove(this.loopEvent);
 			}
@@ -3552,8 +3440,6 @@ var ButtonWithOverState = (function()
 
 	ButtonWithOverState.prototype.onButtonOver = function()
 		{
-		this.imgNormal.input.useHandCursor = true;
-
 		if (this.skipMouseOver)
 			{
 			return;
@@ -3561,19 +3447,10 @@ var ButtonWithOverState = (function()
 
 		this.imgOver.visible = true;
 		this.imgNormal.alpha = 0.00001;
-
-		SimpleGame.myGame.canvas.style.cursor = "pointer";
-
-		if (SimpleGame.myGame.device.touch)
-			{
-			}
 		};
 
 	ButtonWithOverState.prototype.onButtonOut = function()
 		{
-		if (this.imgnormalnamestr == "open_menu2")
-			{
-			}
 		this.imgOver.visible = false;
 		this.imgNormal.alpha = 1;
 		};
