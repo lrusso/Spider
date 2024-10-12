@@ -51,21 +51,25 @@
 
 			window.addEventListener("load", function()
 				{
-				// RESIZING THE IFRAME
-				resizeContent();
-
-				// TO KEEP FOCUSING AND RESIZING THE IFRAME (WORKAROUND FOR IOS DEVICES)
-				setInterval(function()
+				// CHECKING IF THE GAME IS NOT RUNNING WITHIN AN IFRAME
+				if (window.top == window.self)
 					{
+					// RESIZING THE IFRAME
 					resizeContent();
-					document.getElementById("content").focus();
-					}, 250);
 
-				// LOADING THE GAME
-				document.getElementById("content").src = "SpiderGame.htm";
+					// TO KEEP FOCUSING AND RESIZING THE IFRAME (WORKAROUND FOR IOS DEVICES)
+					setInterval(function()
+						{
+						resizeContent();
+						document.getElementById("content").focus();
+						}, 250);
 
-				// SHOWING THE IFRAME
-				document.getElementById("content").style.display = "block";
+					// LOADING THE GAME
+					document.getElementById("content").src = "SpiderGame.htm";
+
+					// SHOWING THE IFRAME
+					document.getElementById("content").style.display = "block";
+					}
 				});
 
 			window.addEventListener("resize", function()
