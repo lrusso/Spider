@@ -1,6 +1,6 @@
 # Spider Solitaire
 
-Spider Solitaire developed in JavaScript.
+Spider Solitaire game developed in JavaScript.
 
 ![alt screenshot](https://raw.githubusercontent.com/lrusso/Spider/master/Spider.png)
 
